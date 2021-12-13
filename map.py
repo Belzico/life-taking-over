@@ -2,6 +2,8 @@ import zones
 import misc
 import random
 import tiles
+import especies
+
 
 
 class Map:
