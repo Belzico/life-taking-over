@@ -7,6 +7,8 @@ class Coordinates:
         self.X = x
         self.Y = y
 
+
+
 class Element:
     def __init__(self,atmoicValue, name):
         self.AtomicValue = atmoicValue
