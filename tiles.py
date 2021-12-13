@@ -12,7 +12,7 @@ class Tile:
 
 
     def __init__(self,x,y,zone):
-        self.Coordinates =  misc.Coordinates(x,y)
+        self.Coordinates =  (x,y)
         self.Zone = zone
         #self.EnergyValue = -1
         if zone.ZoneType is 'Forest'  :
