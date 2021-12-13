@@ -60,9 +60,34 @@ class Individuo():
         newName=self.especie+str(lastNumber+1)
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
+    
+    #movimiento del individuo
+    def move(self,map):
+        #aca se valorara segun que criterio moverse
+        tup=()
+        if True:
+            tup=self.moveRandom()
+        self.xMundo+=tup[0]
+        self.yMundo+=tup[0]
+        #aca falta mandar el update al mapa
+
+            
+    def moveRandom(map):
+        #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
+        myPosition=list(map).count/2
+        i=10
+        while i>0:
+            xRandom=int.random(-1,2)
+            yRandom=int.random(-1,2)
+            if map[xRandom+myPosition][yRandom+myPosition]!="":
+                break
+            i-=1
+            #caso donde no se mueve
+            if i==0:
+                xRandom=0
+                yRandom=0
+        return (xRandom,yRandom)  
         
-    def move(self):
-        pass
         
 #especie inicial previa a la generacion automatica de especies
 class Alfie():
