@@ -27,6 +27,8 @@ def movementWithBoundries (Individuo, valor_de_percepcion, mapa):
         
      countX+=1
      
+     return perceptionList
+     
 
 
 def main():
