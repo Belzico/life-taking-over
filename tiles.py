@@ -14,6 +14,7 @@ class Tile:
     def __init__(self,x,y,zone):
         self.Coordinates =  (x,y)
         self.Zone = zone
+        self.CreatureList = {}
         #self.EnergyValue = -1
         if zone.ZoneType is 'Forest'  :
             self.createForestTile()
@@ -26,6 +27,7 @@ class Tile:
 
 
     def createForestTile(self):
+        
         pass
 
     def createMountainTile(self):
