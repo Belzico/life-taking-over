@@ -1,7 +1,7 @@
 import sys
 
 #Todas las zonas con las que trabaja la simulación
-ZoneList = {'Forest', 'Mountain', 'Ocean'}
+ZoneList = {'Prairie', 'Mountain', 'Ocean'}
 
 #Todos los elementos con los que trabaja la simulación
 
@@ -15,7 +15,7 @@ NoneRandomRange = (0, 200)
 
 
 
-ForestGenerationList = {'Solar Light' : InfiniteRange ,
+PrairieGenerationList = {'Solar Light' : InfiniteRange ,
                         'Water' : LowRandomRange,
                         'Organic Matter' : MediumRandomRange,
                         'Phosil' : NoneRandomRange ,
