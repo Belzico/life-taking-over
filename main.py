@@ -30,7 +30,14 @@ def movementWithBoundries (Individuo, valor_de_percepcion, mapa):
      return perceptionList
      
 
-
+def moveCreature (Individuo , Coordinates , Mapa):
+    destinyTile = Mapa.Tiles[Coordinates[0]][Coordinates[1]]
+    actualTile = Mapa.Tiles[Individuo.Coordinates[0]][Individuo.Coordinates[1]]
+    actualTile.CreatureList.remove(Individuo)
+    Individuo.Coordinates = Coordinates
+    destinyTile.CreatureList.append(Individuo)
+    
+    
 def main():
     globals.allSpecies["Alfie"]=especies.Alfie()
     current=globals.allSpecies["Alfie"]
