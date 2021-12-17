@@ -73,9 +73,9 @@ class Map:
         actCol = Individuo.yMundo - perceptionValue
         perceptionList = []
         ##LLenando perceptionlist
-        for i in range(0, 1  + 2(perceptionValue)):
+        for i in range(0, 1  + 2 * int(perceptionValue)):
             newList = []
-            for j in range(0,  1  + 2(perceptionValue)):
+            for j in range(0,  1  + 2 * int(perceptionValue)):
                 newList.append("")
             perceptionList.append(newList)
         
