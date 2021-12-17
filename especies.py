@@ -47,7 +47,10 @@ class Individuo():
         #nombre del individuos
         self.name=name    
     
-        #agregar al diccionario del mapa
+        #agregando aa la casilla
+        globals.worldMap.IsBorn(self)
+        #agregando a la lista de individuos global    
+        globals.worldIndividuals[self.name]=self
      
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
     def breed(self):
