@@ -87,7 +87,7 @@ class Map:
             actCol = Individuo.yMundo - perceptionValue
             countY=0
             while actCol <= Individuo.yMundo + perceptionValue:
-                if not(0<=actRow<= self.SizeX) or not(0<=actCol<=self.SizeY):
+                if not(0<=actRow< self.SizeX) or not(0<=actCol< self.SizeY):
                     perceptionList[countX][countY]= ""
                 else:
                     perceptionList[countX][countY]= self.Tiles[actRow][actCol]
