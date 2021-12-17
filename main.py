@@ -60,10 +60,11 @@ def main():
     print(len(current.individuos))
 
     
-KK = map.Map(5,5,2)
+KK = map.Map(6,6,2)
 
 for i in range(KK.SizeX):
     for j in range(KK.SizeY):
+        print(KK.Tiles[i][j].Zone.ZoneType)
         print(KK.Tiles[i][j].Coordinates)
         print(KK.Tiles[i][j].ComponentsDict)
         

@@ -20,9 +20,9 @@ class Tile:
         #self.EnergyValue = -1
         if zone.ZoneType == 'Prairie'  :
             self.createPrairieTile()
-        if zone == 'Mountain' :
+        if zone.ZoneType == 'Mountain' :
             self.createMountainTile()
-        if zone == 'Ocean'  :
+        if zone.ZoneType == 'Ocean'  :
              self.createOceanTile()
         zone.TileList.append(self)
 
