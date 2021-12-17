@@ -4,7 +4,7 @@ import map
 
 
 def worldController():
-    i=10
+    i=30
     while (i>0):
         
         value=''
@@ -14,7 +14,7 @@ def worldController():
             value.resolveIteration(tempMap)
         i-=1
         
-        globals.worldMap.PrintMap()
+        #globals.worldMap.PrintMap()
         print('---------------------------------NEW CYCLE-------------------------------------------------')
         #####################################    
         #aca meter el codigo de ejecucion de la cola de fenomenos.

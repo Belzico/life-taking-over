@@ -74,10 +74,14 @@ class Individuo():
         #por ahora solo nos movemos random
         if True:
             tup=self.moveRandom(map)
+            
+        previusX=self.xMundo
+        previusY=self.yMundo
         self.xMundo+=tup[0]
-        self.yMundo+=tup[0]
+        self.yMundo+=tup[1]
         
-        globals.worldMap.udpdateIndividual(self,self.xMundo,self.yMundo)
+        print("me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
+        globals.worldMap.udpdateIndividual(self,previusX,previusY)
     
     #en este metodo se decidira lo que hara el individuos 
     def resolveIteration(self,map):
