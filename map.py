@@ -45,4 +45,11 @@ class Map:
                 self.Tiles[row][col] = tempTile
                 if tileCount == self.Zones[zoneCount].TileCount:
                     zoneCount +=1
+                    
+    def MoveCreature (self, Individuo , Coordinates):
+        destinyTile = self.Tiles[Coordinates[0]][Coordinates[1]]
+        actualTile = self.Tiles[Individuo.Coordinates[0]][Individuo.Coordinates[1]]
+        actualTile.CreatureList.remove(Individuo)
+        Individuo.Coordinates = Coordinates
+        destinyTile.CreatureList.append(Individuo)
         
