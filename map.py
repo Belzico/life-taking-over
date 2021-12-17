@@ -68,6 +68,17 @@ class Map:
         Individuo.Coordinates = Coordinates
         destinyTile.CreatureList.append(Individuo)
         
+    def PrintMap (self):
+        for i in range(self.SizeX):
+            for j in range(self.SizeY):
+                print ('-----------------------------------------------------------------------')
+                print(self.Tiles[i][j].Coordinates)
+                print(self.Tiles[i][j].Zone.ZoneType)
+                print(self.Tiles[i][j].ComponentsDict)
+                print(self.Tiles[i][j].CreatureList)
+                print ('-----------------------------------------------------------------------')
+                
+        
     def movementWithBoundries (self,Individuo, valor_de_percepcion):
         perceptionValue = int(valor_de_percepcion)
      
@@ -101,4 +112,7 @@ class Map:
             countX+=1
      
             return perceptionList
+        
+        
+        
      
