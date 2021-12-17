@@ -21,11 +21,12 @@ def worldController():
 
     
 def main():
+    globals.worldMap=map.Map(5,5,4)
     globals.allSpecies["Alfie"]=especies.Alfie()
     current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))
-    globals.worldMap=map.Map(5,5,4)
+    
     worldController()
     
     

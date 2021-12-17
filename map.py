@@ -60,7 +60,7 @@ class Map:
                     
     def MoveCreature (self, Individuo , Coordinates):
         destinyTile = self.Tiles[Coordinates[0]][Coordinates[1]]
-        actualTile = self.Tiles[Individuo.Coordinates[0]][Individuo.Coordinates[1]]
+        actualTile = self.Tiles[Individuo.xMundo][Individuo.yMundo]
         actualTile.CreatureList.remove(Individuo)
         Individuo.Coordinates = Coordinates
         destinyTile.CreatureList.append(Individuo)
