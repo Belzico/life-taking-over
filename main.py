@@ -60,5 +60,10 @@ def main():
     print(len(current.individuos))
 
     
-    
-main()
+KK = map.Map(5,5,2)
+
+for i in range(KK.SizeX):
+    for j in range(KK.SizeY):
+        print(KK.Tiles[i][j].Coordinates)
+        print(KK.Tiles[i][j].ComponentsDict)
+        

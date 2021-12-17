@@ -1,5 +1,6 @@
 import zones
 import misc
+import globals
 import random
 import tiles
 import especies
@@ -13,7 +14,7 @@ class Map:
         self.SizeY = sizeY
         self.ZoneCount = amount_of_zones
         self.Tiles = []
-        self.Zones = {}
+        self.Zones = []
         self.CreateNotSoRandmo()
 
 
@@ -27,17 +28,25 @@ class Map:
         zoneCount= self.ZoneCount
         extraTiles = 0
         while zoneCount > 0:
-            zoneIndex = random.randint(0, len(misc.ZoneList)-1)
+            zoneIndex = random.randint(0, len(globals.ZoneList)-1)
             if zoneCount == 1:
                 extraTiles = self.TilesCount % self.ZoneCount
             tiles_per_zone = self.TilesCount/ self.ZoneCount + extraTiles
-            tempZone = zones.Zone(tiles_per_zone, misc.ZoneList[zoneIndex])
+            tempZone = zones.Zone(tiles_per_zone, globals.ZoneList[zoneIndex])
             self.Zones.append(tempZone)
             zoneCount = zoneCount - 1
 
     def PopulateNotSoRandom(self):
         tileCount = 0
         zoneCount = 0
+        
+        for i in range(self.SizeX):
+            new = []
+            for j in range(self.SizeY):
+                new.append('foo')
+            self.Tiles.append(new)
+        
+        
         for row in range (self.SizeX):
             for col in range (self.SizeY):
                 tileCount += 1
