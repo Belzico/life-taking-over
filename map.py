@@ -16,6 +16,9 @@ class Map:
         self.Zones = {}
         self.CreateNotSoRandmo()
 
+    #actualiza en el mundo
+    def udpdateIndividual(self,tempInd,x,y):
+        pass    
 
     def CreateNotSoRandmo(self):
 
@@ -45,4 +48,49 @@ class Map:
                 self.Tiles[row][col] = tempTile
                 if tileCount == self.Zones[zoneCount].TileCount:
                     zoneCount +=1
+                    
+                    
+    def movementWithBoundries (Individuo, valor_de_percepcion, mapa):
+        perceptionValue = int(valor_de_percepcion)
+     
+    #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+        actRow = Individuo.xMundo  - perceptionValue
+        actCol = Individuo.yMundo - perceptionValue
+        perceptionList = []
+        countX=0
+        countY=0
+     
+        for actRow in range(0, Individuo.xMundo  + 1 + perceptionValue):
+            for actCol in range(0, Individuo.yMundo  + 1 + perceptionValue):
+                if not(0<=actRow<= mapa.SizeX) and not(0<=actCol<=mapa.SizeY):
+                    perceptionList[countX][countY]= ""
+                else:
+                    perceptionList[countX][countY]= mapa.Tiles[actRow][actCol]
+            
+                countY+=1
         
+        
+            countX+=1
+     
+        return perceptionList
+    
+    def movmentWithoutBoundries (Individuo, valor_de_percepcion, mapa):
+        perceptionValue = int(valor_de_percepcion)
+    
+        actRow = Individuo.xMundo  - perceptionValue
+        actCol = Individuo.yMundo - perceptionValue
+        perceptionList = []
+        countX=0
+        countY=0
+        for actRow in range(0, Individuo.xMundo  + 1 + perceptionValue):
+            for actCol in range(0, Individuo.yMundo  + 1 + perceptionValue):
+                if not(0<=actRow<= mapa.SizeX) and not(0<=actCol<=mapa.SizeY):
+                    perceptionList[countX][countY]= ""
+                else:
+                    perceptionList[countX][countY]= mapa.Tiles[actRow][actCol]
+            
+                countY+=1
+                
+            countX+=1
+        
+        return perceptionList

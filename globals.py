@@ -1,4 +1,5 @@
 import sys
+import queue
 
 #Todas las zonas con las que trabaja la simulación
 ZoneList = {'Prairie', 'Mountain', 'Ocean'}
@@ -53,6 +54,14 @@ OceanGenerationList = {'Solar Light' : InfiniteRange ,
 
 
 
-
+#diccionario de especies
 allSpecies ={}
+#mapa
+worldMap=""
+#lista de todos individuos
+worldIndividuals={}
+
+#cola de fenomenos
+worldFenomenos=queue.PriorityQueue()
+
 
