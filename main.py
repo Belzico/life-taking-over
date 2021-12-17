@@ -3,70 +3,37 @@ import globals
 import map
 
 
-
-def movementWithBoundries (Individuo, valor_de_percepcion, mapa):
-     perceptionValue = int(valor_de_percepcion)
-     
-     #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
-     actRow = Individuo.xMundo  - perceptionValue
-     actCol = Individuo.yMundo - perceptionValue
-     perceptionList = []
-     countX=0
-     countY=0
-     
-     for actRow in range(0, Individuo.xMundo  + 1 + perceptionValue):
-        for actCol in range(0, Individuo.yMundo  + 1 + perceptionValue):
-            if not(0<=actRow<= mapa.SizeX) and not(0<=actCol<=mapa.SizeY):
-                perceptionList[countX][countY]= ""
-            else:
-                perceptionList[countX][countY]= mapa.Tiles[actRow][actCol]
+def worldController():
+    i=30
+    while (i>0):
+        
+        value=''
+        for val in globals.worldIndividuals:
+            value=globals.worldIndividuals[val]
+            tempMap=globals.worldMap.movementWithBoundries(value,1) 
+            value.resolveIteration(tempMap)
+        i-=1
+        
+        #globals.worldMap.PrintMap()
+        print('---------------------------------NEW CYCLE-------------------------------------------------')
+        #####################################    
+        #aca meter el codigo de ejecucion de la cola de fenomenos.
+        #####################################
             
-            countY+=1
-        
-        
-     countX+=1
-     
-     return perceptionList
-     
-     
-def movmentWithoutBoundries (Individuo, valor_de_percepcion, mapa):
-    perceptionValue = int(valor_de_percepcion)
-    
-    actRow = Individuo.xMundo  - perceptionValue
-    actCol = Individuo.yMundo - perceptionValue
-    perceptionList = []
-    countX=0
-    countY=0
-    for actRow in range(0, Individuo.xMundo  + 1 + perceptionValue):
-        for actCol in range(0, Individuo.yMundo  + 1 + perceptionValue):
-            if not(0<=actRow<= mapa.SizeX) and not(0<=actCol<=mapa.SizeY):
-                perceptionList[countX][countY]= ""
-            else:
-                perceptionList[countX][countY]= mapa.Tiles[actRow][actCol]
-            
-            countY+=1
-        
-        
-    countX+=1
-     
-    return perceptionList
 
 
 
-def moveCreature (Individuo , Coordinates , Mapa):
-    destinyTile = Mapa.Tiles[Coordinates[0]][Coordinates[1]]
-    actualTile = Mapa.Tiles[Individuo.Coordinates[0]][Individuo.Coordinates[1]]
-    actualTile.CreatureList.remove(Individuo)
-    Individuo.Coordinates = Coordinates
-    destinyTile.CreatureList.append(Individuo)
-    
     
 def main():
+    globals.worldMap=map.Map(5,5,4)
     globals.allSpecies["Alfie"]=especies.Alfie()
     current=globals.allSpecies["Alfie"]
-    current.individuos["Alfie1"].breed()
-    print(len(current.individuos))
-
+    #current.individuos["Alfie1"].breed()
+    #print(len(current.individuos))
+    
+    worldController()
+    
     
     
 main()
+    
