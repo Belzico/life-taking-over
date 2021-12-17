@@ -62,11 +62,10 @@ class Map:
                     zoneCount +=1
                     
     def MoveCreature (self, Individuo , Coordinates):
-        destinyTile = self.Tiles[Coordinates[0]][Coordinates[1]]
+        oldTile = self.Tiles[Coordinates[0]][Coordinates[1]]
         actualTile = self.Tiles[Individuo.xMundo][Individuo.yMundo]
-        actualTile.CreatureList.remove(Individuo)
-        Individuo.Coordinates = Coordinates
-        destinyTile.CreatureList.append(Individuo)
+        oldTile.CreatureList.remove(Individuo)
+        actualTile.CreatureList.append(Individuo)
         
         
     def PrintMap (self):
