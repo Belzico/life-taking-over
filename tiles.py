@@ -15,7 +15,7 @@ class Tile:
     def __init__(self,x,y,zone):
         self.Coordinates =  (x,y)
         self.Zone = zone
-        self.CreatureList = {}
+        self.CreatureList = []
         self.ComponentsDict = {}
         #self.EnergyValue = -1
         if zone.ZoneType == 'Prairie'  :
