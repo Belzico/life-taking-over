@@ -13,6 +13,9 @@ def worldController():
             tempMap=globals.worldMap.movementWithBoundries(value,1) 
             value.resolveIteration(tempMap)
         i-=1
+        
+        globals.worldMap.PrintMap()
+        print('---------------------------------NEW CYCLE-----------------------------------------------------------------')
         #####################################    
         #aca meter el codigo de ejecucion de la cola de fenomenos.
         #####################################
@@ -34,11 +37,5 @@ def main():
     
 main()
     
-KK = map.Map(6,6,2)
 
-for i in range(globals.worldMap.SizeX):
-    for j in range(globals.worldMap.SizeY):
-        print(KK.Tiles[i][j].Zone.ZoneType)
-        print(KK.Tiles[i][j].Coordinates)
-        print(KK.Tiles[i][j].ComponentsDict)
         
