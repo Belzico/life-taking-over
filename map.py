@@ -26,7 +26,10 @@ class Map:
         self.CreateZonesNotSoRandom()
         self.PopulateNotSoRandom()
 
-
+    
+    def IsBorn(self, individuo):
+        self.Tiles[int(individuo.xMundo)][int(individuo.yMundo)].CreatureList.append(individuo)
+    
     def CreateZonesNotSoRandom(self):
         zoneCount= self.ZoneCount
         extraTiles = 0
