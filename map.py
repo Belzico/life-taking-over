@@ -113,5 +113,5 @@ class Map:
             actRow+=1
             countX+=1
      
-            return perceptionList
+        return perceptionList
      
