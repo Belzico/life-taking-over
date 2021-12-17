@@ -73,9 +73,9 @@ class Map:
         actCol = Individuo.yMundo - perceptionValue
         perceptionList = []
         ##LLenando perceptionlist
-        for i in range(0, Individuo.xMundo  + 1 + perceptionValue):
+        for i in range(0, 1  + 2(perceptionValue)):
             newList = []
-            for j in range(0, Individuo.yMundo  + 1 + perceptionValue):
+            for j in range(0,  1  + 2(perceptionValue)):
                 newList.append("")
             perceptionList.append(newList)
         
@@ -83,16 +83,18 @@ class Map:
         countX=0
         countY=0
      
-        for actRow in range(0, Individuo.xMundo  + 1 + perceptionValue):
-            for actCol in range(0, Individuo.yMundo  + 1 + perceptionValue):
-                if not(0<=actRow<= self.SizeX) and not(0<=actCol<=self.SizeY):
+        while actRow <= Individuo.xMundo  + perceptionValue:
+            actCol = Individuo.yMundo - perceptionValue
+            countY=0
+            while actCol <= Individuo.yMundo + perceptionValue:
+                if not(0<=actRow<= self.SizeX) or not(0<=actCol<=self.SizeY):
                     perceptionList[countX][countY]= ""
                 else:
                     perceptionList[countX][countY]= self.Tiles[actRow][actCol]
             
                 countY+=1
-        
-        
+                actCol +=1
+            actRow+=1
             countX+=1
      
             return perceptionList
