@@ -19,7 +19,7 @@ class Map:
 
     #actualiza en el mundo
     def udpdateIndividual(self,tempInd,x,y):
-        pass    
+        self.MoveCreature(tempInd,(x,y))    
 
     def CreateNotSoRandmo(self):
 
@@ -65,3 +65,35 @@ class Map:
         Individuo.Coordinates = Coordinates
         destinyTile.CreatureList.append(Individuo)
         
+    def movementWithBoundries (self,Individuo, valor_de_percepcion):
+        perceptionValue = int(valor_de_percepcion)
+     
+        #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+        actRow = Individuo.xMundo  - perceptionValue
+        actCol = Individuo.yMundo - perceptionValue
+        perceptionList = []
+        ##LLenando perceptionlist
+        for i in range(0, Individuo.xMundo  + 1 + perceptionValue):
+            newList = []
+            for j in range(0, Individuo.yMundo  + 1 + perceptionValue):
+                newList.append("")
+            perceptionList.append(newList)
+        
+     
+        countX=0
+        countY=0
+     
+        for actRow in range(0, Individuo.xMundo  + 1 + perceptionValue):
+            for actCol in range(0, Individuo.yMundo  + 1 + perceptionValue):
+                if not(0<=actRow<= self.SizeX) and not(0<=actCol<=self.SizeY):
+                    perceptionList[countX][countY]= ""
+                else:
+                    perceptionList[countX][countY]= self.Tiles[actRow][actCol]
+            
+                countY+=1
+        
+        
+            countX+=1
+     
+            return perceptionList
+     

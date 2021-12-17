@@ -28,7 +28,7 @@ class Especies():
     
 
 class Individuo():
-    def __init__(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad):
+    def __init__(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name):
         #coordenadas
         self.xMundo=xMundo
         self.yMundo=yMundo
@@ -44,8 +44,12 @@ class Individuo():
         #la muerte se debera tratar de forma lazy, x cada iteracion no hay q actualizar, 
         #solo en kso de que sea necesario
         self.edad=edad
+        #nombre del individuos
+        self.name=name    
+    
+
         
-        globals.individuos[self.name]=self
+        globals.worldIndividuals[self.name]=self
      
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
     def breed(self):
@@ -68,7 +72,7 @@ class Individuo():
         tup=()
         #por ahora solo nos movemos random
         if True:
-            tup=self.moveRandom()
+            tup=self.moveRandom(map)
         self.xMundo+=tup[0]
         self.yMundo+=tup[0]
         
@@ -89,14 +93,14 @@ class Individuo():
                 self.move(map)
                 return
             
-    def moveRandom(map):
+    def moveRandom(seflf,myMap):
         #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
-        myPosition=list(map).count/2
+        myPosition=int(len(list(myMap))/2)
         i=10
         while i>0:
-            xRandom=int.random(-1,2)
-            yRandom=int.random(-1,2)
-            if map[xRandom+myPosition][yRandom+myPosition]!="":
+            xRandom=random.randint(-1,1)
+            yRandom=random.randint(-1,1)
+            if myMap[xRandom+myPosition][yRandom+myPosition]!="":
                 break
             i-=1
             #caso donde no se mueve
@@ -162,10 +166,10 @@ class Alfie():
     def listaIndividuosGenerator():
         individuals={}
         #empezaran en las coordenadas 0,0,0,0
-        individuals["Alfie0"]=Individuo(0,0,0,0,0,0,"Alfie",3)
-        individuals["Alfie1"]=Individuo(0,0,0,0,0,0,"Alfie",3)
-        individuals["Alfie2"]=Individuo(0,0,0,0,0,0,"Alfie",3)
-        individuals["Alfie3"]=Individuo(0,0,0,0,0,0,"Alfie",3)
+        individuals["Alfie0"]=Individuo(0,0,0,0,0,0,"Alfie",3,0)
+        individuals["Alfie1"]=Individuo(0,0,0,0,0,0,"Alfie",3,1)
+        individuals["Alfie2"]=Individuo(0,0,0,0,0,0,"Alfie",3,2)
+        individuals["Alfie3"]=Individuo(0,0,0,0,0,0,"Alfie",3,3)
         return individuals
     
     
