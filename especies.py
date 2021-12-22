@@ -10,29 +10,41 @@ class Especies():
     
     
     
-    def __init__(self,basicInfo,naturalDefense,resistenciaElemental,individuos):
-        #datos como el tiempo de vida, tipo de alimentacion...etc
-        self.basicInfo={}
-        #datos como partes de veneno, piel dura, colmillos afilados...etc
-        #esto sera utilizado en lucha entre especies
-        self.naturalDefense={}
-        #datos para saber que tan resistente a algun elemento es...etc
-        self.resistenciaElementa={}
-        #lisa de tidos los individuos de la especie
-        self.individuos={}
+    def __init__(self,basicInfo,naturalDefense,resistenciaElemental,individuos,x=None,y=None):
+        if "name" in basicInfo:
+            pass
+        else:
+            
+            #datos como el tiempo de vida, tipo de alimentacion...etc
+            self.basicInfo={}
+            #datos como partes de veneno, piel dura, colmillos afilados...etc
+            #esto sera utilizado en lucha entre especies
+            self.naturalDefense={}
+            #datos para saber que tan resistente a algun elemento es...etc
+            self.resistenciaElementa={}
+            #lisa de tidos los individuos de la especie
+            self.individuos={}
+            #lista de elementos de donde puede sacar parte de la energix
+            self.alimentos={}
+        
+            #llamada al generador
+            self.especieGenerator(x,y,individuos)
 
     #aca generaremos especies siguiendo algunos criterios pero de forma aleatoria
-    def especieGenerator(self):
+    def especieGenerator(self,X,Y,size):
         self.basicInfo=Especies.basicInfoGenerator()
-        self.individuos=Especies.listaIndividuosGenerator(self.basicInfo["Cantidad_de_miembros"],self.basicInfo["name"],self.basicInfo["Cantidad_de_energia_almacenable"])
+        
+        self.individuos=Especies.listaIndividuosGenerator(self.basicInfo["Cantidad_de_miembros"],self.basicInfo["name"])
         self.naturalDefense=Especies.naturalDefenseGenerator()
         self.resistenciaElemental=Especies.resistenciasElementalesGenerator()
     
-    def listaIndividuosGenerator(miembros,name,energy):
+    def listaIndividuosGenerator(miembros,name,energy,vida):
         individuals={}
         i=0
+        
         while(i<miembros):
-            individuals[""+name+""+i+""]=Individuo(0,0,0,0,0,0,name,energy)
+            #(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name,vida):
+            individuals[""+name+""+i+""]=Individuo(0,0,0,0,0,0,name,energy,i,vida)
             i+=1
         #empezaran en las coordenadas 0,0,0,0
         
@@ -65,6 +77,8 @@ class Especies():
         basicInfo["Cantidad_de_energia_necesaria"]=temporalEnergy
         #cantidad de energia que pueden almacenar maxima
         basicInfo["Cantidad_de_energia_almacenable"]=""+int(temporalEnergy)+random.randint(1,4)+""
+        #cantidad de energia almacenada a partir de la cual le da hambre
+        basicInfo["Nivel_de_Hambre"]=3
         #cantidad de casillas que puede recorrer en un dia en el agua
         basicInfo["Velocidad_agua"]=""+random.randint(0,1)+""
         #cantidad de casillas que puede recorrer en un dia en volando
@@ -79,8 +93,31 @@ class Especies():
     
     def naturalDefenseGenerator():
         naturalDefense={}
+        #vida maxima del individuo
+        naturalDefense["Vida"]=""+random.randint(5,11)+""
         #la percepcion no es mas que cuantas casillas sin contar en la que esta es capaz de ver/oir...etc el individuo
-        naturalDefense["Percepcion_de_mundo"]="0"
+        naturalDefense["Percepcion_de_mundo"]="1"
+        #la inteligencia es un factor que puede influir en varios campos
+        naturalDefense["Inteligencia"]="0"
+        #factor que indica que tan sigiloso puede llegar a ser un individuo en un combate
+        naturalDefense["Sigilo"]=0
+        #armadura que indica que tan dura es la piel del individuo
+        armor=random.randint(1,4)
+        naturalDefense["Armadura"]=""+armor+""
+        #armadura en zona debil ej: la parte de abajo de los cocodrilos es suave contrario a la espalda
+        naturalDefense["Armadura_debil"]=str(int(armor/random.randint(0,armor)))
+        #porciento de armadura fuerte del cuerpo
+        naturalDefense["Armadura_debil_porciento"]=""+random.randint(0,51) +""
+        #probabilidad de aumentar el golpe critico en la zona debil
+        naturalDefense["Crit_chance_increase"]="0"
+        #probabilidad de aplicar daño de sangrado al enemigo
+        naturalDefense["Bleed_chance"]="0"
+        #daño por sangrado
+        naturalDefense["Bleed_damage"]="1"
+        #probabilidad de ralentizar al objetivo permanentemente mientras dure el combate, se acumula
+        naturalDefense["Slow_chance"]="0"
+        #velocidad reducida
+        naturalDefense["Slow_done"]="1"
         return naturalDefense
         
     def resistenciasElementalesGenerator():
@@ -90,7 +127,7 @@ class Especies():
 
 
 class Individuo():
-    def __init__(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name):
+    def __init__(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name,vida):
         #coordenadas
         self.xMundo=xMundo
         self.yMundo=yMundo
@@ -107,7 +144,8 @@ class Individuo():
         #solo en kso de que sea necesario
         self.edad=edad
         #nombre del individuos
-        self.name=name    
+        self.name=name
+        self.vida=vida    
     
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
@@ -129,6 +167,8 @@ class Individuo():
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
     
+                                     #move
+    #############################################################################
     #movimiento del individuo
     def move(self,map):
         #aca se valorara segun que criterio moverse
@@ -145,21 +185,6 @@ class Individuo():
         print("me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
         globals.worldMap.udpdateIndividual(self,previusX,previusY)
     
-    #en este metodo se decidira lo que hara el individuos 
-    def resolveIteration(self,map):
-        mySpecie=globals.allSpecies[self.especie]
-        #cosumiendo energia
-        self.saciedad=str(int(self.saciedad)-int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]))
-        #revisando el hambre de la especie
-        hambre=int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]) 
-        if int(self.saciedad)<=int(hambre):
-            #caso especial de Alfie
-            if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
-                self.saciedad=str(int(self.saciedad)+1)
-                
-                self.move(map)
-                return
-            
     def moveRandom(seflf,myMap):
         #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
         myPosition=int(len(list(myMap))/2)
@@ -175,6 +200,27 @@ class Individuo():
                 xRandom=0
                 yRandom=0
         return (xRandom,yRandom)  
+
+
+###########################################################################################
+
+
+    #en este metodo se decidira lo que hara el individuos 
+    def resolveIteration(self,map):
+        mySpecie=globals.allSpecies[self.especie]
+        #cosumiendo energia
+        self.saciedad=str(int(self.saciedad)-int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]))
+        #revisando el hambre de la especie
+        hambre=int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]) 
+        if int(self.saciedad)<=int(hambre):
+            #caso especial de Alfie
+            if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
+                self.saciedad=str(int(self.saciedad)+1)
+                
+                self.move(map)
+                return
+            
+
         
         
 #especie inicial previa a la generacion automatica de especies
@@ -233,10 +279,10 @@ class Alfie():
     def listaIndividuosGenerator():
         individuals={}
         #empezaran en las coordenadas 0,0,0,0
-        individuals["Alfie0"]=Individuo(0,0,0,0,0,0,"Alfie",3,0)
-        individuals["Alfie1"]=Individuo(0,0,0,0,0,0,"Alfie",3,1)
-        individuals["Alfie2"]=Individuo(0,0,0,0,0,0,"Alfie",3,2)
-        individuals["Alfie3"]=Individuo(0,0,0,0,0,0,"Alfie",3,3)
+        individuals["Alfie0"]=Individuo(0,0,0,0,0,0,"Alfie",3,0,5)
+        individuals["Alfie1"]=Individuo(0,0,0,0,0,0,"Alfie",3,1,5)
+        individuals["Alfie2"]=Individuo(0,0,0,0,0,0,"Alfie",3,2,5)
+        individuals["Alfie3"]=Individuo(0,0,0,0,0,0,"Alfie",3,3,5)
         return individuals
     
     
