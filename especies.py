@@ -89,9 +89,8 @@ class Especies():
     
 
 
-
 class Individuo():
-    def __init__(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad):
+    def __init__(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name):
         #coordenadas
         self.xMundo=xMundo
         self.yMundo=yMundo
@@ -107,6 +106,13 @@ class Individuo():
         #la muerte se debera tratar de forma lazy, x cada iteracion no hay q actualizar, 
         #solo en kso de que sea necesario
         self.edad=edad
+        #nombre del individuos
+        self.name=name    
+    
+        #agregando aa la casilla
+        globals.worldMap.IsBorn(self)
+        #agregando a la lista de individuos global    
+        globals.worldIndividuals[self.name]=self
      
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
     def breed(self):
@@ -122,9 +128,54 @@ class Individuo():
         newName=self.especie+str(lastNumber+1)
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
+    
+    #movimiento del individuo
+    def move(self,map):
+        #aca se valorara segun que criterio moverse
+        tup=()
+        #por ahora solo nos movemos random
+        if True:
+            tup=self.moveRandom(map)
+            
+        previusX=self.xMundo
+        previusY=self.yMundo
+        self.xMundo+=tup[0]
+        self.yMundo+=tup[1]
         
-    def move(self):
-        pass
+        print("me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
+        globals.worldMap.udpdateIndividual(self,previusX,previusY)
+    
+    #en este metodo se decidira lo que hara el individuos 
+    def resolveIteration(self,map):
+        mySpecie=globals.allSpecies[self.especie]
+        #cosumiendo energia
+        self.saciedad=str(int(self.saciedad)-int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]))
+        #revisando el hambre de la especie
+        hambre=int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]) 
+        if int(self.saciedad)<=int(hambre):
+            #caso especial de Alfie
+            if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
+                self.saciedad=str(int(self.saciedad)+1)
+                
+                self.move(map)
+                return
+            
+    def moveRandom(seflf,myMap):
+        #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
+        myPosition=int(len(list(myMap))/2)
+        i=10
+        while i>0:
+            xRandom=random.randint(-1,1)
+            yRandom=random.randint(-1,1)
+            if myMap[xRandom+myPosition][yRandom+myPosition]!="":
+                break
+            i-=1
+            #caso donde no se mueve
+            if i==0:
+                xRandom=0
+                yRandom=0
+        return (xRandom,yRandom)  
+        
         
 #especie inicial previa a la generacion automatica de especies
 class Alfie():
@@ -133,6 +184,8 @@ class Alfie():
         self.naturalDefense=Alfie.naturalDefenseGenerator()
         self.resistenciaElemental=Alfie.resistenciasElementalesGenerator()
         self.individuos=Alfie.listaIndividuosGenerator()
+        
+        
       
     def basicInfoGenerator():
         basicInfo={}
@@ -154,7 +207,9 @@ class Alfie():
         #cantidad de energia diaria requerida por individuo
         basicInfo["Cantidad_de_energia_necesaria"]="1"
         #cantidad de energia que pueden almacenar maxima
-        basicInfo["Cantidad_de_energia_almacenable"]="3"
+        basicInfo["Cantidad_de_energia_almacenable"]="5"
+        #cantidad de energia almacenada a partir de la cual le da hambre
+        basicInfo["Nivel_de_Hambre"]=3
         #cantidad de casillas que puede recorrer en un dia en el agua
         basicInfo["Velocidad_agua"]="0.5"
         #cantidad de casillas que puede recorrer en un dia en volando
@@ -178,10 +233,10 @@ class Alfie():
     def listaIndividuosGenerator():
         individuals={}
         #empezaran en las coordenadas 0,0,0,0
-        individuals["Alfie0"]=Individuo(0,0,0,0,0,0,"Alfie",3)
-        individuals["Alfie1"]=Individuo(0,0,0,0,0,0,"Alfie",3)
-        individuals["Alfie2"]=Individuo(0,0,0,0,0,0,"Alfie",3)
-        individuals["Alfie3"]=Individuo(0,0,0,0,0,0,"Alfie",3)
+        individuals["Alfie0"]=Individuo(0,0,0,0,0,0,"Alfie",3,0)
+        individuals["Alfie1"]=Individuo(0,0,0,0,0,0,"Alfie",3,1)
+        individuals["Alfie2"]=Individuo(0,0,0,0,0,0,"Alfie",3,2)
+        individuals["Alfie3"]=Individuo(0,0,0,0,0,0,"Alfie",3,3)
         return individuals
     
     
