@@ -21,6 +21,8 @@ class Map:
     def udpdateIndividual(self,tempInd,x,y):
         self.MoveCreature(tempInd,(x,y))    
 
+
+
     def CreateNotSoRandmo(self):
 
         self.CreateZonesNotSoRandom()
@@ -29,6 +31,7 @@ class Map:
     
     def IsBorn(self, individuo):
         self.Tiles[int(individuo.xMundo)][int(individuo.yMundo)].CreatureList.append(individuo)
+        
     
     def CreateZonesNotSoRandom(self):
         zoneCount= self.ZoneCount
