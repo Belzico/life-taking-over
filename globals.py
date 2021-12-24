@@ -56,6 +56,7 @@ OceanGenerationList = {'Solar Light' : InfiniteRange ,
 
 #diccionario de especies
 allSpecies ={}
+lastNameSpecie=0
 #mapa
 worldMap=""
 #lista de todos individuos
