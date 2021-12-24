@@ -10,8 +10,11 @@ class Especies():
     
     
     
-    def __init__(self,individuos,x,y):
-    
+    def __init__(self,individuos,x,y,evolve=None):
+        #para ver si se cae en el caso de la evolucion donde se reciben todos los parametros en un dic
+        if evolve!=None:
+            self.evolve(evolve)
+            return
             
         #datos como el tiempo de vida, tipo de alimentacion...etc
         self.basicInfo={}
@@ -19,7 +22,7 @@ class Especies():
         #esto sera utilizado en lucha entre especies
         self.naturalDefense={}
         #datos para saber que tan resistente a algun elemento es...etc
-        self.resistenciaElementa={}
+        self.resistenciaElemental={}
         #lisa de tidos los individuos de la especie
         self.individuos={}
         #lista de elementos de donde puede sacar parte de la energix
@@ -34,6 +37,8 @@ class Especies():
 
         #numero del proximo individuo
         self.nextName=int(individuos)
+    
+    
         
     #aca generaremos especies siguiendo algunos criterios pero de forma aleatoria
     def especieGenerator(self,x,y,individuos):
@@ -44,7 +49,7 @@ class Especies():
         self.resistenciaElemental=Especies.resistenciasElementalesGenerator()
         self.individuos=self.listaIndividuosGenerator(x,y,individuos)
     
-    def listaIndividuosGenerator(self,x,y,miembros):
+    def listaIndividuosGenerator(self,x,y,miembros,varianzas=None):
         individuals={}
         i=0
         
@@ -52,7 +57,7 @@ class Especies():
             name=self.basicInfo["name"]
             #(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name,vida):
             creatureName=""+str(name)+""+"$"+str(i)+""
-            individuals[""+str(name)+""+"$"+str(i)+""]=Individuo(x,y,self,creatureName)
+            individuals[""+str(name)+""+"$"+str(i)+""]=Individuo(x,y,self,creatureName,varianzas)
             i+=1
         #empezaran en las coordenadas 0,0,0,0
         
@@ -73,30 +78,11 @@ class Especies():
         #sexo del indi
         temporalMiembros=str(random.randint(2,9))
         basicInfo["Cantidad_de_miembros"]=temporalMiembros
-        basicInfo["Edad_de_madurez_sexual_en_dias"]=str(random.randint(20,31))
-        basicInfo["Tiempo_de_gestacion"]=str(random.randint(20,31))
-        #sexo del individuo
-        basicInfo["Sexo"]="0"
-        #cuantos hijos por reproduccion puede consebir por reproduccion
-        basicInfo["Cantidad_de_hijos"]="1"
-        basicInfo["Tiempo_de_vida_en dias"]=str(random.randint(50,101))
+
         #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
         basicInfo["Tipo_de_alimentacion"]="entorno"
-        #cuanta energia daran al que los mate y se alimente de ellos
-        basicInfo["Cantidad_de_energia_dropeada"]=str(random.randint(1,4))
-        #cantidad de energia diaria requerida por individuo
-        temporalEnergy=str(random.randint(1,4))
-        basicInfo["Cantidad_de_energia_necesaria"]=temporalEnergy
-        #cantidad de energia que pueden almacenar maxima
-        basicInfo["Cantidad_de_energia_almacenable"]=str(int(temporalEnergy)+random.randint(1,4))
-        #cantidad de energia almacenada a partir de la cual le da hambre
-        basicInfo["Nivel_de_Hambre"]=3
-        #cantidad de casillas que puede recorrer en un dia en el agua
-        basicInfo["Velocidad_agua"]=str(random.randint(0,1))
-        #cantidad de casillas que puede recorrer en un dia en volando
-        basicInfo["Velocidad_agua"]=str(random.randint(0,1))
-        #cantidad de casillas que puede recorrer en un dia en la tierra
-        basicInfo["Velocidad_agua"]=str(random.randint(0,1))
+        #sexo del individuo
+        basicInfo["Sexo"]="0"
         #el ultimo numero para nombrar al siguiente individuo
         basicInfo["Ultimo_numero"]=str(temporalMiembros)
         #generamos los individuos
@@ -130,16 +116,68 @@ class Especies():
         naturalDefense["Slow_chance"]="0"
         #velocidad reducida
         naturalDefense["Slow_done"]="1"
+        #cantidad de casillas que puede recorrer en un dia en el agua
+        naturalDefense["Velocidad_agua"]=str(random.randint(0,1))
+        #cantidad de casillas que puede recorrer en un dia en volando
+        naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
+        #cantidad de casillas que puede recorrer en un dia en la tierra
+        naturalDefense["Velocidad_tierra"]=str(random.randint(0,1))
+        
+        naturalDefense["Edad_de_madurez_sexual_en_dias"]=str(random.randint(20,31))
+        naturalDefense["Tiempo_de_gestacion"]=str(random.randint(20,31))
+        
+        #cuantos hijos por reproduccion puede consebir por reproduccion
+        naturalDefense["Cantidad_de_hijos"]="1"
+        naturalDefense["Tiempo_de_vida_en dias"]=str(random.randint(50,101))
+       
+        #cuanta energia daran al que los mate y se alimente de ellos
+        naturalDefense["Cantidad_de_energia_dropeada"]=str(random.randint(1,4))
+        #cantidad de energia diaria requerida por individuo
+        temporalEnergy=str(random.randint(1,4))
+        naturalDefense["Cantidad_de_energia_necesaria"]=temporalEnergy
+        #cantidad de energia que pueden almacenar maxima
+        naturalDefense["Cantidad_de_energia_almacenable"]=str(int(temporalEnergy)+random.randint(1,4))
+        #cantidad de energia almacenada a partir de la cual le da hambre
+        naturalDefense["Nivel_de_Hambre"]=3
+        
         return naturalDefense
         
     def resistenciasElementalesGenerator():
         resistenciasElementales={}
         return resistenciasElementales
     
+    #metodo para evolucionar una especie
+    def evolve(self,paramsDic):
+        #se reciben todos los parametros en el dic 
+        self.basicInfo=paramsDic["basicInfo"]
+        self.naturalDefense=paramsDic["naturalDefense"]
+        self.resistenciaElemental=paramsDic["resistenciaElemental"]
+        self.alimentos=paramsDic["alimentos"]
+        self.nextName=paramsDic["individuos"]
+        
+        #chance de evolucionar a pluricelular
+        if self.basicInfo["Tipo_de_celula"]=="unicelular":
+            tempRandom=random.randint(0,101)
+            if tempRandom>60:
+                self.basicInfo["Tipo_de_celula"]=="pluricelular"
+        
+        #chance de evolucionar a reproduccion sexual
+        if self.basicInfo["Tipo_de_reproduccion"]=="asexual":
+            tempRandom=random.randint(0,101)
+            if tempRandom>80:
+                self.basicInfo["Tipo_de_celula"]=="sexual"        
+        
+        #varianza de las especies
+        varianza=paramsDic["Varianzas"]
+        self.individuos=self.listaIndividuosGenerator(paramsDic["x"] ,paramsDic["y"],paramsDic["individuos"],varianza)
+        
+        
+        
 
 
 class Individuo():
-    def __init__(self,xMundo,yMundo,especie,name):
+    def __init__(self,xMundo,yMundo,especie,name,varianza=None):
+        
         #coordenadas
         self.xMundo=xMundo
         self.yMundo=yMundo
@@ -157,17 +195,142 @@ class Individuo():
         #nombre del individuos
         self.name=name
         self.vida=especie.naturalDefense["Vida"]    
-    
+
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
         #agregando a la lista de individuos global    
         globals.worldIndividuals[self.name]=self
-     
+        
+        #lista con las defensas naturales del individuo simulando que no todos son iwales
+        self.naturalDefenseInd={}
+        self.naturalDefenseGenerator(especie.naturalDefense,varianza)
+    
+    
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
+    def naturalDefenseGeneratorind(self,defences,varianza):
+        
+
+        self.naturalDefenseInd["Vida"]=int(defences["Vida"])+random.randint(-1,2)
+        self.naturalDefenseInd["Percepcion_de_mundo"]=int(defences["Percepcion_de_mundo"])+random.randint(-1,2)
+        self.naturalDefenseInd["Inteligencia"]=int(defences["Inteligencia"])+random.randint(-1,2)
+        self.naturalDefenseInd["Sigilo"]=int(defences["Sigilo"])+random.randint(-1,2)
+        self.naturalDefenseInd["Armadura"]=int(defences["Armadura"])+random.randint(-1,2)
+        self.naturalDefenseInd["Armadura_debil"]=int(defences["Armadura_debil"])+random.randint(-1,2)
+        self.naturalDefenseInd["Armadura_debil_porciento"]=int(defences["Armadura_debil_porciento"])+random.randint(-1,2)
+        self.naturalDefenseInd["Crit_chance_increase"]=int(defences["Crit_chance_increase"])+random.randint(-1,2)
+        self.naturalDefenseInd["Bleed_chance"]=int(defences["Bleed_chance"])+random.randint(-1,2)
+        self.naturalDefenseInd["Crit_chance_increase"]=int(defences["Crit_chance_increase"])+random.randint(-1,2)
+        self.naturalDefenseInd["Bleed_damage"]=int(defences["Bleed_damage"])+random.randint(-1,2)
+        self.naturalDefenseInd["Slow_chance"]=int(defences["Slow_chance"])+random.randint(-1,2)
+        self.naturalDefenseInd["Slow_done"]=int(defences["Slow_done"])+random.randint(-1,2)
+        self.naturalDefenseInd["Velocidad_agua"]=int(defences["Velocidad_agua"])+random.randint(-1,2)
+        self.naturalDefenseInd["Velocidad_aire"]=int(defences["Velocidad_aire"])+random.randint(-1,2)
+        self.naturalDefenseInd["Velocidad_tierra"]=int(defences["Velocidad_tierra"])+random.randint(-1,2)
+        self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(defences["Edad_de_madurez_sexual_en_dias"])+random.randint(-1,2)
+        self.naturalDefenseInd["Tiempo_de_gestacion"]=int(defences["Tiempo_de_gestacion"])+random.randint(-1,2)
+        self.naturalDefenseInd["Cantidad_de_hijos"]=int(defences["Cantidad_de_hijos"])+random.randint(-1,2)
+        self.naturalDefenseInd["Tiempo_de_vida_en dias"]=int(defences["Tiempo_de_vida_en dias"])+random.randint(-1,2)        
+        self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(defences["Cantidad_de_energia_dropeada"])+random.randint(-1,2)
+        self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=int(defences["Cantidad_de_energia_necesaria"])+random.randint(-1,2)
+        self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=int(defences["Cantidad_de_energia_almacenable"])+random.randint(-1,2)
+        self.naturalDefenseInd["Nivel_de_Hambre"]=int(defences["Nivel_de_Hambre"])+random.randint(-1,2)
+
+
+        if varianza!=None:
+            self.naturalDefenseInd["Vida"]=int(self.naturalDefenseInd["Vida"])+int(random.randint(varianza["Vida"],varianza["Vida"]))
+            self.naturalDefenseInd["Percepcion_de_mundo"]=int(self.naturalDefenseInd["Percepcion_de_mundo"])+int(random.randint(varianza["Percepcion_de_mundo"],varianza["Percepcion_de_mundo"]))
+            self.naturalDefenseInd["Inteligencia"]=int(self.naturalDefenseInd["Inteligencia"])+int(random.randint(varianza["Inteligencia"],varianza["Inteligencia"]))
+            self.naturalDefenseInd["Sigilo"]=int(self.naturalDefenseInd["Sigilo"])+int(random.randint(varianza["Sigilo"],varianza["Sigilo"]))
+            self.naturalDefenseInd["Armadura"]=int(self.naturalDefenseInd["Armadura"])+int(random.randint(varianza["Armadura"],varianza["Armadura"]))
+            self.naturalDefenseInd["Armadura_debil"]=int(self.naturalDefenseInd["Armadura_debil"])+int(random.randint(varianza["Armadura_debil"],varianza["Armadura_debil"]))
+            self.naturalDefenseInd["Armadura_debil_porciento"]=int(self.naturalDefenseInd["Armadura_debil_porciento"])+int(random.randint(varianza["Armadura_debil_porciento"],varianza["Armadura_debil_porciento"]))
+            self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(varianza["Crit_chance_increase"],varianza["Crit_chance_increase"]))
+            self.naturalDefenseInd["Bleed_chance"]=int(self.naturalDefenseInd["Bleed_chance"])+int(random.randint(varianza["Bleed_chance"],varianza["Bleed_chance"]))
+            self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(varianza["Crit_chance_increase"],varianza["Crit_chance_increase"]))
+            self.naturalDefenseInd["Bleed_damage"]=int(self.naturalDefenseInd["Bleed_damage"])+int(random.randint(varianza["Bleed_damage"],varianza["Bleed_damage"]))
+            self.naturalDefenseInd["Slow_chance"]=int(self.naturalDefenseInd["Slow_chance"])+int(random.randint(varianza["Slow_chance"],varianza["Slow_chance"]))
+            self.naturalDefenseInd["Slow_done"]=int(self.naturalDefenseInd["Slow_done"])+int(random.randint(varianza["Slow_done"],varianza["Slow_done"]))
+            self.naturalDefenseInd["Velocidad_agua"]=int(self.naturalDefenseInd["Velocidad_agua"])+int(random.randint(varianza["Velocidad_agua"],varianza["Velocidad_agua"]))
+            self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(varianza["Velocidad_aire"],varianza["Velocidad_aire"]))
+            self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(varianza["Velocidad_tierra"],varianza["Velocidad_tierra"]))
+            self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(varianza["Edad_de_madurez_sexual_en_dias"],varianza["Edad_de_madurez_sexual_en_dias"]))
+            self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(varianza["Tiempo_de_gestacion"],varianza["Tiempo_de_gestacion"]))
+            self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(varianza["Cantidad_de_hijos"],varianza["Cantidad_de_hijos"]))
+            self.naturalDefenseInd["Tiempo_de_vida_en dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en dias"])+int(random.randint(varianza["Tiempo_de_vida_en dias"],varianza["Tiempo_de_vida_en dias"]))
+            self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(self.naturalDefenseInd["Cantidad_de_energia_dropeada"])+int(random.randint(varianza["Cantidad_de_energia_dropeada"],varianza["Cantidad_de_energia_dropeada"]))
+            self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=int(self.naturalDefenseInd["Cantidad_de_energia_necesaria"])+int(random.randint(varianza["Cantidad_de_energia_necesaria"],varianza["Cantidad_de_energia_necesaria"]))
+            self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])+int(random.randint(varianza["Cantidad_de_energia_almacenable"],varianza["Cantidad_de_energia_almacenable"]))
+            self.naturalDefenseInd["Nivel_de_Hambre"]=int(self.naturalDefenseInd["Nivel_de_Hambre"])+int(random.randint(varianza["Nivel_de_Hambre"],varianza["Nivel_de_Hambre"]))
+
+
+        
+        
+        
+        if self.naturalDefenseInd["Vida"]<=0:
+            self.naturalDefenseInd["Vida"]=1
+            
+        if self.naturalDefenseInd["Percepcion_de_mundo"]<=0:
+            self.naturalDefenseInd["Percepcion_de_mundo"]=1
+            
+        if int(self.naturalDefenseInd["Armadura_debil_porciento"])<0:
+            self.naturalDefenseInd["Armadura_debil_porciento"]=0
+        if int(self.naturalDefenseInd["Armadura_debil_porciento"])>100:
+            self.naturalDefenseInd["Armadura_debil_porciento"]=100 
+            
+        if int(self.naturalDefenseInd["Crit_chance_increase"])<0:
+            self.naturalDefenseInd["Crit_chance_increase"]=0
+        if int(self.naturalDefenseInd["Crit_chance_increase"])>100:
+            self.naturalDefenseInd["Crit_chance_increase"]=100
+            
+        if int(self.naturalDefenseInd["Bleed_chance"])<0:
+            self.naturalDefenseInd["Bleed_chance"]=0
+        if int(self.naturalDefenseInd["Bleed_chance"])>100:
+            self.naturalDefenseInd["Bleed_chance"]=100
+            
+        if self.naturalDefenseInd["Bleed_damage"]<=0:
+            self.naturalDefenseInd["Bleed_damage"]=1
+            
+        if int(self.naturalDefenseInd["Slow_chance"])<0:
+            self.naturalDefenseInd["Slow_chance"]=0
+        if int(self.naturalDefenseInd["Slow_chance"])>100:
+            self.naturalDefenseInd["Slow_chance"]=100 
+            
+        if self.naturalDefenseInd["Slow_done"]<=0:
+            self.naturalDefenseInd["Slow_done"]=1
+            
+        if self.naturalDefenseInd["Velocidad_agua"]<=0:
+            self.naturalDefenseInd["Velocidad_agua"]=0
+        if self.naturalDefenseInd["Velocidad_aire"]<0:
+            self.naturalDefenseInd["Velocidad_aire"]=0
+        if self.naturalDefenseInd["Velocidad_tierra"]<0:
+            self.naturalDefenseInd["Velocidad_tierra"]=0
+            
+        if self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]<20:
+            self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=20
+        if self.naturalDefenseInd["Tiempo_de_gestacion"]<20:
+            self.naturalDefenseInd["Tiempo_de_gestacion"]=20
+        if self.naturalDefenseInd["Cantidad_de_hijos"]<1:
+            self.naturalDefenseInd["Cantidad_de_hijos"]=1
+            
+        if self.naturalDefenseInd["Tiempo_de_vida_en dias"]<1:
+            self.naturalDefenseInd["Tiempo_de_vida_en dias"]=1
+            
+        if self.naturalDefenseInd["Cantidad_de_energia_dropeada"]<1:
+            self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=1
+        if self.naturalDefenseInd["Cantidad_de_energia_necesaria"]<1:
+            self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=1
+        if self.naturalDefenseInd["Cantidad_de_energia_almacenable"]<1:
+            self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=1
+        if self.naturalDefenseInd["Nivel_de_Hambre"]<1:
+            self.naturalDefenseInd["Nivel_de_Hambre"]=1
+            
+    
     def breed(self):
         currentSpicie=globals.allSpecies[self.especie]
         if currentSpicie.basicInfo["Tipo_de_reproduccion"]=="asexual":
             self.clonateIndividual()
+        elif currentSpicie.basicInfo["Tipo_de_reproduccion"]=="sexual":
+            pass
     
     #este metodo simplemente clona al individuo    
     def clonateIndividual(self):
