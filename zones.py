@@ -15,6 +15,9 @@ class Zone:
         varianza = -1
         #Añadiedno la NaturalDefense de la especie original al diccionario
         AllDictionary = {"NaturalDefense" : especie.naturalDefense}
+        
+        #Añadiendo la lista de individuos
+        AllDictionary = {"Individuos" : []}
         individualsCount = 0
 
         #Dicionario donde guardaré el promedio de valores de todos los individuos de la especie
@@ -25,7 +28,10 @@ class Zone:
             for j in range(len(self.TileList[i].CreatureList)):
                 if j.especie == especie:
                     individualsCount +=1
+                    #Añadiendo el individuo a la lista
+                    AllDictionary["Individuos"].append(j)             
                     promedDictionary = misc.dictMergeSum(j.naturalDefenseInd, promedDictionary)
+                    
 
         #Dividiendo cada valor entre la cantidad de individuos para hallar el promedio
         for i in promedDictionary.keys():
@@ -39,6 +45,7 @@ class Zone:
         #añadiendo el valor de varianza y los promedios al diccionario
         AllDictionary["Varianza"]= varianza
         AllDictionary["Promedio"]= promedDictionary
+    
     
         return AllDictionary
 
