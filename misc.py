@@ -7,6 +7,13 @@ def dictMergeSum(dict1, dict2):
         
     return tempdict
 
+def dictMergeSubstract(dict1, dict2):
+    tempdict ={}
+    for i in dict1.key():
+        tempdict[i] = int(dict1[i])- int(dict2[i])
+        
+    return tempdict
+
 def dictPromed(dict1, dict2):
     tempdict ={}
     for i in dict1.key():

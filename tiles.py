@@ -3,7 +3,7 @@ import zones
 import misc
 import random
 import globals
-
+import especies
 
 
 
@@ -26,7 +26,17 @@ class Tile:
              self.createOceanTile()
         zone.TileList.append(self)
 
-
+    def deleteCreaturesEspecies(self, Creatures , Especie):
+        tempCount = Creatures
+        for j in self.CreatureList:
+            if tempCount <= 0:
+                pass
+            else:
+                if j.especie == Especie:
+                    j.die(Especie)
+                   # self.CreatureList.delete(j)
+                   # j.especie.individuos.delete(j)
+                    tempCount = tempCount -1
 
     def createPrairieTile(self):
         for component in globals.PrairieGenerationList.items():
