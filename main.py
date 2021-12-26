@@ -4,7 +4,7 @@ import map
 
 
 def worldController():
-    i=30
+    i=200
     while (i>0):
         
         value=''

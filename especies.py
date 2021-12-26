@@ -1,6 +1,6 @@
 import random
 import globals
-
+import misc
 
 
 #clase especies
@@ -55,7 +55,6 @@ class Especies():
         
         while(i<miembros):
             name=self.basicInfo["name"]
-            #(self,xMundo,yMundo,xZona,yZona,sexo,edad,especie,saciedad, name,vida):
             creatureName=""+str(name)+""+"$"+str(i)+""
             individuals[""+str(name)+""+"$"+str(i)+""]=Individuo(x,y,self,creatureName,varianzas)
             i+=1
@@ -128,7 +127,7 @@ class Especies():
         
         #cuantos hijos por reproduccion puede consebir por reproduccion
         naturalDefense["Cantidad_de_hijos"]="1"
-        naturalDefense["Tiempo_de_vida_en dias"]=str(random.randint(50,101))
+        naturalDefense["Tiempo_de_vida_en_dias"]=str(random.randint(50,101))
        
         #cuanta energia daran al que los mate y se alimente de ellos
         naturalDefense["Cantidad_de_energia_dropeada"]=str(random.randint(1,4))
@@ -148,12 +147,13 @@ class Especies():
     
     #metodo para evolucionar una especie
     def evolve(self,paramsDic):
-        #se reciben todos los parametros en el dic 
-        self.basicInfo=paramsDic["basicInfo"]
-        self.naturalDefense=paramsDic["naturalDefense"]
-        self.resistenciaElemental=paramsDic["resistenciaElemental"]
-        self.alimentos=paramsDic["alimentos"]
-        self.nextName=paramsDic["individuos"]
+        #se reciben todos los parametros en el dic
+        father=paramsDic["EspeciePadre"] 
+        self.basicInfo=father["basicInfo"]
+        self.naturalDefense=father["naturalDefense"]
+        self.resistenciaElemental=father["resistenciaElemental"]
+        self.alimentos=father["alimentos"]
+        self.nextName=father["individuos"]
         
         #chance de evolucionar a pluricelular
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
@@ -168,7 +168,7 @@ class Especies():
                 self.basicInfo["Tipo_de_celula"]=="sexual"        
         
         #varianza de las especies
-        varianza=paramsDic["Varianzas"]
+        varianza=paramsDic["Varianza"]
         self.individuos=self.listaIndividuosGenerator(paramsDic["x"] ,paramsDic["y"],paramsDic["individuos"],varianza)
         
         
@@ -176,7 +176,8 @@ class Especies():
 
 
 class Individuo():
-    def __init__(self,xMundo,yMundo,especie,name,varianza=None):
+    def __init__(self,xMundo,yMundo,especie,name,father,varianza=None):
+        
         
         #coordenadas
         self.xMundo=xMundo
@@ -187,15 +188,18 @@ class Individuo():
         #string con el nombre de la especie
         self.especie=especie.basicInfo["name"]
         #sexo del individuo, en caso de ser asexual sera por defecto cero
-        self.sexo=especie.basicInfo["Sexo"]
+        if especie.basicInfo["Tipo_de_reproduccion"]=="asexual":
+            self.sexo=0
+        elif especie.basicInfo["Tipo_de_reproduccion"]=="sexual":
+            self.sexo=random.randint(0,2)
         #Fecha en la que muere, (la edad sera la resta con la fecha actual)
         #la muerte se debera tratar de forma lazy, x cada iteracion no hay q actualizar, 
         #solo en kso de que sea necesario
-        self.edad=especie.basicInfo["Tiempo_de_vida_en dias"]
+        self.edad=especie.basicInfo["Tiempo_de_vida_en_dias"]
         #nombre del individuos
         self.name=name
-        self.vida=especie.naturalDefense["Vida"]    
 
+        self.lastReproduction=""
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
         #agregando a la lista de individuos global    
@@ -203,11 +207,15 @@ class Individuo():
         
         #lista con las defensas naturales del individuo simulando que no todos son iwales
         self.naturalDefenseInd={}
-        self.naturalDefenseGenerator(especie.naturalDefense,varianza)
+        
+        if father==0:
+            self.naturalDefenseGeneratoInd(especie.naturalDefense,varianza)
+        elif father==0:
+            self.naturalDefenseGeneratoInd(varianza)
     
     
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
-    def naturalDefenseGeneratorind(self,defences,varianza):
+    def naturalDefenseGeneratorInd(self,defences,varianza=None):
         
 
         self.naturalDefenseInd["Vida"]=int(defences["Vida"])+random.randint(-1,2)
@@ -229,7 +237,7 @@ class Individuo():
         self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(defences["Edad_de_madurez_sexual_en_dias"])+random.randint(-1,2)
         self.naturalDefenseInd["Tiempo_de_gestacion"]=int(defences["Tiempo_de_gestacion"])+random.randint(-1,2)
         self.naturalDefenseInd["Cantidad_de_hijos"]=int(defences["Cantidad_de_hijos"])+random.randint(-1,2)
-        self.naturalDefenseInd["Tiempo_de_vida_en dias"]=int(defences["Tiempo_de_vida_en dias"])+random.randint(-1,2)        
+        self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(defences["Tiempo_de_vida_en_dias"])+random.randint(-1,2)        
         self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(defences["Cantidad_de_energia_dropeada"])+random.randint(-1,2)
         self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=int(defences["Cantidad_de_energia_necesaria"])+random.randint(-1,2)
         self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=int(defences["Cantidad_de_energia_almacenable"])+random.randint(-1,2)
@@ -256,7 +264,7 @@ class Individuo():
             self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(varianza["Edad_de_madurez_sexual_en_dias"],varianza["Edad_de_madurez_sexual_en_dias"]))
             self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(varianza["Tiempo_de_gestacion"],varianza["Tiempo_de_gestacion"]))
             self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(varianza["Cantidad_de_hijos"],varianza["Cantidad_de_hijos"]))
-            self.naturalDefenseInd["Tiempo_de_vida_en dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en dias"])+int(random.randint(varianza["Tiempo_de_vida_en dias"],varianza["Tiempo_de_vida_en dias"]))
+            self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"])+int(random.randint(varianza["Tiempo_de_vida_en_dias"],varianza["Tiempo_de_vida_en_dias"]))
             self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(self.naturalDefenseInd["Cantidad_de_energia_dropeada"])+int(random.randint(varianza["Cantidad_de_energia_dropeada"],varianza["Cantidad_de_energia_dropeada"]))
             self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=int(self.naturalDefenseInd["Cantidad_de_energia_necesaria"])+int(random.randint(varianza["Cantidad_de_energia_necesaria"],varianza["Cantidad_de_energia_necesaria"]))
             self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])+int(random.randint(varianza["Cantidad_de_energia_almacenable"],varianza["Cantidad_de_energia_almacenable"]))
@@ -312,8 +320,8 @@ class Individuo():
         if self.naturalDefenseInd["Cantidad_de_hijos"]<1:
             self.naturalDefenseInd["Cantidad_de_hijos"]=1
             
-        if self.naturalDefenseInd["Tiempo_de_vida_en dias"]<1:
-            self.naturalDefenseInd["Tiempo_de_vida_en dias"]=1
+        if self.naturalDefenseInd["Tiempo_de_vida_en_dias"]<1:
+            self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=1
             
         if self.naturalDefenseInd["Cantidad_de_energia_dropeada"]<1:
             self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=1
@@ -324,8 +332,9 @@ class Individuo():
         if self.naturalDefenseInd["Nivel_de_Hambre"]<1:
             self.naturalDefenseInd["Nivel_de_Hambre"]=1
             
-    
-    def breed(self):
+    #este metodo se encarga de la reproduccion
+    def breed(self,mate=None):
+        #caso en q la reproduccion es asexual y tiene un solo padre
         currentSpicie=globals.allSpecies[self.especie]
         if currentSpicie.basicInfo["Tipo_de_reproduccion"]=="asexual":
             self.clonateIndividual()
@@ -336,11 +345,27 @@ class Individuo():
     def clonateIndividual(self):
         currentSpicie=globals.allSpecies[self.especie]
         lastNumber=int(currentSpicie.basicInfo["Ultimo_numero"])
-        newIndividual=Individuo(self.xMundo,self.yMundo,self.xZona,self.yZona,self.sexo,0,self.especie,currentSpicie.basicInfo["Cantidad_de_energia_almacenable"])
+        
         newName=self.especie+str(lastNumber+1)
+        #def __init__(self,xMundo,yMundo,especie,name,varianza=None):
+        newIndividual=Individuo(self.xMundo,self.yMundo,self.especie,newName)
+        
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
     
+    #este metodo crea un nuevo individuo promedio de los dos padres
+    def sexualReproduction(self,mate):
+        dicPromedyDefenses=misc.dictPromed(self.naturalDefenseInd,mate.naturalDefenseInd)
+        
+        currentSpicie=globals.allSpecies[self.especie]
+        lastNumber=int(currentSpicie.basicInfo["Ultimo_numero"])
+        
+        newName=self.especie+str(lastNumber+1)
+        #def __init__(self,xMundo,yMundo,especie,name,varianza=None):
+        newIndividual=Individuo(self.xMundo,self.yMundo,self.especie,newName,dicPromedyDefenses)
+        
+        currentSpicie.individuos[newName]=newIndividual
+        currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
                                      #move
     #############################################################################
     #movimiento del individuo
@@ -385,16 +410,41 @@ class Individuo():
         #cosumiendo energia
         self.saciedad=str(int(self.saciedad)-int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]))
         #revisando el hambre de la especie
-        hambre=int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]) 
+        hambre=int(mySpecie.basicInfo["Nivel_de_Hambre"]) 
+
+        #move del individuos
         if int(self.saciedad)<=int(hambre):
             #caso especial de Alfie
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
                 self.saciedad=str(int(self.saciedad)+1)
                 
                 self.move(map)
-                return
-            
-
+                
+        #reproduccion del individuo
+        if int(mySpecie.basicInfo["Tiempo_de_vida_en_dias"]-mySpecie.basicInfo["Edad_de_madurez_sexual_en_dias"])>=int(self.edad):
+                fixEdad=int(self.especie["Tiempo_de_vida_en_dias"])-int(self.edad)
+                reproduccionCicle=(int(self.especie["Tiempo_de_vida_en_dias"])-int(self.especie["Edad_de_madurez_sexual_en_dias"]))/int(self.especie["Cantidad_de_hijos"])
+                if fixEdad % reproduccionCicle==0:
+                    if self.especie.basicInfo["Tipo_de_reproduccion"]=="asexual":
+                        self.breed()                    
+                    elif self.especie.basicInfo["Tipo_de_reproduccion"]=="sexual" and self.sexo==int(1):
+                        for item in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
+                            fixEdad=int(item.especie["Tiempo_de_vida_en_dias"])-int(item.edad)
+                            reproduccionCicle=(int(item.especie["Tiempo_de_vida_en_dias"])-int(item.especie["Edad_de_madurez_sexual_en_dias"]))/int(item.especie["Cantidad_de_hijos"])       
+                            if fixEdad % reproduccionCicle==0:
+                                self.breed(item)
+                                break                                                      
+        
+        
+        #actualizacion de edad del individuo                
+        self.edad=int(self.edad)-1
+        if int(self.edad)==0:
+            if self.name in globals.individuos:
+               del globals.individuos[self.name]
+            self.mySpecie.basicInfo["Cantidad_de_miembros"]=int(self.mySpecie.basicInfo["Cantidad_de_miembros"])-1
+            #matar en casilla de mapa
+            globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.delete(self)
+    
         
         
 #especie inicial previa a la generacion automatica de especies
@@ -419,7 +469,7 @@ class Alfie():
         basicInfo["Tiempo_de_gestacion"]="20"
         #cuantos hijos por reproduccion puede consebir por reproduccion
         basicInfo["Cantidad_de_hijos"]="1"
-        basicInfo["Tiempo_de_vida_en dias"]="100"
+        basicInfo["Tiempo_de_vida_en_dias"]="100"
         #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
         basicInfo["Tipo_de_alimentacion"]="entorno"
         #cuanta energia daran al que los mate y se alimente de ellos

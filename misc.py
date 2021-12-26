@@ -8,7 +8,10 @@ def dictMergeSum(dict1, dict2):
 def dictPromed(dict1, dict2):
     tempdict ={}
     for i in dict1.key():
-        tempdict[i] = (int(dict1[i])+ int(dict2[i]))/2
+        if (int(dict1[i])+ int(dict2[i]))%2==1:
+            tempdict[i] =1+ (int(dict1[i])+ int(dict2[i]))/2
+        else:
+            tempdict[i] = (int(dict1[i])+ int(dict2[i]))/2
         
     return tempdict
 
