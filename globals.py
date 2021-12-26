@@ -6,7 +6,8 @@ ZoneList = ['Prairie', 'Mountain', 'Ocean']
 #La peligrosidad de cada zona
 ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
 
-
+#Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
+EvolutionFrequency = 1
 
 #Todos los elementos con los que trabaja la simulación
 WorldComponents = { 'Solar Light','Water', 'Organic Matter', 'Phosil' ,'Iron' , 'Aluminum' , 'Oxygen' , 'Carbon Dioxide' , 'Helium' , 'Nitrogen' }
