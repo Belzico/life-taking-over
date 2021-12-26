@@ -158,7 +158,7 @@ class Especies():
         #chance de evolucionar a pluricelular
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
             tempRandom=random.randint(0,101)
-            if tempRandom>20:
+            if tempRandom>200:
                 self.basicInfo["Tipo_de_celula"]=="pluricelular"
         
         #chance de evolucionar a reproduccion sexual
