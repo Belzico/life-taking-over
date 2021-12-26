@@ -18,6 +18,14 @@ def worldController():
         
         misc.dieList()
         misc.bornList()
+        
+        if i%10 == 0:
+            for h in  globals.worldMap.Zones:
+                for j in globals.allSpecies.keys():
+                    h.startEvolving(globals.allSpecies[j])
+                
+        
+        
         #globals.worldMap.PrintMap()
         print('---------------------------------NEW CYCLE-------------------------------------------------')
         #####################################    

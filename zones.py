@@ -26,7 +26,7 @@ class Zone:
         
 
         #Dicionario donde guardaré el promedio de valores de todos los individuos de la especie
-        PromedDictionary = {}
+        promedDictionary = {}
         
         #Rellenando los valores promedios de los individuos con todos los que se encuentran en esa zona
         for i in self.TileList:
@@ -53,8 +53,8 @@ class Zone:
 
         
         #Rellenando todos los valores de varianza
-        for i in range(self.TileCount):
-            for j in range(len(self.TileList[i].CreatureList)):
+        for i in self.TileList:
+            for j in i.CreatureList:
                 if j.especie == especie:
                     #Añadiendo el individuo a la lista        
                     tempdict = misc.dictMergeSubstract(j.naturalDefenseInd, promedDictionary)
@@ -75,7 +75,7 @@ class Zone:
 
 
         #Si la varianza general es lo suficientemente grande entonces evoluciona
-        if varianza >= 1 or varianza <= -1 :
+        if varianza >= globals.EvolutionFrequency or varianza <= -1*(globals.EvolutionFrequency) :
             if MajorityOfindividuals <= (len(especie.individuos)/2):
                 TileToEvolve.deleteCreaturesEspecies(MajorityOfindividuals, especie)
                 especies.Especies(MajorityOfindividuals,TileToEvolve.Coordinates[0],TileToEvolve.Coordinates[1],AllDictionary)
