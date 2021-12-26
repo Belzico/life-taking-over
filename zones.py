@@ -75,7 +75,7 @@ class Zone:
 
 
         #Si la varianza general es lo suficientemente grande entonces evoluciona
-        if varianza >= 5:
+        if varianza >= 5 or varianza <= -5 :
             if MajorityOfindividuals <= (len(especie.individuos)/2):
                 TileToEvolve.deleteCreaturesEspecies(MajorityOfindividuals, especie)
                 especies.Especies(MajorityOfindividuals,TileToEvolve.Coordinates[0],TileToEvolve.Coordinates[1],AllDictionary)
