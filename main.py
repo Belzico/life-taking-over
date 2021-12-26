@@ -1,6 +1,8 @@
+from tkinter import Misc
 import especies
 import globals
 import map
+import misc
 
 
 def worldController():
@@ -14,6 +16,8 @@ def worldController():
             value.resolveIteration(tempMap)
         i-=1
         
+        misc.dieList()
+        misc.bornList()
         #globals.worldMap.PrintMap()
         print('---------------------------------NEW CYCLE-------------------------------------------------')
         #####################################    
@@ -25,8 +29,8 @@ def worldController():
 
     
 def main():
-    globals.worldMap=map.Map(5,5,4)
-    globals.allSpecies["1"]=especies.Especies(5,2,2)
+    globals.worldMap=map.Map(1,1,1)
+    globals.allSpecies["1"]=especies.Especies(5,0,0)
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))

@@ -1,3 +1,5 @@
+import globals
+
 def dictMergeSum(dict1, dict2):
     tempdict ={}
     for i in dict1.key():
@@ -15,7 +17,15 @@ def dictPromed(dict1, dict2):
         
     return tempdict
 
+def dieList():
+    for item in globals.deadIndividuals:
+        del globals.worldIndividuals[item]
+    globals.deadIndividuals=[]
 
+def bornList():
+    for item in globals.bornIndividuals:
+        globals.worldIndividuals[item[0]]=item[1]
+    globals.bornIndividuals=[]
 
 class Coordinates:
     X = -1

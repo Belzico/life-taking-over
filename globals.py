@@ -68,4 +68,8 @@ worldIndividuals={}
 #cola de fenomenos
 worldFenomenos=queue.PriorityQueue()
 
+#lista de individuos muertos para eliminar al final del siglo
+deadIndividuals=[]
 
+#lista de individuos nacidos para agregar al final del siglo
+bornIndividuals=[]

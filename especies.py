@@ -56,7 +56,7 @@ class Especies():
         while(i<miembros):
             name=self.basicInfo["name"]
             creatureName=""+str(name)+""+"$"+str(i)+""
-            individuals[""+str(name)+""+"$"+str(i)+""]=Individuo(x,y,self,creatureName,varianzas)
+            individuals[""+str(name)+""+"$"+str(i)+""]=Individuo(x,y,self,creatureName,0,varianzas)
             i+=1
         #empezaran en las coordenadas 0,0,0,0
         
@@ -158,7 +158,7 @@ class Especies():
         #chance de evolucionar a pluricelular
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
             tempRandom=random.randint(0,101)
-            if tempRandom>60:
+            if tempRandom>20:
                 self.basicInfo["Tipo_de_celula"]=="pluricelular"
         
         #chance de evolucionar a reproduccion sexual
@@ -184,9 +184,9 @@ class Individuo():
         self.yMundo=yMundo
        
         #la cantidad de energia con la que empiezan
-        self.saciedad=especie.basicInfo["Cantidad_de_energia_almacenable"]
+        self.saciedad=especie.naturalDefense["Cantidad_de_energia_almacenable"]
         #string con el nombre de la especie
-        self.especie=especie.basicInfo["name"]
+        self.especie=especie
         #sexo del individuo, en caso de ser asexual sera por defecto cero
         if especie.basicInfo["Tipo_de_reproduccion"]=="asexual":
             self.sexo=0
@@ -195,23 +195,25 @@ class Individuo():
         #Fecha en la que muere, (la edad sera la resta con la fecha actual)
         #la muerte se debera tratar de forma lazy, x cada iteracion no hay q actualizar, 
         #solo en kso de que sea necesario
-        self.edad=especie.basicInfo["Tiempo_de_vida_en_dias"]
+        self.edad=especie.naturalDefense["Tiempo_de_vida_en_dias"]
         #nombre del individuos
         self.name=name
 
         self.lastReproduction=""
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
+        
         #agregando a la lista de individuos global    
-        globals.worldIndividuals[self.name]=self
+        #globals.worldIndividuals[self.name]=self
+        globals.bornIndividuals.append((self.name,self))
         
         #lista con las defensas naturales del individuo simulando que no todos son iwales
         self.naturalDefenseInd={}
         
         if father==0:
-            self.naturalDefenseGeneratoInd(especie.naturalDefense,varianza)
+            self.naturalDefenseGeneratorInd(especie.naturalDefense,varianza)
         elif father==0:
-            self.naturalDefenseGeneratoInd(varianza)
+            self.naturalDefenseGeneratorInd(varianza)
     
     
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
@@ -335,7 +337,7 @@ class Individuo():
     #este metodo se encarga de la reproduccion
     def breed(self,mate=None):
         #caso en q la reproduccion es asexual y tiene un solo padre
-        currentSpicie=globals.allSpecies[self.especie]
+        currentSpicie=self.especie
         if currentSpicie.basicInfo["Tipo_de_reproduccion"]=="asexual":
             self.clonateIndividual()
         elif currentSpicie.basicInfo["Tipo_de_reproduccion"]=="sexual":
@@ -343,12 +345,12 @@ class Individuo():
     
     #este metodo simplemente clona al individuo    
     def clonateIndividual(self):
-        currentSpicie=globals.allSpecies[self.especie]
+        currentSpicie=self.especie
         lastNumber=int(currentSpicie.basicInfo["Ultimo_numero"])
         
-        newName=self.especie+str(lastNumber+1)
+        newName=self.especie.basicInfo["name"]+"$"+str(lastNumber+1)
         #def __init__(self,xMundo,yMundo,especie,name,varianza=None):
-        newIndividual=Individuo(self.xMundo,self.yMundo,self.especie,newName)
+        newIndividual=Individuo(self.xMundo,self.yMundo,self.especie,newName,0)
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
@@ -360,9 +362,9 @@ class Individuo():
         currentSpicie=globals.allSpecies[self.especie]
         lastNumber=int(currentSpicie.basicInfo["Ultimo_numero"])
         
-        newName=self.especie+str(lastNumber+1)
+        newName=self.especie.basicInfo["name"]+"$"+str(lastNumber+1)
         #def __init__(self,xMundo,yMundo,especie,name,varianza=None):
-        newIndividual=Individuo(self.xMundo,self.yMundo,self.especie,newName,dicPromedyDefenses)
+        newIndividual=Individuo(self.xMundo,self.yMundo,self.especie,newName,1,dicPromedyDefenses)
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
@@ -406,11 +408,11 @@ class Individuo():
 
     #en este metodo se decidira lo que hara el individuos 
     def resolveIteration(self,map):
-        mySpecie=globals.allSpecies[self.especie]
+        mySpecie=self.especie
         #cosumiendo energia
-        self.saciedad=str(int(self.saciedad)-int(mySpecie.basicInfo["Cantidad_de_energia_necesaria"]))
+        self.saciedad=str(int(self.saciedad)-int(mySpecie.naturalDefense["Cantidad_de_energia_necesaria"]))
         #revisando el hambre de la especie
-        hambre=int(mySpecie.basicInfo["Nivel_de_Hambre"]) 
+        hambre=int(mySpecie.naturalDefense["Nivel_de_Hambre"]) 
 
         #move del individuos
         if int(self.saciedad)<=int(hambre):
@@ -421,16 +423,16 @@ class Individuo():
                 self.move(map)
                 
         #reproduccion del individuo
-        if int(mySpecie.basicInfo["Tiempo_de_vida_en_dias"]-mySpecie.basicInfo["Edad_de_madurez_sexual_en_dias"])>=int(self.edad):
-                fixEdad=int(self.especie["Tiempo_de_vida_en_dias"])-int(self.edad)
-                reproduccionCicle=(int(self.especie["Tiempo_de_vida_en_dias"])-int(self.especie["Edad_de_madurez_sexual_en_dias"]))/int(self.especie["Cantidad_de_hijos"])
+        if int(int(mySpecie.naturalDefense["Tiempo_de_vida_en_dias"])-int(mySpecie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))>=int(self.edad):
+                fixEdad=int(self.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(self.edad)
+                reproduccionCicle=(int(self.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(self.especie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))/int(self.especie.naturalDefense["Cantidad_de_hijos"])
                 if fixEdad % reproduccionCicle==0:
                     if self.especie.basicInfo["Tipo_de_reproduccion"]=="asexual":
                         self.breed()                    
                     elif self.especie.basicInfo["Tipo_de_reproduccion"]=="sexual" and self.sexo==int(1):
                         for item in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
-                            fixEdad=int(item.especie["Tiempo_de_vida_en_dias"])-int(item.edad)
-                            reproduccionCicle=(int(item.especie["Tiempo_de_vida_en_dias"])-int(item.especie["Edad_de_madurez_sexual_en_dias"]))/int(item.especie["Cantidad_de_hijos"])       
+                            fixEdad=int(item.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(item.edad)
+                            reproduccionCicle=(int(item.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(item.especie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))/int(item.especie.naturalDefense["Cantidad_de_hijos"])       
                             if fixEdad % reproduccionCicle==0:
                                 self.breed(item)
                                 break                                                      
@@ -439,12 +441,15 @@ class Individuo():
         #actualizacion de edad del individuo                
         self.edad=int(self.edad)-1
         if int(self.edad)==0:
-            if self.name in globals.individuos:
-               del globals.individuos[self.name]
-            self.mySpecie.basicInfo["Cantidad_de_miembros"]=int(self.mySpecie.basicInfo["Cantidad_de_miembros"])-1
-            #matar en casilla de mapa
-            globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.delete(self)
+            self.die(mySpecie)
     
+        
+    def die(self,mySpecie):
+        globals.deadIndividuals.append(self.name)
+        mySpecie.basicInfo["Cantidad_de_miembros"]=int(mySpecie.basicInfo["Cantidad_de_miembros"])-1
+        del mySpecie.individuos[self.name]
+        #matar en casilla de mapa
+        globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.remove(self)
         
         
 #especie inicial previa a la generacion automatica de especies
