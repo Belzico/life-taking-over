@@ -37,7 +37,7 @@ class Especies():
 
         #numero del proximo individuo
         self.nextName=int(individuos)
-    
+
     
         
     #aca generaremos especies siguiendo algunos criterios pero de forma aleatoria
@@ -154,6 +154,9 @@ class Especies():
         self.resistenciaElemental=father["resistenciaElemental"]
         self.alimentos=father["alimentos"]
         self.nextName=father["individuos"]
+        
+        self.basicInfo["name"]=int(globals.lastNameSpecie)
+        globals.lastNameSpecie=int(globals.lastNameSpecie)+1
         
         #chance de evolucionar a pluricelular
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
@@ -359,7 +362,7 @@ class Individuo():
     def sexualReproduction(self,mate):
         dicPromedyDefenses=misc.dictPromed(self.naturalDefenseInd,mate.naturalDefenseInd)
         
-        currentSpicie=globals.allSpecies[self.especie]
+        currentSpicie=self.especie
         lastNumber=int(currentSpicie.basicInfo["Ultimo_numero"])
         
         newName=self.especie.basicInfo["name"]+"$"+str(lastNumber+1)
