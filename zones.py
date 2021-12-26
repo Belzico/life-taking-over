@@ -12,13 +12,16 @@ class Zone:
 
 #El método recibe la especie con la que se trabajará    
     def startEvolving(self, especie):
-        varianza = -1
+        varianzaPromedio = -1
         #Añadiedno la NaturalDefense de la especie original al diccionario
         AllDictionary = {"NaturalDefense" : especie.naturalDefense}
         
         #Añadiendo la lista de individuos
-        AllDictionary = {"Individuos" : []}
+        AllDictionary["Individuos"]  = []
         individualsCount = 0
+        
+        VarianzaDictionary = {}
+        
 
         #Dicionario donde guardaré el promedio de valores de todos los individuos de la especie
         PromedDictionary = {}
@@ -33,23 +36,30 @@ class Zone:
                     promedDictionary = misc.dictMergeSum(j.naturalDefenseInd, promedDictionary)
                     
 
+        
+        #Rellenando todos los valores
+        
+        
         #Dividiendo cada valor entre la cantidad de individuos para hallar el promedio
         for i in promedDictionary.keys():
             promedDictionary[i] = promedDictionary[i]/individualsCount
             
         #Calculando la varianza de todos los valores
         for i in promedDictionary.keys():
-           varianza += int(especie.naturalDefense[i])- int(promedDictionary[i])
-        varianza = varianza/individualsCount
+           varianzaPromedio += int(especie.naturalDefense[i])- int(promedDictionary[i])
+        varianza = varianzaPromedio/individualsCount
         
         #añadiendo el valor de varianza y los promedios al diccionario
-        AllDictionary["Varianza"]= varianza
+
         AllDictionary["Promedio"]= promedDictionary
     
     
         return AllDictionary
 
         
+
+    
+    
         
     
     def ChangeDanger(self, newDangerInt):

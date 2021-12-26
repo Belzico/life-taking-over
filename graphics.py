@@ -15,17 +15,13 @@ class MapGraphics:
         # Create a canvas widget
         canvas=Canvas(win, width=500, height=300)
         canvas.pack()
-        
-        AmountofLines
-        
+
         # Add a line in canvas widget
         for i in range(map.SizeX):
             for j in range(map.SizeY):
+                pass
                 
-
        
-        
-        
         return
       
         
