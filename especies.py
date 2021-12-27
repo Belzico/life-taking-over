@@ -45,9 +45,12 @@ class Especies():
         self.basicInfo=Especies.basicInfoGenerator()
         
         
+
         self.naturalDefense=Especies.naturalDefenseGenerator()
+        self.foodListGenerator()
         self.resistenciaElemental=Especies.resistenciasElementalesGenerator()
         self.individuos=self.listaIndividuosGenerator(x,y,individuos)
+        
     
     def listaIndividuosGenerator(self,x,y,miembros,varianzas=None):
         individuals={}
@@ -79,7 +82,7 @@ class Especies():
         basicInfo["Cantidad_de_miembros"]=temporalMiembros
 
         #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
-        basicInfo["Tipo_de_alimentacion"]="entorno"
+        basicInfo["Tipo_de_alimentacion"]="element"
         #sexo del individuo
         basicInfo["Sexo"]="0"
         #el ultimo numero para nombrar al siguiente individuo
@@ -91,7 +94,8 @@ class Especies():
     def naturalDefenseGenerator():
         naturalDefense={}
         #vida maxima del individuo
-        naturalDefense["Vida"]=str(random.randint(5,11))
+        life=random.randint(20,25)
+        naturalDefense["Vida"]=str(life)
         #la percepcion no es mas que cuantas casillas sin contar en la que esta es capaz de ver/oir...etc el individuo
         naturalDefense["Percepcion_de_mundo"]="1"
         #la inteligencia es un factor que puede influir en varios campos
@@ -130,20 +134,24 @@ class Especies():
         naturalDefense["Tiempo_de_vida_en_dias"]=str(random.randint(50,101))
        
         #cuanta energia daran al que los mate y se alimente de ellos
-        naturalDefense["Cantidad_de_energia_dropeada"]=str(random.randint(1,4))
+        naturalDefense["Cantidad_de_energia_dropeada"]=str(life)
         #cantidad de energia diaria requerida por individuo
         temporalEnergy=str(random.randint(1,4))
-        naturalDefense["Cantidad_de_energia_necesaria"]=temporalEnergy
+        naturalDefense["Cantidad_de_energia_necesaria"]=1+life/5
         #cantidad de energia que pueden almacenar maxima
-        naturalDefense["Cantidad_de_energia_almacenable"]=str(int(temporalEnergy)+random.randint(1,4))
+        naturalDefense["Cantidad_de_energia_almacenable"]=1+(life/5)*3
         #cantidad de energia almacenada a partir de la cual le da hambre
-        naturalDefense["Nivel_de_Hambre"]=3
+        naturalDefense["Nivel_de_Hambre"]=1+2*life/3
         
         return naturalDefense
         
     def resistenciasElementalesGenerator():
         resistenciasElementales={}
         return resistenciasElementales
+    
+    def foodListGenerator(self):
+        self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
+        
     
     #metodo para evolucionar una especie
     def evolve(self,paramsDic):
@@ -240,10 +248,10 @@ class Individuo():
         self.naturalDefenseInd["Tiempo_de_gestacion"]=int(defences["Tiempo_de_gestacion"])+random.randint(-1,2)
         self.naturalDefenseInd["Cantidad_de_hijos"]=int(defences["Cantidad_de_hijos"])+random.randint(-1,2)
         self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(defences["Tiempo_de_vida_en_dias"])+random.randint(-1,2)        
-        self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(defences["Cantidad_de_energia_dropeada"])+random.randint(-1,2)
-        self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=int(defences["Cantidad_de_energia_necesaria"])+random.randint(-1,2)
-        self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=int(defences["Cantidad_de_energia_almacenable"])+random.randint(-1,2)
-        self.naturalDefenseInd["Nivel_de_Hambre"]=int(defences["Nivel_de_Hambre"])+random.randint(-1,2)
+        self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(defences["Vida"])
+        self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=1+int(defences["Vida"])/5
+        self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=1+3*int(defences["Vida"])/5
+        self.naturalDefenseInd["Nivel_de_Hambre"]=1+2*int(self.naturalDefenseInd["Vida"])/3
 
 
         if varianza!=None:
@@ -267,10 +275,10 @@ class Individuo():
             self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(varianza["Tiempo_de_gestacion"],varianza["Tiempo_de_gestacion"]))
             self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(varianza["Cantidad_de_hijos"],varianza["Cantidad_de_hijos"]))
             self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"])+int(random.randint(varianza["Tiempo_de_vida_en_dias"],varianza["Tiempo_de_vida_en_dias"]))
-            self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(self.naturalDefenseInd["Cantidad_de_energia_dropeada"])+int(random.randint(varianza["Cantidad_de_energia_dropeada"],varianza["Cantidad_de_energia_dropeada"]))
-            self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=int(self.naturalDefenseInd["Cantidad_de_energia_necesaria"])+int(random.randint(varianza["Cantidad_de_energia_necesaria"],varianza["Cantidad_de_energia_necesaria"]))
-            self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])+int(random.randint(varianza["Cantidad_de_energia_almacenable"],varianza["Cantidad_de_energia_almacenable"]))
-            self.naturalDefenseInd["Nivel_de_Hambre"]=int(self.naturalDefenseInd["Nivel_de_Hambre"])+int(random.randint(varianza["Nivel_de_Hambre"],varianza["Nivel_de_Hambre"]))
+            self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(self.naturalDefenseInd["Vida"])
+            self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=1+(int(self.naturalDefenseInd["Vida"]))/5
+            self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=1+3*(int(self.naturalDefenseInd["Vida"]))/5
+            self.naturalDefenseInd["Nivel_de_Hambre"]=2*int(self.naturalDefenseInd["Vida"])/3
 
 
         
@@ -406,6 +414,45 @@ class Individuo():
 ###########################################################################################
 
 
+####################################feed###################################################
+
+    def eat(self):
+        listDestroy=[]
+        for resource in globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict:
+            
+            ##################################
+            #cosumiendo energia
+            #self.saciedad=int(self.saciedad)-int(self.especie.naturalDefense["Cantidad_de_energia_necesaria"])
+            #revisando el hambre de la especie
+            #hambre=int(self.especie.naturalDefense["Nivel_de_Hambre"]) 
+            ###################################################
+            
+            neededFood= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(self.saciedad)
+           
+            if resource in self.especie.alimentos:
+                #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
+                if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood/int(self.especie.alimentos[resource]):
+                    listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
+                    self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                    
+                    break
+                
+                #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
+                else:
+                    self.saciedad+=globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource]*int(self.alimentos[resource])
+                    listDestroy.append((resource,int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])))
+    	            
+        #comprobando si ya esta lleno
+            if int(self.saciedad) >= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
+                self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+        
+        
+        
+        for item in listDestroy:
+            print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidades de "+str(item[0]))
+            #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
+###########################################################################################
+
     #en este metodo se decidira lo que hara el individuos 
     def resolveIteration(self,map):
         mySpecie=self.especie
@@ -419,8 +466,10 @@ class Individuo():
             #caso especial de Alfie
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
                 self.saciedad=str(int(self.saciedad)+1)
-                
-                self.move(map)
+            if mySpecie.basicInfo["Tipo_de_alimentacion"]=="element":
+               self.eat()
+                        
+            self.move(map)
                 
         #reproduccion del individuo
         if int(int(mySpecie.naturalDefense["Tiempo_de_vida_en_dias"])-int(mySpecie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))>=int(self.edad):
