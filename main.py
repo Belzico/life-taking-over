@@ -31,7 +31,7 @@ def worldController():
         #####################################    
         #aca meter el codigo de ejecucion de la cola de fenomenos.
         #####################################
-            
+    print("Simulation finished")        
 
 
 
