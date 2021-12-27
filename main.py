@@ -3,11 +3,15 @@ import especies
 import globals
 import map
 import misc
+import graphics
 
 
 def worldController():
     i=200
+    
+    
     while (i>0):
+        
         
         value=''
         for val in globals.worldIndividuals:
@@ -31,14 +35,16 @@ def worldController():
         #####################################    
         #aca meter el codigo de ejecucion de la cola de fenomenos.
         #####################################
+        
     print("Simulation finished!!!!!")        
 
 
 
     
 def main():
-    globals.worldMap=map.Map(1,1,1)
+    globals.worldMap=map.Map(10,10,4)
     globals.allSpecies["1"]=especies.Especies(5,0,0)
+    temp = graphics.GraphicController()
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))

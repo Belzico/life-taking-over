@@ -12,6 +12,10 @@ class Especies():
     
     def __init__(self,individuos,x,y,evolve=None):
         #para ver si se cae en el caso de la evolucion donde se reciben todos los parametros en un dic
+        
+        #Valor RGB para la parte gráfica
+        self.RGBColor= (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+        
         if evolve!=None:
             self.evolve(evolve)
             return

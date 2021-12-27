@@ -1,10 +1,13 @@
 import sys
 import queue
+from tkinter import *
 
 #Todas las zonas con las que trabaja la simulación
 ZoneList = ['Prairie', 'Mountain', 'Ocean']
 #La peligrosidad de cada zona
 ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
+
+
 
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
 EvolutionFrequency = 1
