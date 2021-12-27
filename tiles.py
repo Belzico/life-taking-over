@@ -10,7 +10,7 @@ import especies
 
 class Tile:
 
-
+    
 
     def __init__(self,x,y,zone):
         self.Coordinates =  (x,y)
@@ -37,6 +37,16 @@ class Tile:
                    # self.CreatureList.delete(j)
                    # j.especie.individuos.delete(j)
                     tempCount = tempCount -1
+                    
+    
+    def eliminate(self,elementTuple):
+        if elementTuple[0] == 'Solar Light' or elementTuple[0] == 'Water':
+            return
+        
+        else:
+            self.ComponentsDict[elementTuple[0]] = self.ComponentsDict[elementTuple[0]] - elementTuple[1]
+        if self.ComponentsDict[elementTuple[0]] < 0:
+            self.ComponentsDict[elementTuple[0]] = 0
 
     def createPrairieTile(self):
         for component in globals.PrairieGenerationList.items():
