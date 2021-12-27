@@ -78,7 +78,7 @@ class Zone:
         
         
         #Buscar la mejor comida para comer:
-        AllDictionary["elemento"]
+        AllDictionary["elemento"] = ""
         
         
         #Hallando la varianza general con respecto a la especie padre
