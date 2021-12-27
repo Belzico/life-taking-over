@@ -66,18 +66,27 @@ class Zone:
         
         AllDictionary["Varianza"] = varianzaDictionary
         
+        
+
         if TileToEvolve != -1:
             AllDictionary["x"] = TileToEvolve.Coordinates[0]
             AllDictionary["y"] = TileToEvolve.Coordinates[1]
+        
+        ##########EN CASO DE QUE NO ENCUENTRE A NADIE
         else:
             return
+        
+        
+        #Buscar la mejor comida para comer:
+        AllDictionary["elemento"]
+        
         
         #Hallando la varianza general con respecto a la especie padre
         for i in promedDictionary.keys():
            varianzaPromedio += int(especie.naturalDefense[i])- int(promedDictionary[i])
         varianza = varianzaPromedio/individualsInZone
         
-  
+
 
         #Si la varianza general es lo suficientemente grande entonces evoluciona
         if varianza >= globals.EvolutionFrequency or varianza <= -1*(globals.EvolutionFrequency) :
