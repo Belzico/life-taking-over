@@ -157,12 +157,18 @@ class Especies():
         #se reciben todos los parametros en el dic
         father=paramsDic["EspeciePadre"] 
         self.basicInfo= copy.deepcopy(father.basicInfo)
-        self.naturalDefense=copy.deepcopy(father.naturalDefense)
+        self.naturalDefense=paramsDic["Promedio"]
         self.resistenciaElemental=copy.deepcopy(father.resistenciaElemental)
         self.alimentos=copy.deepcopy(father.alimentos)
-        self.nextName=copy.deepcopy(father.individuos)
+        self.nextName=paramsDic["Individuos"]
         
-        self.basicInfo["Cantidad_de_miembros"]=paramsDic["Individuos"]
+        
+        #revisando si se agrega el elemento a los comestibles o se elimina alguno existente
+        if int(father.naturalDefense["Vida"])>int(self.naturalDefense["Vida"]):
+            self.removeFood()
+        if int(father.naturalDefense["Vida"])<int(self.naturalDefense["Vida"]):
+            self.addFood(paramsDic["Elemento"])
+            
         
         self.basicInfo["name"]=int(globals.lastNameSpecie)
         globals.lastNameSpecie=int(globals.lastNameSpecie)+1
@@ -171,7 +177,7 @@ class Especies():
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
             tempRandom=random.randint(0,100)
             if tempRandom>50:
-                print("La especie "+self.name+" es pluricelular")   
+                print("La especie "+str(self.basicInfo["name"])+" es pluricelular")   
                 self.basicInfo["Tipo_de_celula"]="pluricelular"
         
         #chance de evolucionar a reproduccion sexual
@@ -179,15 +185,25 @@ class Especies():
             tempRandom=random.randint(0,100)
             if tempRandom>-1:
                 self.basicInfo["Tipo_de_reproduccion"]="sexual"        
-                print("La especie "+self.name+" tiene reproduccion sexual")
+                print("La especie "+str(self.basicInfo["name"])+" tiene reproduccion sexual")
         
         #varianza de las especies
         varianza=paramsDic["Varianza"]
         self.individuos=self.listaIndividuosGenerator(paramsDic["x"] ,paramsDic["y"],paramsDic["Individuos"],varianza)
-        
-        
-        
-
+    
+    #agrega un elemento comestible o aumenta su eficacia    
+    def addFood(self,food):
+        if food in self.alimentos:
+            self.alimentos[food]=int(self.alimentos[food])+1
+        else:
+            self.alimentos[food]=1
+    #resta 1 a la energia q se obtiene de un elemento random y en caso de q llegue a 0 lo elimina
+    def removeFood(self):
+        for item in self.alimentos:
+            self.alimentos[item]=self.alimentos[item]-1
+            break
+        if int(self.alimentos[item])<=0:
+                del self.alimentos[item]
 
 class Individuo():
     def __init__(self,xMundo,yMundo,especie,name,father,varianza=None):
