@@ -258,26 +258,26 @@ class Individuo():
 
 
         if varianza!=None:
-            self.naturalDefenseInd["Vida"]=int(self.naturalDefenseInd["Vida"])+int(random.randint(varianza["Vida"],varianza["Vida"]))
-            self.naturalDefenseInd["Percepcion_de_mundo"]=int(self.naturalDefenseInd["Percepcion_de_mundo"])+int(random.randint(varianza["Percepcion_de_mundo"],varianza["Percepcion_de_mundo"]))
-            self.naturalDefenseInd["Inteligencia"]=int(self.naturalDefenseInd["Inteligencia"])+int(random.randint(varianza["Inteligencia"],varianza["Inteligencia"]))
-            self.naturalDefenseInd["Sigilo"]=int(self.naturalDefenseInd["Sigilo"])+int(random.randint(varianza["Sigilo"],varianza["Sigilo"]))
-            self.naturalDefenseInd["Armadura"]=int(self.naturalDefenseInd["Armadura"])+int(random.randint(varianza["Armadura"],varianza["Armadura"]))
-            self.naturalDefenseInd["Armadura_debil"]=int(self.naturalDefenseInd["Armadura_debil"])+int(random.randint(varianza["Armadura_debil"],varianza["Armadura_debil"]))
-            self.naturalDefenseInd["Armadura_debil_porciento"]=int(self.naturalDefenseInd["Armadura_debil_porciento"])+int(random.randint(varianza["Armadura_debil_porciento"],varianza["Armadura_debil_porciento"]))
-            self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(varianza["Crit_chance_increase"],varianza["Crit_chance_increase"]))
-            self.naturalDefenseInd["Bleed_chance"]=int(self.naturalDefenseInd["Bleed_chance"])+int(random.randint(varianza["Bleed_chance"],varianza["Bleed_chance"]))
-            self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(varianza["Crit_chance_increase"],varianza["Crit_chance_increase"]))
-            self.naturalDefenseInd["Bleed_damage"]=int(self.naturalDefenseInd["Bleed_damage"])+int(random.randint(varianza["Bleed_damage"],varianza["Bleed_damage"]))
-            self.naturalDefenseInd["Slow_chance"]=int(self.naturalDefenseInd["Slow_chance"])+int(random.randint(varianza["Slow_chance"],varianza["Slow_chance"]))
-            self.naturalDefenseInd["Slow_done"]=int(self.naturalDefenseInd["Slow_done"])+int(random.randint(varianza["Slow_done"],varianza["Slow_done"]))
-            self.naturalDefenseInd["Velocidad_agua"]=int(self.naturalDefenseInd["Velocidad_agua"])+int(random.randint(varianza["Velocidad_agua"],varianza["Velocidad_agua"]))
-            self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(varianza["Velocidad_aire"],varianza["Velocidad_aire"]))
-            self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(varianza["Velocidad_tierra"],varianza["Velocidad_tierra"]))
-            self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(varianza["Edad_de_madurez_sexual_en_dias"],varianza["Edad_de_madurez_sexual_en_dias"]))
-            self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(varianza["Tiempo_de_gestacion"],varianza["Tiempo_de_gestacion"]))
-            self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(varianza["Cantidad_de_hijos"],varianza["Cantidad_de_hijos"]))
-            self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"])+int(random.randint(varianza["Tiempo_de_vida_en_dias"],varianza["Tiempo_de_vida_en_dias"]))
+            self.naturalDefenseInd["Vida"]=int(self.naturalDefenseInd["Vida"])+int(random.randint(int(varianza["Vida"]),int(varianza["Vida"])))
+            self.naturalDefenseInd["Percepcion_de_mundo"]=int(self.naturalDefenseInd["Percepcion_de_mundo"])+int(random.randint(int(varianza["Percepcion_de_mundo"]),int(varianza["Percepcion_de_mundo"])))
+            self.naturalDefenseInd["Inteligencia"]=int(self.naturalDefenseInd["Inteligencia"])+int(random.randint(int(varianza["Inteligencia"]),int(varianza["Inteligencia"])))
+            self.naturalDefenseInd["Sigilo"]=int(self.naturalDefenseInd["Sigilo"])+int(random.randint(int(varianza["Sigilo"]),int(varianza["Sigilo"])))
+            self.naturalDefenseInd["Armadura"]=int(self.naturalDefenseInd["Armadura"])+int(random.randint(int(varianza["Armadura"]),int(varianza["Armadura"])))
+            self.naturalDefenseInd["Armadura_debil"]=int(self.naturalDefenseInd["Armadura_debil"])+int(random.randint(int(varianza["Armadura_debil"]),int(varianza["Armadura_debil"])))
+            self.naturalDefenseInd["Armadura_debil_porciento"]=int(self.naturalDefenseInd["Armadura_debil_porciento"])+int(random.randint(int(varianza["Armadura_debil_porciento"]),int(varianza["Armadura_debil_porciento"])))
+            self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(int(varianza["Crit_chance_increase"]),int(varianza["Crit_chance_increase"])))
+            self.naturalDefenseInd["Bleed_chance"]=int(self.naturalDefenseInd["Bleed_chance"])+int(random.randint(int(varianza["Bleed_chance"]),int(varianza["Bleed_chance"])))
+            self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(int(varianza["Crit_chance_increase"]),int(varianza["Crit_chance_increase"])))
+            self.naturalDefenseInd["Bleed_damage"]=int(self.naturalDefenseInd["Bleed_damage"])+int(random.randint(int(varianza["Bleed_damage"]),int(varianza["Bleed_damage"])))
+            self.naturalDefenseInd["Slow_chance"]=int(self.naturalDefenseInd["Slow_chance"])+int(random.randint(int(varianza["Slow_chance"]),int(varianza["Slow_chance"])))
+            self.naturalDefenseInd["Slow_done"]=int(self.naturalDefenseInd["Slow_done"])+int(random.randint(int(varianza["Slow_done"]),int(varianza["Slow_done"])))
+            self.naturalDefenseInd["Velocidad_agua"]=int(self.naturalDefenseInd["Velocidad_agua"])+int(random.randint(int(varianza["Velocidad_agua"]),int(varianza["Velocidad_agua"])))
+            self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(int(varianza["Velocidad_aire"]),int(varianza["Velocidad_aire"])))
+            self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(int(varianza["Velocidad_tierra"]),int(varianza["Velocidad_tierra"])))
+            self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(int(varianza["Edad_de_madurez_sexual_en_dias"]),int(varianza["Edad_de_madurez_sexual_en_dias"])))
+            self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(int(varianza["Tiempo_de_gestacion"]),int(varianza["Tiempo_de_gestacion"])))
+            self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(int(varianza["Cantidad_de_hijos"]),int(varianza["Cantidad_de_hijos"])))
+            self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"])+int(random.randint(int(varianza["Tiempo_de_vida_en_dias"]),int(varianza["Tiempo_de_vida_en_dias"])))
             self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(self.naturalDefenseInd["Vida"])
             self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=1+(int(self.naturalDefenseInd["Vida"]))/5
             self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=1+3*(int(self.naturalDefenseInd["Vida"]))/5
@@ -453,7 +453,7 @@ class Individuo():
         
         for item in listDestroy:
             print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidades de "+str(item[0]))
-            #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
+            globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate((item[0],item[1]))
 ###########################################################################################
 
     #en este metodo se decidira lo que hara el individuos 
