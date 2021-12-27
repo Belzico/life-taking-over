@@ -1,3 +1,4 @@
+from random import randint
 import globals
 import misc
 import especies
@@ -78,7 +79,7 @@ class Zone:
         
         
         #Buscar la mejor comida para comer:
-        AllDictionary["elemento"] = ""
+        AllDictionary["Elemento"] = self.SelectPopularElement(TileToEvolve)
         
         
         #Hallando la varianza general con respecto a la especie padre
@@ -117,7 +118,34 @@ class Zone:
         
 
     
-    
+    def SelectPopularElement(self,Tile):
+        ElementsPctTupleList = []
+        count = 0
+        for i in Tile.ComponentsDict.keys():
+            if i == 'Solar Light' or i == 'Water':
+                pass
+            else:
+                if Tile.ComponentsDict[i] == 0:
+                    pass
+                else: 
+                    if count == 0: 
+                        ElementsPctTupleList.append((i,Tile.ComponentsDict[i]))
+                    else:
+                        ElementsPctTupleList.append((i, Tile.ComponentsDict[i] + ElementsPctTupleList[-1][1]))
+                    
+                    count += 1
+            
+        ElementsPctTupleList.append(('Solar Light', ElementsPctTupleList[count - 1][1] + ElementsPctTupleList[count - 1][1]/10))
+        
+        ElementsPctTupleList.append(('Water', ElementsPctTupleList[count - 1][1] + ElementsPctTupleList[count - 1][1]/10))
+        
+        randomIndex = randint(0 , int(ElementsPctTupleList[-1][1]))
+        
+        for i in ElementsPctTupleList:
+            if i[1]<= randomIndex:
+                return i[0]
+        
+        return 'Solar Light'
         
     
     def ChangeDanger(self, newDangerInt):
