@@ -66,22 +66,30 @@ class Zone:
         
         AllDictionary["Varianza"] = varianzaDictionary
         
+        if TileToEvolve != -1:
+            AllDictionary["x"] = TileToEvolve.Coordinates[0]
+            AllDictionary["y"] = TileToEvolve.Coordinates[1]
+        else:
+            return
         
         #Hallando la varianza general con respecto a la especie padre
         for i in promedDictionary.keys():
            varianzaPromedio += int(especie.naturalDefense[i])- int(promedDictionary[i])
         varianza = varianzaPromedio/individualsInZone
         
-
+  
 
         #Si la varianza general es lo suficientemente grande entonces evoluciona
         if varianza >= globals.EvolutionFrequency or varianza <= -1*(globals.EvolutionFrequency) :
+            print("Una especie ha evolucionado en la casilla ( "+ str(TileToEvolve.Coordinates[0])+", " +str(TileToEvolve.Coordinates[1]) +")" )
             if MajorityOfindividuals <= (len(especie.individuos)/2):
+                AllDictionary["Individuos"] = MajorityOfindividuals
                 TileToEvolve.deleteCreaturesEspecies(MajorityOfindividuals, especie)
                 especies.Especies(MajorityOfindividuals,TileToEvolve.Coordinates[0],TileToEvolve.Coordinates[1],AllDictionary)
-                print("Una especie ha evolucionado en la casilla ( "+ TileToEvolve.Coordinates[0]+", " +TileToEvolve.Coordinates[1] +")" )
+              
             
             else:
+                AllDictionary["Individuos"] = MajorityOfindividuals/2
                 TileToEvolve.deleteCreaturesEspecies(MajorityOfindividuals/2, especie)
                 especies.Especies(MajorityOfindividuals/2,TileToEvolve.Coordinates[0],TileToEvolve.Coordinates[1],AllDictionary)
             

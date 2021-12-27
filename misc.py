@@ -41,7 +41,8 @@ def dictPromed(dict1, dict2):
 
 def dieList():
     for item in globals.deadIndividuals:
-        del globals.worldIndividuals[item]
+        if item in globals.worldIndividuals.keys():
+            del globals.worldIndividuals[item]
     globals.deadIndividuals=[]
 
 def bornList():

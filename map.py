@@ -69,8 +69,11 @@ class Map:
     def MoveCreature (self, Individuo , Coordinates):
         oldTile = self.Tiles[Coordinates[0]][Coordinates[1]]
         actualTile = self.Tiles[Individuo.xMundo][Individuo.yMundo]
-        oldTile.CreatureList.remove(Individuo)
-        actualTile.CreatureList.append(Individuo)
+        
+        #########CHECKEAR EL PORQUE EL INDIVIDUO SE MOVIÓ SIN PERMISO
+        if Individuo in oldTile.CreatureList:
+            oldTile.CreatureList.remove(Individuo)
+            actualTile.CreatureList.append(Individuo)
         
         
     def PrintMap (self):
