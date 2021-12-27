@@ -3,9 +3,13 @@ import queue
 
 #Todas las zonas con las que trabaja la simulación
 ZoneList = ['Prairie', 'Mountain', 'Ocean']
+#La peligrosidad de cada zona
+ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
+
+#Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
+EvolutionFrequency = 1
 
 #Todos los elementos con los que trabaja la simulación
-
 WorldComponents = { 'Solar Light','Water', 'Organic Matter', 'Phosil' ,'Iron' , 'Aluminum' , 'Oxygen' , 'Carbon Dioxide' , 'Helium' , 'Nitrogen' }
 
 InfiniteRange = (10000, 100000)
@@ -65,4 +69,8 @@ worldIndividuals={}
 #cola de fenomenos
 worldFenomenos=queue.PriorityQueue()
 
+#lista de individuos muertos para eliminar al final del siglo
+deadIndividuals=[]
 
+#lista de individuos nacidos para agregar al final del siglo
+bornIndividuals=[]

@@ -1,5 +1,6 @@
 import zones
 import misc
+import graphics
 import globals
 import random
 import tiles
@@ -21,14 +22,18 @@ class Map:
     def udpdateIndividual(self,tempInd,x,y):
         self.MoveCreature(tempInd,(x,y))    
 
+
+
     def CreateNotSoRandmo(self):
 
         self.CreateZonesNotSoRandom()
         self.PopulateNotSoRandom()
+        self.Graphics = graphics.MapGraphics(self)
 
     
     def IsBorn(self, individuo):
         self.Tiles[int(individuo.xMundo)][int(individuo.yMundo)].CreatureList.append(individuo)
+        
     
     def CreateZonesNotSoRandom(self):
         zoneCount= self.ZoneCount
@@ -64,8 +69,11 @@ class Map:
     def MoveCreature (self, Individuo , Coordinates):
         oldTile = self.Tiles[Coordinates[0]][Coordinates[1]]
         actualTile = self.Tiles[Individuo.xMundo][Individuo.yMundo]
-        oldTile.CreatureList.remove(Individuo)
-        actualTile.CreatureList.append(Individuo)
+        
+        #########CHECKEAR EL PORQUE EL INDIVIDUO SE MOVIÓ SIN PERMISO
+        if Individuo in oldTile.CreatureList:
+            oldTile.CreatureList.remove(Individuo)
+            actualTile.CreatureList.append(Individuo)
         
         
     def PrintMap (self):
