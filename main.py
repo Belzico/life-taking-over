@@ -42,7 +42,7 @@ def main():
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))
-    
+    print("star world")
     worldController()
     
     
