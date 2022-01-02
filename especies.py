@@ -121,9 +121,9 @@ class Especies():
         #cantidad de casillas que puede recorrer en un dia en el agua
         naturalDefense["Velocidad_agua"]=str(random.randint(0,1))
         #cantidad de casillas que puede recorrer en un dia en volando
-        naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
+        #naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
         #cantidad de casillas que puede recorrer en un dia en la tierra
-        naturalDefense["Velocidad_tierra"]=str(random.randint(0,1))
+        #naturalDefense["Velocidad_tierra"]=str(random.randint(0,1))
         
         naturalDefense["Edad_de_madurez_sexual_en_dias"]=str(random.randint(20,31))
         naturalDefense["Tiempo_de_gestacion"]=str(random.randint(20,31))
@@ -233,6 +233,7 @@ class Individuo():
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
         
+                
         #agregando a la lista de individuos global    
         #globals.worldIndividuals[self.name]=self
         globals.bornIndividuals.append((self.name,self))
@@ -268,8 +269,8 @@ class Individuo():
         self.naturalDefenseInd["Slow_chance"]=int(defences["Slow_chance"])+random.randint(a,b)
         self.naturalDefenseInd["Slow_done"]=int(defences["Slow_done"])+random.randint(a,b)
         self.naturalDefenseInd["Velocidad_agua"]=int(defences["Velocidad_agua"])+random.randint(a,b)
-        self.naturalDefenseInd["Velocidad_aire"]=int(defences["Velocidad_aire"])+random.randint(a,b)
-        self.naturalDefenseInd["Velocidad_tierra"]=int(defences["Velocidad_tierra"])+random.randint(a,b)
+        #self.naturalDefenseInd["Velocidad_aire"]=int(defences["Velocidad_aire"])+random.randint(a,b)
+        #self.naturalDefenseInd["Velocidad_tierra"]=int(defences["Velocidad_tierra"])+random.randint(a,b)
         self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(defences["Edad_de_madurez_sexual_en_dias"])+random.randint(a,b)
         self.naturalDefenseInd["Tiempo_de_gestacion"]=int(defences["Tiempo_de_gestacion"])+random.randint(a,b)
         self.naturalDefenseInd["Cantidad_de_hijos"]=int(defences["Cantidad_de_hijos"])+random.randint(a,b)
@@ -297,8 +298,8 @@ class Individuo():
             self.naturalDefenseInd["Slow_chance"]=int(self.naturalDefenseInd["Slow_chance"])+int(random.randint(int(varianza["Slow_chance"]),int(varianza["Slow_chance"])))
             self.naturalDefenseInd["Slow_done"]=int(self.naturalDefenseInd["Slow_done"])+int(random.randint(int(varianza["Slow_done"]),int(varianza["Slow_done"])))
             self.naturalDefenseInd["Velocidad_agua"]=int(self.naturalDefenseInd["Velocidad_agua"])+int(random.randint(int(varianza["Velocidad_agua"]),int(varianza["Velocidad_agua"])))
-            self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(int(varianza["Velocidad_aire"]),int(varianza["Velocidad_aire"])))
-            self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(int(varianza["Velocidad_tierra"]),int(varianza["Velocidad_tierra"])))
+            #self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(int(varianza["Velocidad_aire"]),int(varianza["Velocidad_aire"])))
+            #self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(int(varianza["Velocidad_tierra"]),int(varianza["Velocidad_tierra"])))
             self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(int(varianza["Edad_de_madurez_sexual_en_dias"]),int(varianza["Edad_de_madurez_sexual_en_dias"])))
             self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(int(varianza["Tiempo_de_gestacion"]),int(varianza["Tiempo_de_gestacion"])))
             self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(int(varianza["Cantidad_de_hijos"]),int(varianza["Cantidad_de_hijos"])))
@@ -346,10 +347,10 @@ class Individuo():
             
         if self.naturalDefenseInd["Velocidad_agua"]<=0:
             self.naturalDefenseInd["Velocidad_agua"]=0
-        if self.naturalDefenseInd["Velocidad_aire"]<0:
-            self.naturalDefenseInd["Velocidad_aire"]=0
-        if self.naturalDefenseInd["Velocidad_tierra"]<0:
-            self.naturalDefenseInd["Velocidad_tierra"]=0
+        #if self.naturalDefenseInd["Velocidad_aire"]<0:
+        #    self.naturalDefenseInd["Velocidad_aire"]=0
+        #if self.naturalDefenseInd["Velocidad_tierra"]<0:
+        #    self.naturalDefenseInd["Velocidad_tierra"]=0
             
         if self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]<20:
             self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=20
@@ -411,7 +412,7 @@ class Individuo():
         #aca se valorara segun que criterio moverse
         tup=()
         #por ahora solo nos movemos random
-        if True:
+        if self.naturalDefenseInd["Inteligencia"]==0:
             tup=self.moveRandom(map)
             
         previusX=self.xMundo
