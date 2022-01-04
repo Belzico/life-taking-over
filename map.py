@@ -87,8 +87,173 @@ class Map:
                 print ('-----------------------------------------------------------------------')
                     
         
+         
     
     def movementWithBoundries (self,Individuo, valor_de_percepcion):
+        perceptionValue = int(valor_de_percepcion)
+     
+        #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+        actRow = Individuo.xMundo  - perceptionValue
+        actCol = Individuo.yMundo - perceptionValue
+        perceptionList = []
+        tileCount = 0
+        ##LLenando perceptionlist
+        for i in range(0, 1  + 2 * int(perceptionValue)):
+            newList = []
+            for j in range(0,  1  + 2 * int(perceptionValue)):
+                newList.append("")
+                tileCount +=1
+            perceptionList.append(newList)
+        
+        
+             
+        countX=0
+        countY=0
+        
+
+        #Movimiento con límites del mapa
+        while actRow <= Individuo.xMundo  + perceptionValue:
+            actCol = Individuo.yMundo - perceptionValue
+            countY=0
+            while actCol <= Individuo.yMundo + perceptionValue:
+                if not(0<=actRow< self.SizeX) or not(0<=actCol< self.SizeY):
+                    perceptionList[countX][countY]= ""
+                else:
+                    perceptionList[countX][countY]= self.Tiles[actRow][actCol]
+            
+                countY+=1
+                actCol +=1
+            actRow+=1
+            countX+=1
+     
+        return perceptionList
+     
+
+    
+    def movementMatrix(self,Individuo) -> dict:
+        matrixDict = {}
+        perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
+        
+        matrixDict["Tile"] = perceptionList
+        
+        matrixDict["Especie"]= map.speciesMatrix(Individuo, perceptionList)
+        
+
+        
+        matrixDict["Comida"] = map.foodMatrix(Individuo,perceptionList)
+       
+        matrixDict["Peligro"] = map.dangerMatrix(Individuo,perceptionList)
+        
+        return matrixDict
+        
+        
+        
+    def dangerMatrix(self,Individuo, TilePerceptionMatrix):
+        valuesList = []
+        for i in range(len(TilePerceptionMatrix)):
+            valuesList.append([])
+            for j in range(len(TilePerceptionMatrix[i])):
+                valuesList[i].append(-1)
+    
+        #Buscando la casilla de menor peligrosidad
+        savedValue = -1
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                if savedValue > TilePerceptionMatrix[i][j].Zone.Danger:
+                    savedValue = TilePerceptionMatrix[i][j].Zone.Danger
+                    
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                if savedValue == TilePerceptionMatrix[i][j].Zone.Danger:
+                    valuesList[i][j] = 5
+                if savedValue<TilePerceptionMatrix[i][j].Zone.Danger< savedValue*1.5:
+                    valuesList[i][j] = 4
+                if savedValue*1.5<=TilePerceptionMatrix[i][j].Zone.Danger< savedValue*2:
+                    valuesList[i][j] = 3
+                if savedValue*2 == TilePerceptionMatrix[i][j].Zone.Danger:
+                    valuesList[i][j] = 2
+                if savedValue*2 < TilePerceptionMatrix[i][j].Zone.Danger:
+                    valuesList[i][j] = 1
+         
+        return valuesList   
+    
+    def FoodMatrix(self,Individuo, TilePerceptionMatrix):
+        valuesList = []
+        for i in range(len(TilePerceptionMatrix)):
+            valuesList.append([])
+            for j in range(len(TilePerceptionMatrix[i])):
+                valuesList[i].append(-1)
+    
+        #Buscando la casilla con mayor cantidad de comida
+        savedValue = -1
+        tempvalue= 0
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                tempvalue= 0
+                for h in globals.allSpecies[Individuo.especie].alimentos.keys():
+                    tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
+                if tempvalue>savedValue:
+                    savedValue = tempvalue
+
+                    
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                tempvalue= 0
+                for h in globals.allSpecies[Individuo.especie].alimentos.keys():
+                    tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
+                if savedValue == tempvalue:
+                    valuesList[i][j] = 5
+                if savedValue>tempvalue>=savedValue*0.7:
+                    valuesList[i][j] = 4
+                if savedValue*0.7>tempvalue>=savedValue*0.5:
+                    valuesList[i][j] = 3
+                if savedValue*0.5> tempvalue>=savedValue*0.3:
+                    valuesList[i][j] = 2
+                if savedValue*0.3> tempvalue:
+                    valuesList[i][j] = 1
+         
+        return valuesList   
+
+    def speciesMatrix(self,Individuo, TilePerceptionMatrix):
+        valuesList = []
+        for i in range(len(TilePerceptionMatrix)):
+            valuesList.append([])
+            for j in range(len(TilePerceptionMatrix[i])):
+                valuesList[i].append(-1)
+    
+        #Buscando la casilla con la mayor cantidad de individuos de la especie
+        savedValue = -1
+        tempvalue= 0
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                tempvalue=0
+                for h in TilePerceptionMatrix[i][j].CreatureList:
+                    if h.especie == Individuo.especie:
+                        tempvalue +=1
+                if savedValue< tempvalue:
+                    savedValue = tempvalue
+                    
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                tempvalue= 0
+                for h in TilePerceptionMatrix[i][j].CreatureList:
+                    tempvalue += 1
+                if savedValue ==  tempvalue:
+                    valuesList[i][j] = 5
+                if savedValue>tempvalue>=savedValue*0.7:
+                    valuesList[i][j] = 4
+                if savedValue*0.7>tempvalue>=savedValue*0.5:
+                    valuesList[i][j] = 3
+                if savedValue*0.5> tempvalue>=savedValue*0.3:
+                    valuesList[i][j] = 2
+                if savedValue*0.3> tempvalue:
+                    valuesList[i][j] = 1
+                
+        
+    
+    
+    
+    def movementWithoutBoundries (self,Individuo, valor_de_percepcion):
         perceptionValue = int(valor_de_percepcion)
      
         #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
@@ -105,20 +270,12 @@ class Map:
      
         countX=0
         countY=0
-     
-        while actRow <= Individuo.xMundo  + perceptionValue:
-            actCol = Individuo.yMundo - perceptionValue
-            countY=0
-            while actCol <= Individuo.yMundo + perceptionValue:
-                if not(0<=actRow< self.SizeX) or not(0<=actCol< self.SizeY):
-                    perceptionList[countX][countY]= ""
-                else:
-                    perceptionList[countX][countY]= self.Tiles[actRow][actCol]
-            
-                countY+=1
-                actCol +=1
-            actRow+=1
-            countX+=1
+        
+                #Colocando las Tiles en Perception List
+        for i in range(perceptionList):
+            for j in range(perceptionList):
+                perceptionList[i][j] = self.Tiles[Individuo.xMundo  - perceptionValue + i][Individuo.yMundo - perceptionValue + j]
+                
      
         return perceptionList
      
