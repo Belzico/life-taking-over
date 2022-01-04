@@ -233,6 +233,8 @@ class Individuo():
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
         
+        self.priorities={}
+        self.setPriorities()
                 
         #agregando a la lista de individuos global    
         #globals.worldIndividuals[self.name]=self
@@ -247,6 +249,15 @@ class Individuo():
             self.naturalDefenseGeneratorInd(especie.naturalDefense,varianza)
         else:
             self.naturalDefenseGeneratorInd(varianza)
+    
+    
+    
+    def setPriorities(self):
+        self.priorities["hambre"]=1 +(1-self.saciedad/self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+        self.priorities["danger"]=2-(1-self.saciedad/self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+        self.priorities["mate"]=1
+        self.priorities["imanEspecie"]=1
+        
     
     
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
@@ -411,14 +422,21 @@ class Individuo():
     def move(self,map):
         #aca se valorara segun que criterio moverse
         tup=()
-        #por ahora solo nos movemos random
-        if self.naturalDefenseInd["Inteligencia"]==0:
-            tup=self.moveRandom(map)
-            
+        
         previusX=self.xMundo
         previusY=self.yMundo
-        self.xMundo+=tup[0]
-        self.yMundo+=tup[1]
+        #por ahora solo nos movemos random
+        if self.naturalDefenseInd["Inteligencia"]<2:
+            tup=self.moveRandom(map)
+            self.xMundo+=tup[0]
+            self.yMundo+=tup[1]
+        else:
+            tempDic=globals.worldMap.movementMatrix(self)   
+            #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
+            misc.pathFinder(self,tempDic["Comida"],tempDic["Peligro"],tempDic["Parejas"],tempDic["Especie"]) 
+            
+        
+
         
         print("Yo "+self.name+" me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
         globals.worldMap.udpdateIndividual(self,previusX,previusY)
