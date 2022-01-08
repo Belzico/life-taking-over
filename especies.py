@@ -529,7 +529,7 @@ class Individuo():
                 elif self.especie.basicInfo["Tipo_de_reproduccion"]=="sexual" and self.sexo==int(1):
                     for item in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
                         if item.sexo==int(0):
-                            if self.giveMeRealAge()-int(item.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(item.lastReproduction)>int(item.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                            if item.giveMeRealAge()-int(item.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(item.lastReproduction)>int(item.naturalDefenseInd["Tiempo_entre_reproducccion"]):
                                 self.lastReproduction=self.giveMeRealAge()
                                 item.lastReproduction=self.giveMeRealAge()
                                 self.breed(item)
