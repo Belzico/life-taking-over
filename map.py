@@ -131,22 +131,63 @@ class Map:
 
     
     def movementMatrix(self,Individuo) -> dict:
-        matrixDict = {}
         perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
-        
-        matrixDict["Tile"] = perceptionList
-        
-        matrixDict["Especie"]= map.speciesMatrix(Individuo, perceptionList)
-        
 
+        matrixDict = {}
+        matrixDict["Tiles"] = perceptionList
         
-        matrixDict["Comida"] = map.foodMatrix(Individuo,perceptionList)
+        matrixDict["Especie"]= self.speciesMatrix(Individuo, perceptionList)
+        
+        matrixDict["Pareja"] = self.PeerMatrix(Individuo,perceptionList)
+        
+        matrixDict["Comida"] = self.FoodMatrix(Individuo,perceptionList)
        
-        matrixDict["Peligro"] = map.dangerMatrix(Individuo,perceptionList)
+        matrixDict["Peligro"] = self.dangerMatrix(Individuo,perceptionList)
         
         return matrixDict
         
-        
+    
+    def PeerMatrix(self,Individuo,TilePerceptionMatrix):
+        valuesList = []
+        for i in range(len(TilePerceptionMatrix)):
+            valuesList.append([])
+            for j in range(len(TilePerceptionMatrix[i])):
+                valuesList[i].append(-1)
+                
+                 #Buscando la casilla con la mayor cantidad de individuos fértiles de la especie
+       
+        savedValue = -1
+        tempvalue= 0
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                tempvalue=0
+                for h in TilePerceptionMatrix[i][j].CreatureList:
+                    if h.especie == Individuo.especie:
+                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                            tempvalue +=1
+                if savedValue< tempvalue:
+                    savedValue = tempvalue
+    
+        for i in TilePerceptionMatrix:
+            for j in TilePerceptionMatrix[i]:
+                tempvalue= 0
+                for h in TilePerceptionMatrix[i][j].CreatureList:
+                    if h.especie == Individuo.especie:
+                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                            tempvalue +=1
+    
+                if savedValue ==  tempvalue:
+                    valuesList[i][j] = 5
+                if savedValue>tempvalue>=savedValue*0.7:
+                    valuesList[i][j] = 4
+                if savedValue*0.7>tempvalue>=savedValue*0.5:
+                    valuesList[i][j] = 3
+                if savedValue*0.5> tempvalue>=savedValue*0.3:
+                    valuesList[i][j] = 2
+                if savedValue*0.3> tempvalue:
+                    valuesList[i][j] = 1
+                
+        return valuesList
         
     def dangerMatrix(self,Individuo, TilePerceptionMatrix):
         valuesList = []
@@ -220,7 +261,8 @@ class Map:
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
                 valuesList[i].append(-1)
-    
+                
+
         #Buscando la casilla con la mayor cantidad de individuos de la especie
         savedValue = -1
         tempvalue= 0
@@ -248,7 +290,8 @@ class Map:
                     valuesList[i][j] = 2
                 if savedValue*0.3> tempvalue:
                     valuesList[i][j] = 1
-                
+        
+        return valuesList
         
     
     
