@@ -6,7 +6,7 @@ import misc
 
 
 def worldController():
-    i=200
+    i=50
     while (i>0):
         
         value=''
