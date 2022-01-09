@@ -155,9 +155,9 @@ class Map:
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append("")
+                valuesList[i].append(globals.voidValue)
                 
-                 #Buscando la casilla con la mayor cantidad de individuos fértiles de la especie
+        #Buscando la casilla con la mayor cantidad de individuos fértiles de la especie
        
         savedValue = -1
         tempvalue= 0
@@ -165,7 +165,7 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue=0
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
                         if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
@@ -177,7 +177,7 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
                         if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
@@ -201,21 +201,21 @@ class Map:
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append("")
+                valuesList[i].append(globals.voidValue)
     
         #Buscando la casilla de menor peligrosidad
         savedValue = -1
         for i in range(len(TilePerceptionMatrix)):
             for j in range(len(TilePerceptionMatrix[i])):
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 if savedValue > TilePerceptionMatrix[i][j].Zone.Danger:
                     savedValue = TilePerceptionMatrix[i][j].Zone.Danger
                     
         for i in range(len(TilePerceptionMatrix)):
             for j in range(len(TilePerceptionMatrix[i])):
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 if savedValue == TilePerceptionMatrix[i][j].Zone.Danger:
                     valuesList[i][j] = 5
                 if savedValue<TilePerceptionMatrix[i][j].Zone.Danger< savedValue*1.5:
@@ -234,7 +234,7 @@ class Map:
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append("")
+                valuesList[i].append(globals.voidValue)
     
         #Buscando la casilla con mayor cantidad de comida
         savedValue = -1
@@ -243,7 +243,7 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in Individuo.especie.alimentos.keys():
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if tempvalue>savedValue:
@@ -254,7 +254,7 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in Individuo.especie.alimentos.keys():
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if savedValue == tempvalue:
@@ -275,7 +275,7 @@ class Map:
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append("")
+                valuesList[i].append(globals.voidValue)
     
         #Buscando la casilla con la mayor cantidad de individuos de la especie
         savedValue = -1
@@ -284,7 +284,7 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue=0
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
                         tempvalue +=1
@@ -295,7 +295,7 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
                 #Parche de casillas vacías
-                if TilePerceptionMatrix[i][j] == "": continue
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
                         tempvalue += 1
@@ -325,7 +325,7 @@ class Map:
         for i in range(0, 1  + 2 * int(perceptionValue)):
             newList = []
             for j in range(0,  1  + 2 * int(perceptionValue)):
-                newList.append("")
+                newList.append(globals.voidValue)
             perceptionList.append(newList)
         
      
