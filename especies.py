@@ -429,7 +429,7 @@ class Individuo():
         previusY=self.yMundo
         #por ahora solo nos movemos random
         if self.naturalDefenseInd["Inteligencia"]<2:
-            tup=self.moveRandom(mapa["Tiles"])
+            tup=self.moveRandom(mapa["Tile"])
             self.xMundo+=tup[0]
             self.yMundo+=tup[1]
         else:

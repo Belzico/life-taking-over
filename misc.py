@@ -60,9 +60,10 @@ def bornList():
 def mapMaker(myMap,matrix):
     i=0
     while i < len(matrix):
+        myMap.append([])
         j=0
         while j < len(matrix[i]):
-            myMap[i][j]=0
+            myMap[i].append(0)
 
 def sumMatrix(myMap,matrix):
     i=0
