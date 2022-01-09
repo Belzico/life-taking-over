@@ -421,7 +421,7 @@ class Individuo():
                                      #move
     #############################################################################
     #movimiento del individuo
-    def move(self,map):
+    def move(self,mapa):
         #aca se valorara segun que criterio moverse
         tup=()
         
@@ -429,13 +429,13 @@ class Individuo():
         previusY=self.yMundo
         #por ahora solo nos movemos random
         if self.naturalDefenseInd["Inteligencia"]<2:
-            tup=self.moveRandom(map)
+            tup=self.moveRandom(mapa["Tiles"])
             self.xMundo+=tup[0]
             self.yMundo+=tup[1]
         else:
             tempDic=globals.worldMap.movementMatrix(self)   
             #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
-            misc.pathFinder(self,tempDic["Comida"],tempDic["Peligro"],tempDic["Parejas"],tempDic["Especie"]) 
+            misc.pathFinder(self,mapa) 
             
         
 
@@ -518,7 +518,7 @@ class Individuo():
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="element":
                self.eat()
                         
-            #self.move(map)
+        self.move(map)
                 
         #reproduccion del individuo
         if self.giveMeRealAge()-int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0:

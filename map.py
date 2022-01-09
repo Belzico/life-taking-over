@@ -272,8 +272,8 @@ class Map:
         countY=0
         
                 #Colocando las Tiles en Perception List
-        for i in range(perceptionList):
-            for j in range(perceptionList):
+        for i in range(len(perceptionList)):
+            for j in range(len(perceptionList)):
                 perceptionList[i][j] = self.Tiles[Individuo.xMundo  - perceptionValue + i][Individuo.yMundo - perceptionValue + j]
                 
      

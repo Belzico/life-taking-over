@@ -12,7 +12,7 @@ def worldController():
         value=''
         for val in globals.worldIndividuals:
             value=globals.worldIndividuals[val]
-            tempMap=globals.worldMap.movementWithBoundries(value,1) 
+            tempMap=globals.worldMap.movementWithoutBoundries(value,value.naturalDefenseInd["Percepcion_de_mundo"]) 
             value.resolveIteration(tempMap)
         i-=1
         

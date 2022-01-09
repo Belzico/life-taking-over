@@ -78,11 +78,15 @@ def mulMatrix(matrix,value):
         while j < len(matrix[i]):
             matrix*=value
             
-def pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
+def pathFinder(currentIndividual,mapa):
     #mapa para trabajar
     myFixMap=[]    
     #mapa para la matrix de adyacencia
     myMap=[]
+    foodMatrix=mapa["Comida"]
+    dangerMatrix=mapa["Peligro"]
+    mateMatrix=mapa["Pareja"]
+    especiesMatrix=mapa["Especie"]
     mapMaker(myMap,foodMatrix)
     mapMaker(myFixMap,foodMatrix)
     if currentIndividual.naturalDefenseInd["Inteligencia"]>2:
