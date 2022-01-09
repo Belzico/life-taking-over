@@ -141,7 +141,7 @@ class Map:
         
         matrixDict["Especie"]= map.speciesMatrix(Individuo, perceptionList)
         
-
+        matrixDict["Pareja"] = self.PeerMatrix(Individuo,perceptionList)
         
         matrixDict["Comida"] = map.foodMatrix(Individuo,perceptionList)
        
