@@ -182,7 +182,7 @@ def ucsSmart(mapa,adyacencyList,myPosition,destination):
     myMap=mapZone(mapa)
     x1=myPosition[0]
     y1=myPosition[1]
-    myMap[x1,y1]=simpleNode(0,None,False)
+    myMap[x1][y1]=simpleNode(0,None,False)
     myQueue=queue.PriorityQueue()
     #aqui insertamos euristica
     myQueue.put((calcularDistancia(myPosition[0],myPosition[1],destination[0],destination[1]),myPosition))
