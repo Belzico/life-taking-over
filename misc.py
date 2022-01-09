@@ -63,8 +63,12 @@ def mapMaker(myMap,matrix):
         myMap.append([])
         j=0
         while j < len(matrix[i]):
-            myMap[i].append(0)
-
+            if matrix[i][j]==globals.voidValue:
+                myMap[i].append(globals.voidValue)    
+            else:
+                myMap[i].append(0)
+            j+=1
+        i+=1
 def sumMatrix(myMap,matrix):
     i=0
     while i < len(matrix):
@@ -88,9 +92,9 @@ def pathFinder(currentIndividual,mapa):
     dangerMatrix=mapa["Peligro"]
     mateMatrix=mapa["Pareja"]
     especiesMatrix=mapa["Especie"]
-    mapMaker(myMap,foodMatrix)
-    mapMaker(myFixMap,foodMatrix)
-    if currentIndividual.naturalDefenseInd["Inteligencia"]>2:
+    mapMaker(myMap,mapa["Tile"])
+    mapMaker(myFixMap,mapa["Tile"])
+    if currentIndividual.naturalDefenseInd["Inteligencia"]>=2:
         sumMatrix(myMap,mulMatrix(foodMatrix,currentIndividual.priorities['hambre']) )
     if currentIndividual.naturalDefenseInd["Inteligencia"]>5:
         sumMatrix(myMap,mulMatrix(dangerMatrix,currentIndividual.priorities['danger']) )

@@ -433,7 +433,7 @@ class Individuo():
             self.xMundo+=tup[0]
             self.yMundo+=tup[1]
         else:
-            tempDic=globals.worldMap.movementMatrix(self)   
+            #tempDic=globals.worldMap.movementMatrix(self)   
             #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
             misc.pathFinder(self,mapa) 
             
