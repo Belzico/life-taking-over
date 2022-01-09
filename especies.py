@@ -450,7 +450,7 @@ class Individuo():
         while i>0:
             xRandom=random.randint(-1,1)
             yRandom=random.randint(-1,1)
-            if myMap[xRandom+myPosition][yRandom+myPosition]!="":
+            if myMap[xRandom+myPosition][yRandom+myPosition]!=globals.voidValue:
                 break
             i-=1
             #caso donde no se mueve

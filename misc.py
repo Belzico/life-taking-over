@@ -75,15 +75,19 @@ def sumMatrix(myMap,matrix):
         j=0
         while j < len(matrix[i]):
             myMap[i][j]+=matrix[i][j]
-
+            j+=1
+        i+=1
+        
 def mulMatrix(matrix,value):
     i=0
     while i < len(matrix):
         j=0
         while j < len(matrix[i]):
-            matrix[i][j]*=value
+            if matrix[i][j]!=globals.voidValue: 
+                matrix[i][j]*=value
             j+=1
         i+=1    
+    return matrix
             
             
 def pathFinder(currentIndividual,mapa):
@@ -109,7 +113,8 @@ def pathFinder(currentIndividual,mapa):
     destination=bestLocationFinder(myMap)
     adyacencyList=adyacencyMatrizBuilder(myMap)
     
-    ucsSmart(myFixMap,adyacencyList,(len(foodMatrix)+1,len(foodMatrix[0])+1),destination,adyacencyList)
+    myPosition=(int((len(foodMatrix)-1)/2),int((len(foodMatrix)-1)/2))
+    ucsSmart(myFixMap,adyacencyList,myPosition,destination)
     
     
     i=0
@@ -134,15 +139,16 @@ def chanceToDie(risk,index=10):
 
 def bestLocationFinder(myMap):
     i=0
-    temp=1000000
+    temp=globals.voidValue
     result=None
     while i<len(myMap):
         j=0
         while j < len(myMap[i]):
-            if temp<myMap[i][j]:
+            if temp>myMap[i][j] and myMap[i][j]!=globals.voidValue:
                 temp=myMap[i][j]
                 result=(i,j)
-                
+            j+=1
+        i+=1        
     return result
             
 def fixRoad(mapa,destination,adyacencyList):
@@ -174,7 +180,9 @@ def listInversor(lista):
 #dijstra con euristica    
 def ucsSmart(mapa,adyacencyList,myPosition,destination):
     myMap=mapZone(mapa)
-    myMap[myPosition[0],myPosition[1]]=simpleNode(0,None,False)
+    x1=myPosition[0]
+    y1=myPosition[1]
+    myMap[x1,y1]=simpleNode(0,None,False)
     myQueue=queue.PriorityQueue()
     #aqui insertamos euristica
     myQueue.put((calcularDistancia(myPosition[0],myPosition[1],destination[0],destination[1]),myPosition))
@@ -235,21 +243,20 @@ class Element:
 class simpleNode():
     def __init__(self,distancia,padre,visitado):
         self.distancia=distancia
-        self.distanciaEuristica=10000000
+        self.distanciaEuristica=globals.voidValue
         self.padre=padre
         self.visitado=visitado
 
-class mapZone():
-    def __init__(self,myMap):
-        i=0
-        while i < len(myMap):
-            j=0
-            while j < len(myMap[i]):
-                #distancia=infinita,padre=none,visto=false
-                myMap[i][j]=simpleNode(1000000,None,False)
-
-myMap=[[5,3,2,1,0],[0,2,0,1,3],[6,3,0,3,6],[0,1,0,2,0],[1,6,5,2,1]]
-
-test=adyacencyMatrizBuilder(myMap)
-
-print("final test")
+def mapZone(myMap):
+    newMap=[]
+    i=0
+    while i < len(myMap):
+        j=0
+        newMap.append([])
+        while j < len(myMap[i]):
+            #distancia=infinita,padre=none,visto=false
+            newMap[i].append(simpleNode(globals.voidValue,None,False))
+            j+=1
+        i+=1
+    return newMap
+                
