@@ -139,13 +139,13 @@ class Map:
         
         matrixDict["Tile"] = perceptionList
         
-        matrixDict["Especie"]= map.speciesMatrix(Individuo, perceptionList)
+        matrixDict["Especie"]= self.speciesMatrix(Individuo, perceptionList)
         
         matrixDict["Pareja"] = self.PeerMatrix(Individuo,perceptionList)
         
-        matrixDict["Comida"] = map.foodMatrix(Individuo,perceptionList)
+        matrixDict["Comida"] = self.FoodMatrix(Individuo,perceptionList)
        
-        matrixDict["Peligro"] = map.dangerMatrix(Individuo,perceptionList)
+        matrixDict["Peligro"] = self.dangerMatrix(Individuo,perceptionList)
         
         return matrixDict
         
@@ -244,7 +244,7 @@ class Map:
                 tempvalue= 0
                 #Parche de casillas vacías
                 if TilePerceptionMatrix[i][j] == "": continue
-                for h in globals.allSpecies[Individuo.especie].alimentos.keys():
+                for h in Individuo.especie.alimentos.keys():
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if tempvalue>savedValue:
                     savedValue = tempvalue
@@ -255,7 +255,7 @@ class Map:
                 tempvalue= 0
                 #Parche de casillas vacías
                 if TilePerceptionMatrix[i][j] == "": continue
-                for h in globals.allSpecies[Individuo.especie].alimentos.keys():
+                for h in Individuo.especie.alimentos.keys():
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if savedValue == tempvalue:
                     valuesList[i][j] = 5
