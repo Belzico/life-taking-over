@@ -101,7 +101,7 @@ class Map:
         for i in range(0, 1  + 2 * int(perceptionValue)):
             newList = []
             for j in range(0,  1  + 2 * int(perceptionValue)):
-                newList.append("")
+                newList.append(globals.voidValue)
                 tileCount +=1
             perceptionList.append(newList)
         
@@ -117,7 +117,7 @@ class Map:
             countY=0
             while actCol <= Individuo.yMundo + perceptionValue:
                 if not(0<=actRow< self.SizeX) or not(0<=actCol< self.SizeY):
-                    perceptionList[countX][countY]= ""
+                    perceptionList[countX][countY]= globals.voidValue
                 else:
                     perceptionList[countX][countY]= self.Tiles[actRow][actCol]
             
