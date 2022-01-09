@@ -6,6 +6,8 @@ ZoneList = ['Prairie', 'Mountain', 'Ocean']
 #La peligrosidad de cada zona
 ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
 
+voidValue = 10000000
+
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
 EvolutionFrequency = 1
 
