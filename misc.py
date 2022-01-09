@@ -81,7 +81,10 @@ def mulMatrix(matrix,value):
     while i < len(matrix):
         j=0
         while j < len(matrix[i]):
-            matrix*=value
+            matrix[i][j]*=value
+            j+=1
+        i+=1    
+            
             
 def pathFinder(currentIndividual,mapa):
     #mapa para trabajar
