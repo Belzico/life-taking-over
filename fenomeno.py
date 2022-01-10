@@ -1,4 +1,4 @@
-from queue import Queue
+from MyQueue import MyQueue
 from random import Random, randint, random
 from types import coroutine
 import map
@@ -11,21 +11,25 @@ class Fenomeno():
     def __init__(self, nombre, grado, cor, mapa):
         self.nombre = nombre
         self.grado = grado
-        self.Recorrido = Queue()
+        self.Recorrido = MyQueue()
         self.pos = 0
         self.cor = cor
+        self.count_maxDistance = randint(0,10)
         self.vecmov = []
+        self.map = map
         
         #cambiar por probabilidad
-        duracion = randint(0,7)
+        duracion = randint(1,7)
         self.Recorrido.put((duracion, None))
 
     
     def GenerarRecorrido(self,mapa,corulti):
         duracion = randint(0,7)
+        if corulti[2] == self.count_maxDistance:
+            return []
         
-        if corulti[1] == None:
-            return [(duracion,self.cor)]
+        elif corulti[1] == None:
+            return [(duracion,self.cor,0)]
         
         elif self.vecmov == "Random":
             ult_pos = corulti
@@ -33,9 +37,9 @@ class Fenomeno():
             x = randint(-1,1)
             y = randint(-1,1)
             
-            cornew = (ult_pos[0] + x, ult_pos[1] + y)
+            cornew = (ult_pos[1][0] + x, ult_pos[1][1] + y)
             if cornew[0] < mapa.SizeX and cornew[1] < mapa.SizeY:
-                return [(duracion,cornew)]
+                return [(duracion,cornew,corulti[2]+ 1)]
             
         return []
                 
@@ -43,41 +47,41 @@ class Fenomeno():
     def GenerateVector(self):
         self.vecmov.append("Random")
     
-    def Refresc(self,time,mapa):
-        queueCom = Queue()
+    def Refresc(self,time):
+        queueCom = MyQueue()
         lenrecorrido = len(self.Recorrido)
-        for i in range(1,lenrecorrido):
+        for i in range(0,lenrecorrido):
             posrecorrido = self.Recorrido.get()
             queueCom.put((posrecorrido[0],posrecorrido[1],time))
             
-            while queueCom != 0:
-                posrecorrido = self.queueCom.get()
-                move = (posrecorrido[0],posrecorrido[1])
+            while len(queueCom) != 0:
+                posrecorrido = queueCom.get()
+                move = (posrecorrido[0],posrecorrido[1],posrecorrido[2])
                 duracion = posrecorrido[0]
                 rest = posrecorrido[2]
                 if duracion > rest:
-                    duracion = duracion - time
-                    self.EfectuarFenomeno(mapa)
+                    posrecorrido = (duracion - time,posrecorrido[1],posrecorrido[2])
+                    self.EfectuarFenomeno(self.map)
                     self.Recorrido.put(posrecorrido)
         
                 elif duracion == rest:
-                    self.Recorrido[self.pos][0] = duracion - time
-                    self.EfectuarFenomeno(mapa,move)
-                    listmove = self.GenerarRecorrido(mapa,move)
-                    self.CambiarZona(mapa,posrecorrido,listmove)
+                    duracion = duracion - time
+                    self.EfectuarFenomeno(self.map,move)
+                    listmove = self.GenerarRecorrido(self.map,move)
+                    self.CambiarZona(self.map,posrecorrido,listmove)
                     for i in range(0,len(listmove) - 1):
                         self.Recorrido.append(listmove[i])
         
                 elif duracion < rest:
                     rest = rest - duracion
-                    self.EfectuarFenomeno(mapa,move)
+                    self.EfectuarFenomeno(self.map,move)
                     duracion = 0
-                    self.CambiarZona(time,mapa,move)
-                    for i in range(1,len(listmove)):
+                    self.CambiarZona(time,self.map,move)
+                    for i in range(0,len(listmove)):
                         queueCom.put((listmove[i][0],listmove[i][1],rest))
                 
             
-    def EfectuarFenomeno(self,mapa):
+    def EfectuarFenomeno(self,mapa,move):
         print("Efectuando Fenomeno")
         return
     
@@ -89,7 +93,7 @@ class Fenomeno():
                    i += 1
                    #eliminar fenomeno
                 
-                for j in range(0,len(listmove)-1):
+                for j in range(0,len(listmove)):
                     if tile.Coordinates == listmove[j]:
                         i += 1
                         #añadir fenomeno
@@ -101,7 +105,7 @@ class Fenomeno():
         
 class Ciclon(Fenomeno):
     def __init__(self, nombre, grado, cor, mapa):
-        super.__init__(nombre,grado,cor,mapa)
+        super().__init__(nombre,grado,cor,mapa)
         
     def Rand_Mov_CC(cor_ciclon, map, poder_ciclon):
         cor_EjeX_low = cor_ciclon[1]
@@ -115,7 +119,7 @@ class Ciclon(Fenomeno):
         return cor_new
     
     def EfectuarFenomeno(self,mapas,cor):
-        if self.Recorrido[self.pos] == None:
+        if cor[1] == None:
             return
         
         ListaCriaturas = Ciclon.DetectarCriaturas(mapas,cor)
@@ -144,14 +148,14 @@ class Ciclon(Fenomeno):
 
 class ErupcionVolcánica(Fenomeno):
     def __init__(self, nombre, grado, cor, mapa):
-        super.__init__(nombre,grado,cor,mapa)
+        super().__init__(nombre,grado,cor,mapa)
                 
         
-    def EfectuarFenomeno(self,mapa):
-        if self.Recorrido[self.pos] == None:
+    def EfectuarFenomeno(self,mapa,cor):
+        if cor[1] == None:
             return
         
-        if self.pos == 1:
+        if cor == self.cor:
             list_caida_rocas = ErupcionVolcánica.PosCaida_Rocas(mapa,self.corvolcan)
             ErupcionVolcánica.Lluvia_De_Rocas(mapa,list_caida_rocas)
         
@@ -182,20 +186,31 @@ class ErupcionVolcánica(Fenomeno):
                                 i += 1
                                  
         
-    def LavaRecorrido(self,mapa):
-        count = self.Recorrido.qsize()
-        while count != 0:
-            pos_Lava = self.Recorrido.get()
-            
+    def LavaRecorrido(self,mapa,cor):
+        if self.Recorrido[self.pos] != None: 
+            for zone in mapa.Zones:
+                for tile in zone.TileList:
+                    if tile.Coordinates == self.Recorrido[self.pos]:
+                        ErupcionVolcánica.DamageLava(tile)
     
+    def DamageLava(self,tile):
+        i = 0
+        while i < len(tile.CreatureList):
+            creature = tile.CreatureList[i]
+            death = randint(0,1)
+            if death == 1:
+                tile.CreatureList.pop(i)
+            else: 
+                i += 1
+            
     
         
 class Terremoto(Fenomeno):
     def __init__(self, nombre, grado, cor, mapa):
         super().__init__(nombre, grado, cor, mapa)
         
-    def EfectuarFenomeno(self,mapa):
-        if self.Recorrido[self.pos] == None:
+    def EfectuarFenomeno(self,mapa,cor):
+        if cor[1] == None:
             return
         
         for zone in mapa.Zones:
