@@ -119,7 +119,7 @@ class Especies():
         #velocidad reducida
         naturalDefense["Slow_done"]="1"
         #cantidad de casillas que puede recorrer en un dia en el agua
-        naturalDefense["Velocidad_agua"]=str(random.randint(0,1))
+        naturalDefense["Velocidad_agua"]=str(random.randint(10,12))
         #cantidad de casillas que puede recorrer en un dia en volando
         #naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
         #cantidad de casillas que puede recorrer en un dia en la tierra
