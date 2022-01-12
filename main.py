@@ -6,13 +6,13 @@ import misc
 
 
 def worldController():
-    i=200
+    i=50
     while (i>0):
         
         value=''
         for val in globals.worldIndividuals:
             value=globals.worldIndividuals[val]
-            tempMap=globals.worldMap.movementWithBoundries(value,1) 
+            tempMap=globals.worldMap.movementMatrix(value) 
             value.resolveIteration(tempMap)
         i-=1
         
@@ -37,7 +37,7 @@ def worldController():
 
     
 def main():
-    globals.worldMap=map.Map(1,1,1)
+    globals.worldMap=map.Map(5,10,10)
     globals.allSpecies["1"]=especies.Especies(5,0,0)
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()

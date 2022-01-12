@@ -119,17 +119,17 @@ class Especies():
         #velocidad reducida
         naturalDefense["Slow_done"]="1"
         #cantidad de casillas que puede recorrer en un dia en el agua
-        naturalDefense["Velocidad_agua"]=str(random.randint(0,1))
+        naturalDefense["Velocidad_agua"]=str(random.randint(10,12))
         #cantidad de casillas que puede recorrer en un dia en volando
-        naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
+        #naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
         #cantidad de casillas que puede recorrer en un dia en la tierra
-        naturalDefense["Velocidad_tierra"]=str(random.randint(0,1))
+        #naturalDefense["Velocidad_tierra"]=str(random.randint(0,1))
         
-        naturalDefense["Edad_de_madurez_sexual_en_dias"]=str(random.randint(20,31))
-        naturalDefense["Tiempo_de_gestacion"]=str(random.randint(20,31))
+        naturalDefense["Edad_de_madurez_sexual_en_dias"]=str(random.randint(10,21))
+        naturalDefense["Tiempo_de_gestacion"]=str(random.randint(10,21))
         
         #cuantos hijos por reproduccion puede consebir por reproduccion
-        naturalDefense["Cantidad_de_hijos"]="1"
+        naturalDefense["Tiempo_entre_reproducccion"]="5"
         naturalDefense["Tiempo_de_vida_en_dias"]=str(random.randint(50,101))
        
         #cuanta energia daran al que los mate y se alimente de ellos
@@ -229,10 +229,12 @@ class Individuo():
         #nombre del individuos
         self.name=name
 
-        self.lastReproduction=""
+        self.lastReproduction=0
         #agregando aa la casilla
         globals.worldMap.IsBorn(self)
         
+        
+                
         #agregando a la lista de individuos global    
         #globals.worldIndividuals[self.name]=self
         globals.bornIndividuals.append((self.name,self))
@@ -246,6 +248,18 @@ class Individuo():
             self.naturalDefenseGeneratorInd(especie.naturalDefense,varianza)
         else:
             self.naturalDefenseGeneratorInd(varianza)
+
+        self.priorities={}
+        self.setPriorities()
+    
+    
+    
+    def setPriorities(self):
+        self.priorities["hambre"]=1 +(1-self.saciedad/self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+        self.priorities["danger"]=2-(1-self.saciedad/self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+        self.priorities["mate"]=1
+        self.priorities["imanEspecie"]=1
+        
     
     
     #este sera el metodo encargado de reproducir a un individuo, y de el se derivara a los distintos tipos de reproduccion   
@@ -268,11 +282,11 @@ class Individuo():
         self.naturalDefenseInd["Slow_chance"]=int(defences["Slow_chance"])+random.randint(a,b)
         self.naturalDefenseInd["Slow_done"]=int(defences["Slow_done"])+random.randint(a,b)
         self.naturalDefenseInd["Velocidad_agua"]=int(defences["Velocidad_agua"])+random.randint(a,b)
-        self.naturalDefenseInd["Velocidad_aire"]=int(defences["Velocidad_aire"])+random.randint(a,b)
-        self.naturalDefenseInd["Velocidad_tierra"]=int(defences["Velocidad_tierra"])+random.randint(a,b)
+        #self.naturalDefenseInd["Velocidad_aire"]=int(defences["Velocidad_aire"])+random.randint(a,b)
+        #self.naturalDefenseInd["Velocidad_tierra"]=int(defences["Velocidad_tierra"])+random.randint(a,b)
         self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(defences["Edad_de_madurez_sexual_en_dias"])+random.randint(a,b)
         self.naturalDefenseInd["Tiempo_de_gestacion"]=int(defences["Tiempo_de_gestacion"])+random.randint(a,b)
-        self.naturalDefenseInd["Cantidad_de_hijos"]=int(defences["Cantidad_de_hijos"])+random.randint(a,b)
+        self.naturalDefenseInd["Tiempo_entre_reproducccion"]=int(defences["Tiempo_entre_reproducccion"])+random.randint(a,b)
         self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(defences["Tiempo_de_vida_en_dias"])+random.randint(a,b)        
         self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(defences["Vida"])
         self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=1+int(defences["Vida"])/5
@@ -297,11 +311,11 @@ class Individuo():
             self.naturalDefenseInd["Slow_chance"]=int(self.naturalDefenseInd["Slow_chance"])+int(random.randint(int(varianza["Slow_chance"]),int(varianza["Slow_chance"])))
             self.naturalDefenseInd["Slow_done"]=int(self.naturalDefenseInd["Slow_done"])+int(random.randint(int(varianza["Slow_done"]),int(varianza["Slow_done"])))
             self.naturalDefenseInd["Velocidad_agua"]=int(self.naturalDefenseInd["Velocidad_agua"])+int(random.randint(int(varianza["Velocidad_agua"]),int(varianza["Velocidad_agua"])))
-            self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(int(varianza["Velocidad_aire"]),int(varianza["Velocidad_aire"])))
-            self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(int(varianza["Velocidad_tierra"]),int(varianza["Velocidad_tierra"])))
+            #self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(int(varianza["Velocidad_aire"]),int(varianza["Velocidad_aire"])))
+            #self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(int(varianza["Velocidad_tierra"]),int(varianza["Velocidad_tierra"])))
             self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(int(varianza["Edad_de_madurez_sexual_en_dias"]),int(varianza["Edad_de_madurez_sexual_en_dias"])))
             self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(int(varianza["Tiempo_de_gestacion"]),int(varianza["Tiempo_de_gestacion"])))
-            self.naturalDefenseInd["Cantidad_de_hijos"]=int(self.naturalDefenseInd["Cantidad_de_hijos"])+int(random.randint(int(varianza["Cantidad_de_hijos"]),int(varianza["Cantidad_de_hijos"])))
+            self.naturalDefenseInd["Tiempo_entre_reproducccion"]=int(self.naturalDefenseInd["Tiempo_entre_reproducccion"])+int(random.randint(int(varianza["Tiempo_entre_reproducccion"]),int(varianza["Tiempo_entre_reproducccion"])))
             self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"])+int(random.randint(int(varianza["Tiempo_de_vida_en_dias"]),int(varianza["Tiempo_de_vida_en_dias"])))
             self.naturalDefenseInd["Cantidad_de_energia_dropeada"]=int(self.naturalDefenseInd["Vida"])
             self.naturalDefenseInd["Cantidad_de_energia_necesaria"]=1+(int(self.naturalDefenseInd["Vida"]))/5
@@ -346,17 +360,17 @@ class Individuo():
             
         if self.naturalDefenseInd["Velocidad_agua"]<=0:
             self.naturalDefenseInd["Velocidad_agua"]=0
-        if self.naturalDefenseInd["Velocidad_aire"]<0:
-            self.naturalDefenseInd["Velocidad_aire"]=0
-        if self.naturalDefenseInd["Velocidad_tierra"]<0:
-            self.naturalDefenseInd["Velocidad_tierra"]=0
+        #if self.naturalDefenseInd["Velocidad_aire"]<0:
+        #    self.naturalDefenseInd["Velocidad_aire"]=0
+        #if self.naturalDefenseInd["Velocidad_tierra"]<0:
+        #    self.naturalDefenseInd["Velocidad_tierra"]=0
             
-        if self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]<20:
-            self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=20
-        if self.naturalDefenseInd["Tiempo_de_gestacion"]<20:
-            self.naturalDefenseInd["Tiempo_de_gestacion"]=20
-        if self.naturalDefenseInd["Cantidad_de_hijos"]<1:
-            self.naturalDefenseInd["Cantidad_de_hijos"]=1
+        if self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]<10:
+            self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=10
+        if self.naturalDefenseInd["Tiempo_de_gestacion"]<10:
+            self.naturalDefenseInd["Tiempo_de_gestacion"]=10
+        if self.naturalDefenseInd["Tiempo_entre_reproducccion"]<1:
+            self.naturalDefenseInd["Tiempo_entre_reproducccion"]=1
             
         if self.naturalDefenseInd["Tiempo_de_vida_en_dias"]<1:
             self.naturalDefenseInd["Tiempo_de_vida_en_dias"]=1
@@ -407,17 +421,24 @@ class Individuo():
                                      #move
     #############################################################################
     #movimiento del individuo
-    def move(self,map):
+    def move(self,mapa):
         #aca se valorara segun que criterio moverse
         tup=()
-        #por ahora solo nos movemos random
-        if True:
-            tup=self.moveRandom(map)
-            
+        
         previusX=self.xMundo
         previusY=self.yMundo
-        self.xMundo+=tup[0]
-        self.yMundo+=tup[1]
+        #por ahora solo nos movemos random
+        if self.naturalDefenseInd["Inteligencia"]<2:
+            tup=self.moveRandom(mapa["Tile"])
+            self.xMundo+=tup[0]
+            self.yMundo+=tup[1]
+        else:
+            #tempDic=globals.worldMap.movementMatrix(self)   
+            #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
+            misc.pathFinder(self,mapa) 
+            
+        
+
         
         print("Yo "+self.name+" me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
         globals.worldMap.udpdateIndividual(self,previusX,previusY)
@@ -429,7 +450,7 @@ class Individuo():
         while i>0:
             xRandom=random.randint(-1,1)
             yRandom=random.randint(-1,1)
-            if myMap[xRandom+myPosition][yRandom+myPosition]!="":
+            if myMap[xRandom+myPosition][yRandom+myPosition]!=globals.voidValue:
                 break
             i-=1
             #caso donde no se mueve
@@ -497,20 +518,20 @@ class Individuo():
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="element":
                self.eat()
                         
-            self.move(map)
+        self.move(map)
                 
         #reproduccion del individuo
-        if int(int(mySpecie.naturalDefense["Tiempo_de_vida_en_dias"])-int(mySpecie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))>=int(self.edad):
-                fixEdad=int(self.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(self.edad)
-                reproduccionCicle=(int(self.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(self.especie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))/int(self.especie.naturalDefense["Cantidad_de_hijos"])
-                if fixEdad % reproduccionCicle==0:
-                    if self.especie.basicInfo["Tipo_de_reproduccion"]=="asexual":
-                        self.breed()                    
-                    elif self.especie.basicInfo["Tipo_de_reproduccion"]=="sexual" and self.sexo==int(1):
-                        for item in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
-                            fixEdad=int(item.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(item.edad)
-                            reproduccionCicle=(int(item.especie.naturalDefense["Tiempo_de_vida_en_dias"])-int(item.especie.naturalDefense["Edad_de_madurez_sexual_en_dias"]))/int(item.especie.naturalDefense["Cantidad_de_hijos"])       
-                            if fixEdad % reproduccionCicle==0:
+        if self.giveMeRealAge()-int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0:
+            if self.giveMeRealAge()- int(self.lastReproduction)>int(self.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                if self.especie.basicInfo["Tipo_de_reproduccion"]=="asexual":
+                    self.lastReproduction=self.giveMeRealAge()
+                    self.breed()                    
+                elif self.especie.basicInfo["Tipo_de_reproduccion"]=="sexual" and self.sexo==int(1):
+                    for item in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
+                        if item.sexo==int(0):
+                            if item.giveMeRealAge()-int(item.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(item.lastReproduction)>int(item.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                                self.lastReproduction=self.giveMeRealAge()
+                                item.lastReproduction=self.giveMeRealAge()
                                 self.breed(item)
                                 break                                                      
         
@@ -520,6 +541,8 @@ class Individuo():
         if int(self.edad)==0:
             self.die(mySpecie)
     
+    def giveMeRealAge(self):
+        return int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"]) - int(self.edad)
         
     def die(self,mySpecie):
         globals.deadIndividuals.append(self.name)

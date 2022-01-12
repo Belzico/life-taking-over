@@ -101,7 +101,7 @@ class Map:
         for i in range(0, 1  + 2 * int(perceptionValue)):
             newList = []
             for j in range(0,  1  + 2 * int(perceptionValue)):
-                newList.append("")
+                newList.append(globals.voidValue)
                 tileCount +=1
             perceptionList.append(newList)
         
@@ -117,7 +117,7 @@ class Map:
             countY=0
             while actCol <= Individuo.yMundo + perceptionValue:
                 if not(0<=actRow< self.SizeX) or not(0<=actCol< self.SizeY):
-                    perceptionList[countX][countY]= ""
+                    perceptionList[countX][countY]= globals.voidValue
                 else:
                     perceptionList[countX][countY]= self.Tiles[actRow][actCol]
             
@@ -131,10 +131,13 @@ class Map:
 
     
     def movementMatrix(self,Individuo) -> dict:
-        perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
-
         matrixDict = {}
-        matrixDict["Tiles"] = perceptionList
+        #perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
+        #Parche de casillas vacías
+        perceptionList = self.movementWithBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
+
+        
+        matrixDict["Tile"] = perceptionList
         
         matrixDict["Especie"]= self.speciesMatrix(Individuo, perceptionList)
         
@@ -146,36 +149,39 @@ class Map:
         
         return matrixDict
         
-    
+        
     def PeerMatrix(self,Individuo,TilePerceptionMatrix):
         valuesList = []
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append(-1)
+                valuesList[i].append(globals.voidValue)
                 
-                 #Buscando la casilla con la mayor cantidad de individuos fértiles de la especie
+        #Buscando la casilla con la mayor cantidad de individuos fértiles de la especie
        
         savedValue = -1
         tempvalue= 0
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue=0
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
-                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and h.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
                             tempvalue +=1
                 if savedValue< tempvalue:
                     savedValue = tempvalue
     
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
-                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and h.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
                             tempvalue +=1
-    
                 if savedValue ==  tempvalue:
                     valuesList[i][j] = 5
                 if savedValue>tempvalue>=savedValue*0.7:
@@ -188,23 +194,28 @@ class Map:
                     valuesList[i][j] = 1
                 
         return valuesList
-        
+    
+    
     def dangerMatrix(self,Individuo, TilePerceptionMatrix):
         valuesList = []
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append(-1)
+                valuesList[i].append(globals.voidValue)
     
         #Buscando la casilla de menor peligrosidad
         savedValue = -1
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 if savedValue > TilePerceptionMatrix[i][j].Zone.Danger:
                     savedValue = TilePerceptionMatrix[i][j].Zone.Danger
                     
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 if savedValue == TilePerceptionMatrix[i][j].Zone.Danger:
                     valuesList[i][j] = 5
                 if savedValue<TilePerceptionMatrix[i][j].Zone.Danger< savedValue*1.5:
@@ -223,24 +234,28 @@ class Map:
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append(-1)
+                valuesList[i].append(globals.voidValue)
     
         #Buscando la casilla con mayor cantidad de comida
         savedValue = -1
         tempvalue= 0
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
-                for h in globals.allSpecies[Individuo.especie].alimentos.keys():
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
+                for h in Individuo.especie.alimentos.keys():
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if tempvalue>savedValue:
                     savedValue = tempvalue
 
                     
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
-                for h in globals.allSpecies[Individuo.especie].alimentos.keys():
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
+                for h in Individuo.especie.alimentos.keys():
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if savedValue == tempvalue:
                     valuesList[i][j] = 5
@@ -260,26 +275,30 @@ class Map:
         for i in range(len(TilePerceptionMatrix)):
             valuesList.append([])
             for j in range(len(TilePerceptionMatrix[i])):
-                valuesList[i].append(-1)
-                
-
+                valuesList[i].append(globals.voidValue)
+    
         #Buscando la casilla con la mayor cantidad de individuos de la especie
         savedValue = -1
         tempvalue= 0
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue=0
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
                         tempvalue +=1
                 if savedValue< tempvalue:
                     savedValue = tempvalue
                     
-        for i in TilePerceptionMatrix:
-            for j in TilePerceptionMatrix[i]:
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
                 tempvalue= 0
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
-                    tempvalue += 1
+                    if h.especie == Individuo.especie:
+                        tempvalue += 1
                 if savedValue ==  tempvalue:
                     valuesList[i][j] = 5
                 if savedValue>tempvalue>=savedValue*0.7:
@@ -291,7 +310,7 @@ class Map:
                 if savedValue*0.3> tempvalue:
                     valuesList[i][j] = 1
         
-        return valuesList
+        return valuesList   
         
     
     
@@ -307,7 +326,7 @@ class Map:
         for i in range(0, 1  + 2 * int(perceptionValue)):
             newList = []
             for j in range(0,  1  + 2 * int(perceptionValue)):
-                newList.append("")
+                newList.append(globals.voidValue)
             perceptionList.append(newList)
         
      
@@ -315,8 +334,8 @@ class Map:
         countY=0
         
                 #Colocando las Tiles en Perception List
-        for i in range(perceptionList):
-            for j in range(perceptionList):
+        for i in range(len(perceptionList)):
+            for j in range(len(perceptionList)):
                 perceptionList[i][j] = self.Tiles[Individuo.xMundo  - perceptionValue + i][Individuo.yMundo - perceptionValue + j]
                 
      
