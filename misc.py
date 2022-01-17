@@ -4,8 +4,8 @@ import queue
 import random
 
 
-dir1Row=[0,-1,-1,-1,0,1,1,1]
-dir2Col=[1,1,0,-1,-1,-1,0,1]
+dir1Row=[0,-1,-1,-1, 0, 1,1,1]
+dir2Col=[1,1,  0,-1,-1,-1,0,1]
 
 def dictMergeSum(dict1, dict2):
     tempdict ={}
@@ -114,11 +114,11 @@ def pathFinder(currentIndividual,mapa):
     adyacencyList=adyacencyMatrizBuilder(myMap)
     
     myPosition=(int((len(foodMatrix)-1)/2),int((len(foodMatrix)-1)/2))
-    ucsSmart(myFixMap,adyacencyList,myPosition,destination)
+    road= ucsSmart(myFixMap,adyacencyList,myPosition,destination)
     
     
     i=0
-    temp=fixRoad(myFixMap,destination,adyacencyList)
+    temp=fixRoad(road,destination,adyacencyList)
     currentPosition=None
     while(currentIndividual.naturalDefenseInd["Velocidad_agua"]>i):
         if  len(temp)>i:
@@ -130,6 +130,8 @@ def pathFinder(currentIndividual,mapa):
                 return    
          
         i+=1
+        
+    print("3")
 
 def chanceToDie(risk,index=10):
     tempInt=random.randint(0,100)
@@ -150,31 +152,29 @@ def bestLocationFinder(myMap):
             j+=1
         i+=1        
     return result
-            
+
+#revisar que no se salga de los indices de la matrix
+def indexChecker(tup,size):
+    for i in tup:
+        if int(i)<0 or int(i)>=int(size):
+            return False
+        return True
+
 def fixRoad(mapa,destination,adyacencyList):
     road=[]
     road.append(destination)
-    distance=mapa[destination[0],destination[1]].distancia
     currentPosition=destination
-    while distance>0:
-        for i in dir1Row:
-            adyacentNode=(currentPosition[0]+dir1Row[i],currentPosition[1]+dir2Col[i])
-            if mapa[currentPosition[0]][currentPosition[1]].visitado and mapa[currentPosition[0]][currentPosition[1]].distancia-adyacencyList(adyacentNode[0],adyacentNode[1],currentPosition[0],currentPosition[1])==mapa[adyacentNode[0]][adyacentNode[1]]:
-                currentPosition=adyacentNode
-                distance-=adyacencyList(adyacentNode[0],adyacentNode[1],currentPosition[0],currentPosition[1])
-                road.append(currentPosition)
-                break
-    
-        
+    while mapa[currentPosition[0]][currentPosition[1]].padre!=None:
+        road.append(mapa[currentPosition[0]][currentPosition[1]].padre)
+        currentPosition=mapa[currentPosition[0]][currentPosition[1]].padre
     return listInversor(road)
 
 def listInversor(lista):
     result=[]
     i=len(lista)-1
-    j=0
-    while i>0:
-        result[j]=lista[i]        
-        
+    while i>=0:
+        result.append(lista[i])
+        i-=1
     return result
 
 #dijstra con euristica    
@@ -183,32 +183,47 @@ def ucsSmart(mapa,adyacencyList,myPosition,destination):
     x1=myPosition[0]
     y1=myPosition[1]
     myMap[x1][y1]=simpleNode(0,None,False)
+    
     myQueue=queue.PriorityQueue()
+    
+    #if myPosition[0]!=destination[0] or destination[1]!=myPosition[1]:
+        #print("asdf")
     #aqui insertamos euristica
     myQueue.put((calcularDistancia(myPosition[0],myPosition[1],destination[0],destination[1]),myPosition))
     while myQueue.qsize()>0:
         temp=myQueue.get()
-        if myMap[temp[1][0],temp[1][1]].visitado:
+        #if temp==20000000:
+            #print("a")
+        if myMap[temp[1][0]][temp[1][1]].visitado:
             continue
-        myMap[temp[1][0],temp[1][1]].visitado=True
+        myMap[temp[1][0]][temp[1][1]].visitado=True
         if temp[1][0]==destination[0] and temp[1][1]==destination[1]:
-            return
-        for i in dir1Row:
+            break
+        i=0
+        while i < len(dir1Row):
             adyacentNode=(temp[1][0]+dir1Row[i],temp[1][1]+dir2Col[i])
-            #distancia,padre,visto
-            if not myMap[adyacentNode[0],adyacentNode[1]].visitado:
+            #revisando q no este visitado y q sea una posicion valida
+
+            if not myMap[adyacentNode[0]][adyacentNode[1]].visitado and  mapa[adyacentNode[0]][adyacentNode[1]]!=globals.voidValue and indexChecker(adyacentNode,len(mapa)):
                 #preguntando si la distancia euristica G es menor x este camino 
-                if myMap[adyacentNode[0],adyacentNode[1]].distanciaEuristica> myMap[temp[1][0],temp[1][1]].distancia+calcularDistancia(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1]): #adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
+                if myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica> myMap[temp[1][0]][temp[1][1]].distancia+calcularDistancia(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1]): #adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
                     #actualizando la distancia y la distancia euristica y padre
-                    myMap[adyacentNode[0],adyacentNode[1]].distancia=myMap[temp[1][0],temp[1][1]][0]+adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
-                    myMap[adyacentNode[0],adyacentNode[1]].distanciaEuristica=myMap[temp[1][0],temp[1][1]].distancia+calcularDistancia(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])
-                    myMap[adyacentNode[0],adyacentNode[1]].padre=myMap[temp[1][0],temp[1][1]]
+                    myMap[adyacentNode[0]][adyacentNode[1]].distancia=myMap[temp[1][0]][temp[1][1]].distancia+adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
+                    myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica=myMap[temp[1][0]][temp[1][1]].distancia+calcularDistancia(destination[0],destination[1],adyacentNode[0],adyacentNode[1])+adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
+                    myMap[adyacentNode[0]][adyacentNode[1]].padre=(temp[1][0],temp[1][1])
                     #poniendo en la cola con el valor de la distancia euristica G
-                    myQueue.put(myMap[temp[1][0],temp[1][1]].distancia+adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])],(adyacentNode[0],adyacentNode[1]))
+                    myQueue.put((myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica,(adyacentNode[0],adyacentNode[1])))
+                    #tester= myQueue.get()
+                    #if tester==20000000:
+                    #    print("a")
+                    #myQueue.put((myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica,(adyacentNode[0],adyacentNode[1])))
+            i+=1
+    return myMap
+    
 
-
-def calcularDistancia(self,x1,y1,x2,y2):
-    return math.sqrt(abs(x1-x2)+abs(y1-y2)) 
+def calcularDistancia(x1,y1,x2,y2):
+    temp =math.sqrt(pow(abs(x1-x2),2)+pow(abs(y1-y2),2))
+    return temp
 
 def adyacencyMatrizBuilder(mapa):
     adyacencyList={}

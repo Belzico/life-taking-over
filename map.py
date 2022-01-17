@@ -180,7 +180,7 @@ class Map:
                 if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in TilePerceptionMatrix[i][j].CreatureList:
                     if h.especie == Individuo.especie:
-                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and self.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
+                        if h.giveMeRealAge()-int(h.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])>=0 and h.giveMeRealAge()- int(h.lastReproduction)>int(h.naturalDefenseInd["Tiempo_entre_reproducccion"]):
                             tempvalue +=1
                 if savedValue ==  tempvalue:
                     valuesList[i][j] = 5

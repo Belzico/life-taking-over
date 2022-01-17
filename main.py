@@ -39,7 +39,11 @@ def worldController():
 
     
 def main():
+<<<<<<< HEAD
     globals.worldMap=map.Map(5,5,1)
+=======
+    globals.worldMap=map.Map(5,10,10)
+>>>>>>> 954f35b644fd8933764a16a9022502f3d765a8ac
     globals.allSpecies["1"]=especies.Especies(5,0,0)
     
     #Poner en true si se quiere guardar el mapa generado en un JSON
