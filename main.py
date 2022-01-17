@@ -7,7 +7,7 @@ import misc
 
 
 def worldController():
-    i=50
+    i=500
     while (i>0):
         
         #Generando nuevos fenomenos
@@ -47,7 +47,7 @@ def worldController():
 
     
 def main():
-    globals.worldMap=map.Map(5,10,10)
+    globals.worldMap=map.Map(10,10,5)
     globals.allSpecies["1"]=especies.Especies(5,0,0)
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
