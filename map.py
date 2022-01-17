@@ -134,7 +134,7 @@ class Map:
         matrixDict = {}
         #perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
         #Parche de casillas vacías
-        perceptionList = self.movementWithBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
+        perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
 
         
         matrixDict["Tile"] = perceptionList

@@ -3,6 +3,8 @@ import especies
 import globals
 import map
 import misc
+import json
+import os
 
 
 def worldController():
@@ -37,8 +39,19 @@ def worldController():
 
     
 def main():
-    globals.worldMap=map.Map(5,1,1)
+    globals.worldMap=map.Map(5,5,1)
     globals.allSpecies["1"]=especies.Especies(5,0,0)
+    
+    #Poner en true si se quiere guardar el mapa generado en un JSON
+    save= True
+    if save == True:
+        filename = 'map.json'         
+        with open(filename, 'w') as file_object:
+            json.dump(globals.worldMap, file_object) 
+    
+    #Poner en True si se quiere cargar el mapa de un JSON
+    load = False
+    
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))
@@ -46,5 +59,6 @@ def main():
     worldController()
     
   
+
 main()
     
