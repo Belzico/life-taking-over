@@ -1,6 +1,7 @@
 from MyQueue import MyQueue
 from random import Random, randint, random
 from types import coroutine
+import globals
 import map
 import especies
 import misc
@@ -16,7 +17,7 @@ class Fenomeno():
         self.cor = cor
         self.count_maxDistance = randint(0,10)
         self.vecmov = []
-        self.map = map
+        self.map = mapa
         
         #cambiar por probabilidad
         duracion = randint(1,7)
@@ -61,14 +62,14 @@ class Fenomeno():
                 rest = posrecorrido[2]
                 if duracion > rest:
                     posrecorrido = (duracion - time,posrecorrido[1],posrecorrido[2])
-                    self.EfectuarFenomeno(self.map)
+                    self.EfectuarFenomeno(self.map,move)
                     self.Recorrido.put(posrecorrido)
         
                 elif duracion == rest:
                     duracion = duracion - time
                     self.EfectuarFenomeno(self.map,move)
                     listmove = self.GenerarRecorrido(self.map,move)
-                    self.CambiarZona(self.map,posrecorrido,listmove)
+                    self.CambiarZona(posrecorrido,listmove)
                     for i in range(0,len(listmove) - 1):
                         self.Recorrido.append(listmove[i])
         
@@ -76,7 +77,8 @@ class Fenomeno():
                     rest = rest - duracion
                     self.EfectuarFenomeno(self.map,move)
                     duracion = 0
-                    self.CambiarZona(time,self.map,move)
+                    listmove = self.GenerarRecorrido(self.map,move)
+                    self.CambiarZona(move,listmove)
                     for i in range(0,len(listmove)):
                         queueCom.put((listmove[i][0],listmove[i][1],rest))
                 
@@ -85,23 +87,110 @@ class Fenomeno():
         print("Efectuando Fenomeno")
         return
     
-    def CambiarZona(self,mapa,corulti,listmove):
+    def CambiarZona(self,corulti,listmove):
         i = 0
-        for zone in mapa.Zones:
+        for zone in self.map.Zones:
             for tile in zone.TileList:
                 if tile.Coordinates == corulti:
                    i += 1
                    #eliminar fenomeno
+                   if tile.ComComponentsDict["fenomeno"]:
+                       value = tile.ComponentsDict["fenomeno"]
+                       tile.ComponentsDict.pop("fenomeno")
+                       if value == 0:
+                           print("Ocurrio un error al eliminar un fenomeno")
+                       tile.ComponentsDict["fenomeno"] = value - 1
+                    
+                   else:
+                       print("No hay fenomenos en esa posicion")
                 
                 for j in range(0,len(listmove)):
                     if tile.Coordinates == listmove[j]:
                         i += 1
                         #añadir fenomeno
+                        if tile.ComComponentsDict["fenomeno"]:
+                            value = tile.ComponentsDict["fenomeno"]
+                            tile.ComponentsDict.pop("fenomeno")
+                            if value == 0:
+                                print("Ocurrio un error al eliminar un fenomeno")
+                            tile.ComponentsDict["fenomeno"] = value + 1
+                    
+                        else:
+                            tile.ComponentsDict["fenomeno"] = 1
                     
                 if i == 1 + len(listmove):
                     return
                     
-                    
+    def Generar_Fenomeno(mapa):
+        Fenomeno.GenerarCiclon(mapa)
+        Fenomeno.GenerarErupcion(mapa)
+        return
+    
+    def GenerarCiclon(mapa):
+        for zone in mapa.Zones:
+            zonetype = zone.ZoneType
+            dicGenericFen = ""
+            
+            if zonetype in globals.ZoneFenomeno:
+                dicGenericFen = globals.ZoneFenomeno[zonetype]
+            else:
+                continue
+            
+            randp = randint(0,100)
+            if dicGenericFen["Ciclon"]*100 >= randp:
+                counTile = len(zone.TileList)
+                if counTile == 0:
+                    continue
+                pos_origin = randint(0,counTile-1)
+            
+                globals.counterFenomeno += 1
+                globals.counterCiclon += 1
+            
+                nameCiclon = "Ciclon" + str(globals.counterCiclon)
+                grado_peligrosidad = randint(0,5)
+                cor = zone.TileList[pos_origin].Coordinates
+            
+                c = Ciclon(nameCiclon, grado_peligrosidad, cor, mapa)
+                globals.worldFenomenos.put(c)
+            
+            
+
+    def GenerarErupcion(mapa):
+         for zone in mapa.Zones:
+            zonetype = zone.ZoneType
+            dicGenericFen = ""
+            
+            if zonetype in globals.ZoneFenomeno:
+                dicGenericFen = globals.ZoneFenomeno[zonetype]
+            else:
+                continue
+            
+            if not "Volcan" in dicGenericFen:
+                continue
+            
+            randp = randint(0,100)
+            if dicGenericFen["Volcan"]*100 >= randp:
+                tilesList_Volcan = []
+                for tile in zone.TileList:
+                    if "Volcan" in tile.ComponentsDict.keys():
+                        tilesList_Volcan.append(tilesList_Volcan)
+
+                counTile = len(tilesList_Volcan)
+                if counTile == 0:
+                    continue
+                pos_origin = randint(0,counTile-1)
+                
+                globals.counterFenomeno += 1
+                globals.counterErupcion += 1
+            
+                nameErupcion = "Erupcion" + str(globals.counterErupcion)
+                grado_peligrosidad = randint(0,5)
+                cor = zone.TileList[pos_origin].Coordinates
+            
+                e = ErupcionVolcánica(nameErupcion, grado_peligrosidad, cor, mapa)
+                globals.worldFenomenos.put(e)
+                
+            
         
 class Ciclon(Fenomeno):
     def __init__(self, nombre, grado, cor, mapa):
@@ -122,29 +211,21 @@ class Ciclon(Fenomeno):
         if cor[1] == None:
             return
         
-        ListaCriaturas = Ciclon.DetectarCriaturas(mapas,cor)
-        Ciclon.MoverCriaturas(mapas,ListaCriaturas)
+        ListaCriaturas = self.MoverCriaturas(mapas,cor)
     
-    def DetectarCriaturas(self,mapas,cor):
-        creaturesMoves = []
-        if self.Recorrido[self.pos] != None: 
-            for zone in mapas.Zones:
+    def MoverCriaturas(self,mapa,cor):
+        pos = self.Recorrido.get()
+        self.Recorrido.put(pos)
+        
+        if pos != None: 
+            for zone in mapa.Zones:
                 for tile in zone.TileList:
-                    if tile.Coordinates == self.Recorrido[self.pos]:
-                        while tile.CreatureList > 0:
-                            cordnew = Ciclon.Rand_Mov_CC(cor,mapas,1)
+                    if tile.Coordinates == self.cor[1]:
+                        i = 0
+                        for creature in tile.CreatureList:
+                            cordnew = self.Rand_Mov_CC(cor,mapa,1)
                             creature = tile.CreatureList.pop()
-                            creaturesMoves.append((creature,cordnew))
-                        return creaturesMoves
-
-    def MoverCriaturas(mapa, ListCreature):
-        while len(ListCreature) > 0:
-            t = ListCreature.pop()
-            for zone in mapa:
-                for tile in zone.TileList:
-                    if tile.Coordinates == t[1]:
-                        #Cambiar las coordenadas de la ubicacion de la especie
-                        tile.CreatureList.append(t[0])
+                            mapa.MoveCreature(creature,cordnew)
 
 class ErupcionVolcánica(Fenomeno):
     def __init__(self, nombre, grado, cor, mapa):

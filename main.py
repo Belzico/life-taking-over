@@ -1,5 +1,6 @@
 from tkinter import Misc
 import especies
+from fenomeno import Fenomeno
 import globals
 import map
 import misc
@@ -8,6 +9,15 @@ import misc
 def worldController():
     i=50
     while (i>0):
+        
+        #Generando nuevos fenomenos
+        Fenomeno.Generar_Fenomeno(globals.worldMap)
+        
+        #Refrescando cada fenomeno existente
+        c = len(globals.worldFenomenos)
+        while c > 0:
+            fen = globals.worldFenomenos.get()
+            fen.Refresc(globals.time_refresch)
         
         value=''
         for val in globals.worldIndividuals:

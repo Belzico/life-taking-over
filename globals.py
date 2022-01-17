@@ -1,5 +1,6 @@
 import sys
 import queue
+import MyQueue
 
 #Todas las zonas con las que trabaja la simulación
 ZoneList = ['Prairie', 'Mountain', 'Ocean']
@@ -58,6 +59,17 @@ OceanGenerationList = {'Solar Light' : InfiniteRange ,
                         'Helium': LowRandomRange,
                         'Nitrogen' :LowRandomRange}
 
+#Frecuencia de Generacion de Fenomenos:
+ZoneFenomeno = {'Prairie': {"Ciclon": 0}, 'Mountain': {"Ciclon": 0}, 'Ocean': {"Volcan": 0, "Ciclon": 0.7}}
+
+#Contadores_Fenomenos
+dangerCiclon = 20
+dangerVolcan = 50
+counterFenomeno = 0
+counterCiclon = 0
+counterErupcion = 0
+
+time_refresch = 10
 
 
 #diccionario de especies
@@ -69,7 +81,7 @@ worldMap=""
 worldIndividuals={}
 
 #cola de fenomenos
-worldFenomenos=queue.PriorityQueue()
+worldFenomenos= MyQueue.MyQueue()
 
 #lista de individuos muertos para eliminar al final del siglo
 deadIndividuals=[]
