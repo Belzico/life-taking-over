@@ -33,7 +33,7 @@ class Tile:
                 pass
             else:
                 if j.especie == Especie:
-                    j.die(Especie)
+                    j.die()
                    # self.CreatureList.delete(j)
                    # j.especie.individuos.delete(j)
                     tempCount = tempCount -1

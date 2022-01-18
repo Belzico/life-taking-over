@@ -91,6 +91,8 @@ def mulMatrix(matrix,value):
             
             
 def pathFinder(currentIndividual,mapa):
+    
+    previusX,previusY=currentIndividual.xMundo,currentIndividual.yMundo
     #mapa para trabajar
     myFixMap=[]    
     #mapa para la matrix de adyacencia
@@ -114,23 +116,37 @@ def pathFinder(currentIndividual,mapa):
     adyacencyList=adyacencyMatrizBuilder(myMap)
     
     myPosition=(int((len(foodMatrix)-1)/2),int((len(foodMatrix)-1)/2))
+    
+    if destination==None:
+        print("a")
+    
+    
     road= ucsSmart(myFixMap,adyacencyList,myPosition,destination)
     
-    
-    i=0
-    temp=fixRoad(road,destination,adyacencyList)
+    #borrar 
+    a=globals.worldMap
+     
+    i=1
+    temp=fixRoad(road,destination,myPosition)
     currentPosition=None
+    lastPosition=temp[0]
     while(currentIndividual.naturalDefenseInd["Velocidad_agua"]>i):
         if  len(temp)>i:
             currentPosition=temp[i]
-            currentIndividual.xMundo=currentPosition[0]
-            currentIndividual.yMundo=currentPosition[1]
+            currentIndividual.xMundo+=currentPosition[0] - lastPosition[0] 
+            currentIndividual.yMundo+=currentPosition[1] - lastPosition[1] 
+            if not indexChecker((currentIndividual.xMundo,currentIndividual.yMundo),globals.worldMap.SizeX):
+                print("a")
             if chanceToDie(dangerMatrix[currentPosition[0]][currentPosition[1]]):
-                currentIndividual.die(globals.allSpecies[currentIndividual.especie])
-                return    
-         
+                globals.worldMap.udpdateIndividual(currentIndividual,previusX,previusY)
+                print("Yo "+currentIndividual.name+" me movi hacia "+str(currentIndividual.xMundo) +","+str(currentIndividual.yMundo)+"")
+                currentIndividual.die()
+                return False    
+
+            previusX,previusY=currentIndividual.xMundo,currentIndividual.yMundo
+            lastPosition=currentPosition                
         i+=1
-        
+    return True
     print("3")
 
 def chanceToDie(risk,index=10):
@@ -155,15 +171,18 @@ def bestLocationFinder(myMap):
 
 #revisar que no se salga de los indices de la matrix
 def indexChecker(tup,size):
-    for i in tup:
-        if int(i)<0 or int(i)>=int(size):
+    for i in range(len(tup)):
+        if int(tup[i])<0 or int(tup[i])>=int(size):
             return False
-        return True
+    return True
 
-def fixRoad(mapa,destination,adyacencyList):
+def fixRoad(mapa,destination,origin):
     road=[]
     road.append(destination)
     currentPosition=destination
+    if  abs(destination[0]-origin[0])>1 and abs(destination[1]-origin[1])>1:
+        print('a')
+    
     while mapa[currentPosition[0]][currentPosition[1]].padre!=None:
         road.append(mapa[currentPosition[0]][currentPosition[1]].padre)
         currentPosition=mapa[currentPosition[0]][currentPosition[1]].padre
@@ -203,10 +222,11 @@ def ucsSmart(mapa,adyacencyList,myPosition,destination):
         while i < len(dir1Row):
             adyacentNode=(temp[1][0]+dir1Row[i],temp[1][1]+dir2Col[i])
             #revisando q no este visitado y q sea una posicion valida
-
-            if not myMap[adyacentNode[0]][adyacentNode[1]].visitado and  mapa[adyacentNode[0]][adyacentNode[1]]!=globals.voidValue and indexChecker(adyacentNode,len(mapa)):
+            valid=indexChecker(adyacentNode,len(mapa))
+            
+            if valid  and not myMap[adyacentNode[0]][adyacentNode[1]].visitado  and mapa[adyacentNode[0]][adyacentNode[1]]!=globals.voidValue:
                 #preguntando si la distancia euristica G es menor x este camino 
-                if myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica> myMap[temp[1][0]][temp[1][1]].distancia+calcularDistancia(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1]): #adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
+                if  myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica> myMap[temp[1][0]][temp[1][1]].distancia+calcularDistancia(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1]): #adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
                     #actualizando la distancia y la distancia euristica y padre
                     myMap[adyacentNode[0]][adyacentNode[1]].distancia=myMap[temp[1][0]][temp[1][1]].distancia+adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
                     myMap[adyacentNode[0]][adyacentNode[1]].distanciaEuristica=myMap[temp[1][0]][temp[1][1]].distancia+calcularDistancia(destination[0],destination[1],adyacentNode[0],adyacentNode[1])+adyacencyList[(temp[1][0],temp[1][1],adyacentNode[0],adyacentNode[1])]
@@ -239,6 +259,8 @@ def adyacencyMatrizBuilder(mapa):
             y+=1
         x+=1   
     return adyacencyList                        
+
+    
 
 class Coordinates:
     X = -1
