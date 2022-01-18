@@ -73,6 +73,7 @@ class Map:
         #########CHECKEAR EL PORQUE EL INDIVIDUO SE MOVIÓ SIN PERMISO
         if Individuo in oldTile.CreatureList:
             oldTile.CreatureList.remove(Individuo)
+        if Individuo not in actualTile.CreatureList:
             actualTile.CreatureList.append(Individuo)
         
         
@@ -132,7 +133,7 @@ class Map:
     
     def movementMatrix(self,Individuo) -> dict:
         matrixDict = {}
-        #perceptionList = self.movementWithoutBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
+        #perceptionList = self.movementWithBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
         #Parche de casillas vacías
         perceptionList = self.movementWithBoundries(Individuo, Individuo.naturalDefenseInd["Percepcion_de_mundo"])
 

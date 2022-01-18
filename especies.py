@@ -432,16 +432,18 @@ class Individuo():
             tup=self.moveRandom(mapa["Tile"])
             self.xMundo+=tup[0]
             self.yMundo+=tup[1]
+            globals.worldMap.udpdateIndividual(self,previusX,previusY)
+            print("Yo "+self.name+" me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
         else:
             #tempDic=globals.worldMap.movementMatrix(self)   
             #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
-            misc.pathFinder(self,mapa) 
+            die=misc.pathFinder(self,mapa) 
             
         
 
         
-        print("Yo "+self.name+" me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
-        globals.worldMap.udpdateIndividual(self,previusX,previusY)
+        
+        
     
     def moveRandom(seflf,myMap):
         #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
@@ -539,20 +541,29 @@ class Individuo():
         #actualizacion de edad del individuo                
         self.edad=int(self.edad)-1
         if int(self.edad)==0:
-            self.die(mySpecie)
+            self.die()
     
     def giveMeRealAge(self):
         return int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"]) - int(self.edad)
         
-    def die(self,mySpecie):
+    def die(self):
         globals.deadIndividuals.append(self.name)
-        mySpecie.basicInfo["Cantidad_de_miembros"]=int(mySpecie.basicInfo["Cantidad_de_miembros"])-1
+        self.especie.basicInfo["Cantidad_de_miembros"]=int(self.especie.basicInfo["Cantidad_de_miembros"])-1
         
         #######AQUI INTENTAS ELIMINAR A ALGUIEN QUE YA NO EXISTE
         #######ESTA ES UNA SOLUCIÓN TEMPORAL
-        if self.name in mySpecie.individuos.keys():
-            del mySpecie.individuos[self.name]
+        if self.name in self.especie.individuos.keys():
+            del self.especie.individuos[self.name]
         #matar en casilla de mapa
-        globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.remove(self)
+        if self in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
+            globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.remove(self)
         
+        if self.naturalDefenseInd["Inteligencia"]<2:        
+            count=0
+            #for tile in globals.worldMap.Tiles:
+            #    for i in range(len(tile)):
+            #        for creature in tile[i].CreatureList:
+            #            if creature.name==self.name:
+            #                count+=1
+            #print(count)
         
