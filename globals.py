@@ -6,6 +6,18 @@ ZoneList = ['Prairie', 'Mountain', 'Ocean']
 #La peligrosidad de cada zona
 ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
 
+#Variable de caza, mientra más grande más probable que el individuo decida cazar (0--->infinito)
+    # 0: nunca cazará, 
+    # 1: podrá cazar aprox un 1/10 porciento de veces que evolucione , 
+    # 1000000: siempre cazará(probablemente))
+Hunting = 1
+
+#Que tan débil debe ser la craitura que se va a cazar, (1---->10)
+    # 10: más debil que yo, pero no me importa cuan débil
+    # 5: siempre será el doble de débil o más
+    # 1: siempre  será 10 veces más debil que yo
+Weakness = 
+
 voidValue = 10000000
 
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
