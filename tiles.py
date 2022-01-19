@@ -32,12 +32,14 @@ class Tile:
             if tempCount <= 0:
                 pass
             else:
+                
                 if j.especie == Especie:
                     j.die(Especie)
                    # self.CreatureList.delete(j)
                    # j.especie.individuos.delete(j)
                     tempCount = tempCount -1
-                    
+    
+
     
     def eliminate(self,elementTuple):
         if elementTuple[0] == 'Solar Light' or elementTuple[0] == 'Water':

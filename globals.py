@@ -14,9 +14,9 @@ Hunting = 1
 
 #Que tan débil debe ser la craitura que se va a cazar, (1---->10)
     # 10: más debil que yo, pero no me importa cuan débil
-    # 5: siempre será el doble de débil o más
-    # 1: siempre  será 10 veces más debil que yo
-Weakness = 
+    # 5: siempre será el doble de débil o más que yo
+    # 1: siempre será 10 veces más debil que yo
+Weakness = 10
 
 voidValue = 10000000
 
