@@ -4,6 +4,7 @@ import graphics
 import globals
 import random
 import tiles
+import json
 import especies
 
 
@@ -17,7 +18,14 @@ class Map:
         self.Tiles = []
         self.Zones = []
         self.CreateNotSoRandmo()
+        self.SaveInJson()
 
+    
+    def SaveInJson(self):
+        globals.jasonstr = json.dumps(self.__dict__,'map.json')
+        
+   
+    
     #actualiza en el mundo
     def udpdateIndividual(self,tempInd,x,y):
         self.MoveCreature(tempInd,(x,y))    

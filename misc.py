@@ -1,11 +1,28 @@
 import math
+
+from argon2 import Type
 import globals
 import queue
 import random
+import json
 
 
 dir1Row=[0,-1,-1,-1, 0, 1,1,1]
 dir2Col=[1,1,  0,-1,-1,-1,0,1]
+
+def LoadFromJson():
+    Worldmap = "" 
+    
+    Dict = json.loads(globals.jsonstr)
+    
+    Worldmap = map(**Dict)
+    
+     
+     
+     
+    return Worldmap
+
+
 
 def dictMergeSum(dict1, dict2):
     tempdict ={}

@@ -6,6 +6,8 @@ ZoneList = ['Prairie', 'Mountain', 'Ocean']
 #La peligrosidad de cada zona
 ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
 
+jsonstr = 'map.json'
+
 #Variable de caza, mientra más grande más probable que el individuo decida cazar (0--->infinito)
     # 0: nunca cazará, 
     # 1: podrá cazar aprox un 1/10 porciento de veces que evolucione , 
