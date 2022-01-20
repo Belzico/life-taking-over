@@ -107,7 +107,7 @@ class Especies():
         #armadura en zona debil ej: la parte de abajo de los cocodrilos es suave contrario a la espalda
         naturalDefense["Armadura_debil"]=str(int(armor/random.randint(1,armor)))
         #porciento de armadura fuerte del cuerpo
-        naturalDefense["Armadura_debil_porciento"]=str(random.randint(0,51))
+        naturalDefense["Armadura_fuerte_porciento"]=str(random.randint(0,51))
         #probabilidad de aumentar el golpe critico en la zona debil
         naturalDefense["Crit_chance_increase"]="0"
         #probabilidad de aplicar daño de sangrado al enemigo
@@ -251,8 +251,31 @@ class Individuo():
 
         self.priorities={}
         self.setPriorities()
+        
+            
+
     
-    
+    def battleLogGenerator(individuo):
+        battleLog={}
+        battleLog["life"]=int(individuo.naturalDefenseInd["Vida"])
+        battleLog["currentLife"] =int(individuo.naturalDefenseInd["Vida"])
+        battleLog["movements"] =int(individuo.naturalDefenseInd["Velocidad_agua"])
+        battleLog["xPosition"] =0
+        battleLog["xPosition"] =0
+        
+        battleLog["debuffSlow"]=0
+        battleLog["debuffBleed"]=0
+        return battleLog
+
+    def resetBattleLog(individuo,battleLog):
+        battleLog["currentMovements"]=int(individuo.naturalDefenseInd["Velocidad_agua"])
+        
+    def copyBattleLog(firstBattleLog):
+        newBattleLog={}
+        for key in firstBattleLog:
+            newBattleLog[key]=firstBattleLog[key]
+            
+        return newBattleLog
     
     def setPriorities(self):
         self.priorities["hambre"]=1 +(1-self.saciedad/self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
@@ -274,7 +297,7 @@ class Individuo():
         self.naturalDefenseInd["Sigilo"]=int(defences["Sigilo"])+random.randint(a,b)
         self.naturalDefenseInd["Armadura"]=int(defences["Armadura"])+random.randint(a,b)
         self.naturalDefenseInd["Armadura_debil"]=int(defences["Armadura_debil"])+random.randint(a,b)
-        self.naturalDefenseInd["Armadura_debil_porciento"]=int(defences["Armadura_debil_porciento"])+random.randint(a,b)
+        self.naturalDefenseInd["Armadura_fuerte_porciento"]=int(defences["Armadura_fuerte_porciento"])+random.randint(a,b)
         self.naturalDefenseInd["Crit_chance_increase"]=int(defences["Crit_chance_increase"])+random.randint(-a,b)
         self.naturalDefenseInd["Bleed_chance"]=int(defences["Bleed_chance"])+random.randint(a,b)
         self.naturalDefenseInd["Crit_chance_increase"]=int(defences["Crit_chance_increase"])+random.randint(a,b)
@@ -303,7 +326,7 @@ class Individuo():
             self.naturalDefenseInd["Sigilo"]=int(self.naturalDefenseInd["Sigilo"])+int(random.randint(int(varianza["Sigilo"]),int(varianza["Sigilo"])))
             self.naturalDefenseInd["Armadura"]=int(self.naturalDefenseInd["Armadura"])+int(random.randint(int(varianza["Armadura"]),int(varianza["Armadura"])))
             self.naturalDefenseInd["Armadura_debil"]=int(self.naturalDefenseInd["Armadura_debil"])+int(random.randint(int(varianza["Armadura_debil"]),int(varianza["Armadura_debil"])))
-            self.naturalDefenseInd["Armadura_debil_porciento"]=int(self.naturalDefenseInd["Armadura_debil_porciento"])+int(random.randint(int(varianza["Armadura_debil_porciento"]),int(varianza["Armadura_debil_porciento"])))
+            self.naturalDefenseInd["Armadura_fuerte_porciento"]=int(self.naturalDefenseInd["Armadura_fuerte_porciento"])+int(random.randint(int(varianza["Armadura_fuerte_porciento"]),int(varianza["Armadura_fuerte_porciento"])))
             self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(int(varianza["Crit_chance_increase"]),int(varianza["Crit_chance_increase"])))
             self.naturalDefenseInd["Bleed_chance"]=int(self.naturalDefenseInd["Bleed_chance"])+int(random.randint(int(varianza["Bleed_chance"]),int(varianza["Bleed_chance"])))
             self.naturalDefenseInd["Crit_chance_increase"]=int(self.naturalDefenseInd["Crit_chance_increase"])+int(random.randint(int(varianza["Crit_chance_increase"]),int(varianza["Crit_chance_increase"])))
@@ -325,17 +348,23 @@ class Individuo():
 
         
         
-        
         if self.naturalDefenseInd["Vida"]<=0:
             self.naturalDefenseInd["Vida"]=1
             
+        if self.naturalDefenseInd["Sigilo"]<=0:
+            self.naturalDefenseInd["Sigilo"]=0
+            
         if self.naturalDefenseInd["Percepcion_de_mundo"]<=0:
             self.naturalDefenseInd["Percepcion_de_mundo"]=1
-            
-        if int(self.naturalDefenseInd["Armadura_debil_porciento"])<0:
-            self.naturalDefenseInd["Armadura_debil_porciento"]=0
-        if int(self.naturalDefenseInd["Armadura_debil_porciento"])>100:
-            self.naturalDefenseInd["Armadura_debil_porciento"]=100 
+
+        if int(self.naturalDefenseInd["Armadura"])<0:
+            self.naturalDefenseInd["Armadura"]=0            
+        if int(self.naturalDefenseInd["Armadura_debil"])<0:
+            self.naturalDefenseInd["Armadura_debil"]=0
+        if int(self.naturalDefenseInd["Armadura_fuerte_porciento"])>90:
+            self.naturalDefenseInd["Armadura_fuerte_porciento"]=90
+        if int(self.naturalDefenseInd["Armadura_fuerte_porciento"])<10:
+            self.naturalDefenseInd["Armadura_fuerte_porciento"]=10  
             
         if int(self.naturalDefenseInd["Crit_chance_increase"])<0:
             self.naturalDefenseInd["Crit_chance_increase"]=0
@@ -349,6 +378,8 @@ class Individuo():
             
         if self.naturalDefenseInd["Bleed_damage"]<=0:
             self.naturalDefenseInd["Bleed_damage"]=1
+        if self.naturalDefenseInd["Bleed_damage"]>=90:
+            self.naturalDefenseInd["Bleed_damage"]=90
             
         if int(self.naturalDefenseInd["Slow_chance"])<0:
             self.naturalDefenseInd["Slow_chance"]=0

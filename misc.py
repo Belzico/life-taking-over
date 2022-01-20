@@ -1,4 +1,5 @@
 import math
+from unittest import result
 import globals
 import queue
 import random
@@ -297,3 +298,164 @@ def mapZone(myMap):
         i+=1
     return newMap
                 
+                
+    ##################################################combate##########################################
+    
+    #tipos de accion se recibe una accion de lucha y una cantidad de pasos para escapar
+    #1-caminar hacia alguna casilla 
+    #2-atacar con golpe normal que hace daño normal
+    #3-atacar con ataque debil, este tiene mas chance de critico
+    #4-atacar a bajar velocidad (bajo daño bajo critico alto chance de lenteo)
+    #5-atacar para buscar daño de sangrado
+    #dir= countPredictionsFirst,countPredictionsSecond,moves,atacks,debuffs,mapa,firstIndividualPos,SecondIndividualPos,firstIndividualVit,SecondIndividualVit 
+def combatTurn(firstIndividual,SecondIndividual,battleLogFirst,battleLogSecond,myMap,whosPrey,iteration):
+    #(value,tuple) tuple is a tuple with las position and which attack
+    result=None
+    if iteration<=0:
+        if whosPrey==0:
+            posX=battleLogFirst["xPosition"]
+            posY=battleLogFirst["yPosition"]
+            action=battleLogFirst["action"]
+            return (euristicaHuir(battleLogFirst,battleLogSecond,myMap),(posX,posY,action))
+        else:
+            posX=battleLogFirst["xPosition"]
+            posY=battleLogFirst["yPosition"]
+            action=battleLogFirst["action"]
+            return (euristicaHunt(battleLogFirst,battleLogSecond,myMap),(posX,posY,action))
+        
+    #moves=battleLogFirst["movements"]-
+    #if :
+    #    for i in range(len(dir1Row)):
+    #        pass
+    
+
+def mapCreator():
+    result=[]
+    for i in range(21):
+        result.append([])
+    
+    return result
+
+def fullCombat(predator,prey):
+    myMap=mapCreator()
+    predatorBattleLog=battleLogGenerator(predator)
+    preyBattleLog=battleLogGenerator(prey)
+    prey["xPosition"]=len(myMap)//2
+    prey["yPosition"]=len(myMap)//2
+    
+    sneakWalk(predator,prey,predatorBattleLog,preyBattleLog,myMap)
+    
+    #llamado a combatTurn
+    while True:
+        pass
+
+#esto se puede mejorar
+def euristicaHuir(firstIndividualBattlelog,secondIndividualBattlelog,mapa,peso=1):
+    distXPredator=abs(firstIndividualBattlelog["xPosition"]-secondIndividualBattlelog["xPosition"])
+    distYPredator=abs(firstIndividualBattlelog["yPosition"]-secondIndividualBattlelog["yPosition"])
+    distXEdge= max(len(mapa)-firstIndividualBattlelog["xPosition"],firstIndividualBattlelog["xPosition"])//2
+    distYEdge=max(len(mapa[0])-firstIndividualBattlelog["yPosition"],firstIndividualBattlelog["yPosition"])//2
+    
+    
+    return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentlife"]-firstIndividualBattlelog["currentlife"])*peso
+    
+def euristicaHunt(firstIndividualBattlelog,secondIndividualBattlelog,mapa,peso=1):
+    distXPredator=len(mapa)-abs( firstIndividualBattlelog["xPosition"]-secondIndividualBattlelog["xPosition"])
+    distYPredator=len(mapa)-abs(firstIndividualBattlelog["yPosition"]-secondIndividualBattlelog["yPosition"])
+    distXEdge=min(len(mapa)-secondIndividualBattlelog.BattleLog["xPosition"],secondIndividualBattlelog["xPosition"])
+    distYEdge=min(len(mapa[0])-secondIndividualBattlelog.BattleLog["xPosition"],secondIndividualBattlelog["yPosition"])   
+    
+    
+    return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentlife"]-secondIndividualBattlelog.BattleLog["currentlife"])*peso
+
+#weithgs=(min%attack,max%attack,critIncrease,slowIncrease,)
+def standarAttack(currentIndividual, secondIndividual,battleLogSecond,weithgs):
+    attack=calculatePercent(currentIndividual.naturalDefenseInd["Vida"],random.randint(15,20))*weithgs[0]
+    
+    armorChance=random.randint(0,100)
+    defense=0
+    if armorChance>secondIndividual.naturalDefenseInd["Armadura_fuerte_porciento"]:
+        defense=calculatePercent(secondIndividual.naturalDefenseInd["Armadura"],random.randint(10,20))
+    else:
+        defense=calculatePercent(secondIndividual.naturalDefenseInd["Armadura"],random.randint(0,10))
+    
+    critChance=random.randint(0,100)*weithgs[1]
+    if critChance>100-currentIndividual.naturalDefenseInd["Crit_chance_increase"]:
+        attack*=2
+        
+    slowChance=random.randint(0,100)*weithgs[2]
+    slowDone=0
+    if slowChance>100-currentIndividual.naturalDefenseInd["Slow_chance"]:
+        slowDone=calculatePercent(currentIndividual.naturalDefenseInd["Slow_done"],random.randint(10,20))
+        battleLogSecond["Slow"]=battleLogSecond["Slow"]+slowDone
+        
+    bleedChance=random.randint(0,100)
+    bleedDone=0
+    if bleedChance>100-currentIndividual.naturalDefenseInd["Bleed_chance"]:
+        bleedDone=calculatePercent(secondIndividual.naturalDefenseInd["Vida"],currentIndividual.naturalDefenseInd["Bleed_damage"])
+        battleLogSecond["Bleed"]=battleLogSecond["Bleed"]+bleedDone
+               
+    result=0
+    if defense<attack: 
+        result=attack-defense
+    
+    battleLogSecond["life"]-=result
+        
+def sneakWalk(predator,prey,battleLogPredator,battleLogPrey,mapa):
+    
+    tempX,tempY=0,0
+    if battleLogPredator["xPosition"]==battleLogPrey["xPosition"]:
+        dirX=0
+    else:
+        dirX=battleLogPredator["xPosition"]-battleLogPrey["xPosition"]//abs(battleLogPredator["xPosition"]-battleLogPrey["xPosition"])*-1
+    
+    if battleLogPredator["yPosition"]==battleLogPrey["yPosition"]:
+        dirY=0
+    else:
+        dirY=battleLogPredator["yPosition"]-battleLogPrey["yPosition"]//abs(battleLogPredator["yPosition"]-battleLogPrey["yPosition"])*-1
+    
+    while True:
+        if indexChecker((dirX+battleLogPredator["xPosition"],dirY+battleLogPredator["yPosition"]),len(mapa)):
+            if dirX+battleLogPredator["xPosition"]== battleLogPrey["xPosition"] and dirY+battleLogPredator["yPosition"]==battleLogPrey["yPosition"]:
+                standarAttack(predator,prey,battleLogPrey,(2,2,2))
+                return
+        else:
+            predatorChance=20*(int(predator.naturalDefenseInd["Sigilo"])-(int(prey.naturalDefenseInd["Intelgencia"])+(int(prey.naturalDefenseInd["Intelgencia"])))//2)
+            sneakChance=random.randint(0,100)
+            if predatorChance>sneakChance:
+                predator["xPosition"]=dirX+battleLogPredator["xPosition"]
+                predator["yPosition"]=dirY+battleLogPredator["yPosition"]
+            else:
+                return    
+    
+    
+def calculatePercent(number,percent):
+    return number*percent//100 
+
+
+def battleLogGenerator(individuo):
+    battleLog={}
+    battleLog["life"]=int(individuo.naturalDefenseInd["Vida"])
+    battleLog["currentLife"] =int(individuo.naturalDefenseInd["Vida"])
+    battleLog["movements"] =int(individuo.naturalDefenseInd["Velocidad_agua"])
+    battleLog["xPosition"] =0
+    battleLog["xPosition"] =0
+    
+    battleLog["action"] =None
+    
+    battleLog["turnsLeft"] =(int(individuo.naturalDefenseInd["Percepcion_de_mundo"])+int(individuo.naturalDefenseInd["Inteligencia"]))//2
+    
+    battleLog["debuffSlow"]=0
+    battleLog["debuffBleed"]=0
+    return battleLog
+
+def resetBattleLog(individuo,battleLog):
+    battleLog["currentMovements"]=int(individuo.naturalDefenseInd["Velocidad_agua"])
+    battleLog["action"] =None
+    
+def copyBattleLog(firstBattleLog):
+    newBattleLog={}
+    for key in firstBattleLog:
+        newBattleLog[key]=firstBattleLog[key]
+        
+    return newBattleLog
