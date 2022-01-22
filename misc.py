@@ -308,25 +308,92 @@ def mapZone(myMap):
     #4-atacar a bajar velocidad (bajo daño bajo critico alto chance de lenteo)
     #5-atacar para buscar daño de sangrado
     #dir= countPredictionsFirst,countPredictionsSecond,moves,atacks,debuffs,mapa,firstIndividualPos,SecondIndividualPos,firstIndividualVit,SecondIndividualVit 
-def combatTurn(firstIndividual,SecondIndividual,battleLogFirst,battleLogSecond,myMap,whosPrey,iteration):
+def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosPredicting,iteration):
+    #(value,tuple) tuple is a tuple with las position and which attack
+    fullResult=None
+    result4=None
+    
+    
+    posX=battleLogPredator["xPosition"]
+    posY=battleLogPredator["yPosition"]
+    
+    if battleLogPrey["life"]<=0: return (1000000,(posX,posY,battleLogPredator["action"]))
+    if battleLogPredator["life"]<=0: return (-1000000,(posX,posY,battleLogPredator["action"]))
+    if checkBorderEscape((posX,posY),myMap): return (-1000000,(posX,posY,battleLogPredator["action"]))
+    
+    if iteration<0:
+        action=battleLogPredator["action"]
+        return (euristicaHunt(battleLogPredator,battleLogPrey,myMap),(posX,posY,action))
+        
+    moves=battleLogPredator["movements"]-battleLogPredator["debuffSlow"]
+    if moves > 0:
+        for i in range(len(dir1Row)+1):
+            if indexChecker((posX+dir1Row[i],posY+dir2Col[i]),len(myMap)):
+                newDiccPredator=copyBattleLog(battleLogPredator)
+                newDiccPrey=copyBattleLog(battleLogPrey)
+                newDiccPredator["movements"]==newDiccPredator["movements"]-1
+                tempresult=combatTurnPrey(predator,prey,newDiccPredator,newDiccPrey,myMap,iteration)
+                if result4==None:
+                    result4=tempresult
+                if whosPredicting == "Predator":
+                    if result4[0]>tempresult[0]:
+                        fullResult=tempresult[0]
+                else:
+                    if result4[0]<tempresult[0]:
+                        result4=tempresult
+                        
+                        
+    if battleLogPredator["action"]==None and hitRange((posX,posY),(battleLogPrey["xPosition"],battleLogPrey["yPosition"])):
+        newDiccPredator1=copyBattleLog(battleLogPredator),
+        newDiccPrey1=copyBattleLog(battleLogPrey)
+        newDiccPredator1["action"]=="normalHit"
+        standarAttack(predator,prey,newDiccPredator1,(2,1,1))
+        result1=combatTurnPredator(predator,prey,newDiccPredator1,newDiccPrey1,myMap,whosPredicting,iteration)
+        
+        newDiccPredator2=copyBattleLog(battleLogPredator)
+        newDiccPrey2=copyBattleLog(battleLogPrey)
+        newDiccPredator2["action"]=="critHit"
+        standarAttack(predator,prey,newDiccPredator2,(1,2,1))
+        result2=combatTurnPredator(predator,prey,newDiccPredator2,newDiccPrey2,myMap,whosPredicting,iteration)
+        
+        newDiccPredator3=copyBattleLog(battleLogPredator)
+        newDiccPrey3=copyBattleLog(battleLogPrey)
+        newDiccPredator3["action"]=="slowHit"
+        standarAttack(predator,prey,newDiccPredator1,(1,1,2))
+        result3=combatTurnPredator(predator,prey,newDiccPredator3,newDiccPrey3,myMap,whosPredicting,iteration)
+
+        fullResult=bestResult([result1,result2,result3,result4])
+        return fullResult
+        
+        
+def bestResult(listRes):
+    if listRes!=None:
+        tempMax=listRes[0]
+    for i in range(len(listRes)):
+        if listRes[i]!=None and listRes[i][0]>tempMax[0]:
+            tempMax=listRes[i]
+    
+    return tempMax
+    
+
+def hitRange(predatorPos,preyPos):
+    if abs(predatorPos[0]-preyPos[0])<=1 and abs(predatorPos[1]-preyPos[1])<=1:
+        return True
+    return False
+
+def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,iteration):
     #(value,tuple) tuple is a tuple with las position and which attack
     result=None
     if iteration<=0:
-        if whosPrey==0:
-            posX=battleLogFirst["xPosition"]
-            posY=battleLogFirst["yPosition"]
-            action=battleLogFirst["action"]
-            return (euristicaHuir(battleLogFirst,battleLogSecond,myMap),(posX,posY,action))
-        else:
-            posX=battleLogFirst["xPosition"]
-            posY=battleLogFirst["yPosition"]
-            action=battleLogFirst["action"]
-            return (euristicaHunt(battleLogFirst,battleLogSecond,myMap),(posX,posY,action))
+        posX=battleLogPrey["xPosition"]
+        posY=battleLogPrey["yPosition"]
+        action=battleLogPrey["action"]
+        return (euristicaHuir(battleLogPrey,battleLogPredator,myMap),(posX,posY,action))
         
-    #moves=battleLogFirst["movements"]-
-    #if :
-    #    for i in range(len(dir1Row)):
-    #        pass
+    moves=battleLogPrey["movements"]-battleLogPrey[""]
+    if True:
+        for i in range(len(dir1Row)):
+            pass
     
 
 def mapCreator():
@@ -336,8 +403,17 @@ def mapCreator():
     
     return result
 
+
+
+#este es el metodo a invocar para que ocurra el combate
 def fullCombat(predator,prey):
-    myMap=mapCreator()
+    
+    mapLentgh=max(int(predator.naturalDefenseInd["Velocidad_agua"]),int(predator.naturalDefenseInd["Velocidad_agua"]))
+    #parche por si la matrix se hace muy grande
+    if mapLentgh>100 :
+        mapLentgh=100
+    myMap=mapCreator(mapLentgh*10+1)
+    
     predatorBattleLog=battleLogGenerator(predator)
     preyBattleLog=battleLogGenerator(prey)
     prey["xPosition"]=len(myMap)//2
@@ -345,9 +421,45 @@ def fullCombat(predator,prey):
     
     sneakWalk(predator,prey,predatorBattleLog,preyBattleLog,myMap)
     
+    
+    
+    i=0
+    move=None
     #llamado a combatTurn
     while True:
-        pass
+        if i%2==0:
+            futureSigth=(predator.naturalDefenseInd["Inteligencia"]+predator.naturalDefenseInd["Percepcion_de_mundo"])//2
+            move= combatTurnPredator(predator,prey,predatorBattleLog,preyBattleLog,myMap,0,futureSigth)
+            predatorBattleLog["xPosition"]=move[1][0]
+            predatorBattleLog["yPosition"]=move[1][1]
+            if(move[1][2])==0:
+                standarAttack(predator,prey,preyBattleLog,(2,1,1))
+            elif (move[1][2])==0:
+                standarAttack(predator,prey,preyBattleLog,(1,2,1))
+            elif (move[1][2])==0:
+                standarAttack(predator,prey,preyBattleLog,(1,1,2))
+        else : 
+            futureSigth=(prey.naturalDefenseInd["Inteligencia"]+prey.naturalDefenseInd["Percepcion_de_mundo"])//2
+            combatTurnPrey(predator,prey,predatorBattleLog,preyBattleLog,myMap,futureSigth)
+            preyBattleLog["xPosition"]=move[1][0]
+            preyBattleLog["yPosition"]=move[1][1]
+            if(move[1][2])==0:
+                standarAttack(prey,predator,predatorBattleLog,(2,1,1))
+            elif (move[1][2])==0:
+                standarAttack(prey,predator,predatorBattleLog,(1,2,1))
+            elif (move[1][2])==0:
+                standarAttack(prey,predator,predatorBattleLog,(1,1,2))
+        if preyBattleLog["life"]<=0: return 0
+        if predatorBattleLog["life"]<=0: return 1
+        if checkBorderEscape((preyBattleLog["xPosition"],preyBattleLog["yPosition"])):
+            return 2
+        
+        i+=1
+
+def checkBorderEscape(pos,map):
+    if (pos[0]==0 or pos[0]==len(map) and pos[1]==0 or pos[1]==len(map[0])):
+        return True
+    return False    
 
 #esto se puede mejorar
 def euristicaHuir(firstIndividualBattlelog,secondIndividualBattlelog,mapa,peso=1):
@@ -368,6 +480,7 @@ def euristicaHunt(firstIndividualBattlelog,secondIndividualBattlelog,mapa,peso=1
     
     return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentlife"]-secondIndividualBattlelog.BattleLog["currentlife"])*peso
 
+#realiza un ataque recibe un peso para ver que tipo de ataque sera
 #weithgs=(min%attack,max%attack,critIncrease,slowIncrease,)
 def standarAttack(currentIndividual, secondIndividual,battleLogSecond,weithgs):
     attack=calculatePercent(currentIndividual.naturalDefenseInd["Vida"],random.randint(15,20))*weithgs[0]
@@ -381,12 +494,12 @@ def standarAttack(currentIndividual, secondIndividual,battleLogSecond,weithgs):
     
     critChance=random.randint(0,100)*weithgs[1]
     if critChance>100-currentIndividual.naturalDefenseInd["Crit_chance_increase"]:
-        attack*=2
+        attack*=3
         
     slowChance=random.randint(0,100)*weithgs[2]
     slowDone=0
     if slowChance>100-currentIndividual.naturalDefenseInd["Slow_chance"]:
-        slowDone=calculatePercent(currentIndividual.naturalDefenseInd["Slow_done"],random.randint(10,20))
+        slowDone=calculatePercent(currentIndividual.naturalDefenseInd["Slow_done"],random.randint(25,40))
         battleLogSecond["Slow"]=battleLogSecond["Slow"]+slowDone
         
     bleedChance=random.randint(0,100)
@@ -394,13 +507,14 @@ def standarAttack(currentIndividual, secondIndividual,battleLogSecond,weithgs):
     if bleedChance>100-currentIndividual.naturalDefenseInd["Bleed_chance"]:
         bleedDone=calculatePercent(secondIndividual.naturalDefenseInd["Vida"],currentIndividual.naturalDefenseInd["Bleed_damage"])
         battleLogSecond["Bleed"]=battleLogSecond["Bleed"]+bleedDone
-               
+            
     result=0
     if defense<attack: 
         result=attack-defense
     
     battleLogSecond["life"]-=result
-        
+
+#el depredador se acerca sigilosamente
 def sneakWalk(predator,prey,battleLogPredator,battleLogPrey,mapa):
     
     tempX,tempY=0,0
@@ -423,8 +537,8 @@ def sneakWalk(predator,prey,battleLogPredator,battleLogPrey,mapa):
             predatorChance=20*(int(predator.naturalDefenseInd["Sigilo"])-(int(prey.naturalDefenseInd["Intelgencia"])+(int(prey.naturalDefenseInd["Intelgencia"])))//2)
             sneakChance=random.randint(0,100)
             if predatorChance>sneakChance:
-                predator["xPosition"]=dirX+battleLogPredator["xPosition"]
-                predator["yPosition"]=dirY+battleLogPredator["yPosition"]
+                battleLogPredator["xPosition"]=dirX+battleLogPredator["xPosition"]
+                battleLogPredator["yPosition"]=dirY+battleLogPredator["yPosition"]
             else:
                 return    
     
