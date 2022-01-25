@@ -314,16 +314,19 @@ def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosP
     result4=None
     
     
+    
     posX=battleLogPredator["xPosition"]
     posY=battleLogPredator["yPosition"]
     
     if battleLogPrey["life"]<=0: return (1000000,(posX,posY,battleLogPredator["action"]))
     if battleLogPredator["life"]<=0: return (-1000000,(posX,posY,battleLogPredator["action"]))
-    if checkBorderEscape((posX,posY),myMap): return (-1000000,(posX,posY,battleLogPredator["action"]))
+    if checkBorderEscape((battleLogPrey["xPosition"],battleLogPrey["yPosition"]),myMap): return (-5000,(posX,posY,battleLogPredator["action"]))
     
     if iteration<0:
         action=battleLogPredator["action"]
         return (euristicaHunt(battleLogPredator,battleLogPrey,myMap),(posX,posY,action))
+    
+    
         
     moves=battleLogPredator["movements"]-battleLogPredator["debuffSlow"]
     if moves > 0:
@@ -332,12 +335,12 @@ def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosP
                 newDiccPredator=copyBattleLog(battleLogPredator)
                 newDiccPrey=copyBattleLog(battleLogPrey)
                 newDiccPredator["movements"]==newDiccPredator["movements"]-1
-                tempresult=combatTurnPrey(predator,prey,newDiccPredator,newDiccPrey,myMap,iteration)
+                tempresult=combatTurnPredator(predator,prey,newDiccPredator,newDiccPrey,myMap,iteration)
                 if result4==None:
                     result4=tempresult
                 if whosPredicting == "Predator":
                     if result4[0]>tempresult[0]:
-                        fullResult=tempresult[0]
+                        result4=tempresult[0]
                 else:
                     if result4[0]<tempresult[0]:
                         result4=tempresult
@@ -362,10 +365,77 @@ def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosP
         standarAttack(predator,prey,newDiccPredator1,(1,1,2))
         result3=combatTurnPredator(predator,prey,newDiccPredator3,newDiccPrey3,myMap,whosPredicting,iteration)
 
-        fullResult=bestResult([result1,result2,result3,result4])
-        return fullResult
+    if moves<=0 and battleLogPredator["action"]!=None:
+        valueTemp=combatTurnPrey(predator,prey,resetBattleLog(battleLogPredator),battleLogPrey,myMap,iteration-1)
+        result5=(valueTemp,(posX,posY,battleLogPredator["action"]))
+
+    fullResult=bestResult([result1,result2,result3,result4,result5])
+    return fullResult
         
         
+
+
+def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,whosPredicting,iteration):
+    #(value,tuple) tuple is a tuple with las position and which attack
+    fullResult=None
+    result4=None
+    
+    posX=battleLogPrey["xPosition"]
+    posY=battleLogPrey["yPosition"]
+    
+    if battleLogPredator["life"]<=0: return (1000000,(posX,posY,battleLogPrey["action"]))
+    if battleLogPrey["life"]<=0: return (-1000000,(posX,posY,battleLogPrey["action"]))
+    if checkBorderEscape((battleLogPrey["xPosition"],battleLogPrey["yPosition"]),myMap): return (5000,(posX,posY,battleLogPrey["action"]))
+    
+    if iteration<0:
+        action=battleLogPrey["action"]
+        return (euristicaHuir(battleLogPrey,battleLogPredator,myMap),(posX,posY,action))
+
+    moves=battleLogPrey["movements"]-battleLogPrey["debuffSlow"]
+    if moves > 0:
+        for i in range(len(dir1Row)+1):
+            if indexChecker((posX+dir1Row[i],posY+dir2Col[i]),len(myMap)):
+                newDiccPredator=copyBattleLog(battleLogPredator)
+                newDiccPrey=copyBattleLog(battleLogPrey)
+                newDiccPrey["movements"]==newDiccPrey["movements"]-1
+                tempresult=combatTurnPrey(predator,prey,newDiccPredator,newDiccPrey,myMap,iteration)
+                if result4==None:
+                    result4=tempresult
+                if whosPredicting == "Prey":
+                    if result4[0]>tempresult[0]:
+                        result4=tempresult[0]
+                else:
+                    if result4[0]<tempresult[0]:
+                        result4=tempresult
+    
+    if battleLogPrey["action"]==None and hitRange((posX,posY),(battleLogPredator["xPosition"],battleLogPredator["yPosition"])):
+        newDiccPredator1=copyBattleLog(battleLogPredator),
+        newDiccPrey1=copyBattleLog(battleLogPrey)
+        newDiccPrey1["action"]=="normalHit"
+        standarAttack(prey,predator,newDiccPredator1,(2,1,1))
+        result1=combatTurnPredator(predator,prey,newDiccPredator1,newDiccPrey1,myMap,whosPredicting,iteration)
+        
+        newDiccPredator2=copyBattleLog(battleLogPredator)
+        newDiccPrey2=copyBattleLog(battleLogPrey)
+        newDiccPrey2["action"]=="critHit"
+        standarAttack(prey,predator,newDiccPredator2,(1,2,1))
+        result2=combatTurnPredator(predator,prey,newDiccPredator2,newDiccPrey2,myMap,whosPredicting,iteration)
+        
+        newDiccPredator3=copyBattleLog(battleLogPredator)
+        newDiccPrey3=copyBattleLog(battleLogPrey)
+        newDiccPrey3["action"]=="slowHit"
+        standarAttack(prey,predator,newDiccPredator1,(1,1,2))
+        result3=combatTurnPredator(predator,prey,newDiccPredator3,newDiccPrey3,myMap,whosPredicting,iteration)
+
+    if moves<=0 and battleLogPrey["action"]!=None:
+        valueTemp=combatTurnPredator(predator,prey,battleLogPredator,resetBattleLog(battleLogPrey),myMap,iteration-1)
+        result5=(valueTemp,(posX,posY,battleLogPrey["action"]))
+
+    fullResult=bestResult([result1,result2,result3,result4,result5])
+    return fullResult
+
+
+
 def bestResult(listRes):
     if listRes!=None:
         tempMax=listRes[0]
@@ -380,21 +450,6 @@ def hitRange(predatorPos,preyPos):
     if abs(predatorPos[0]-preyPos[0])<=1 and abs(predatorPos[1]-preyPos[1])<=1:
         return True
     return False
-
-def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,iteration):
-    #(value,tuple) tuple is a tuple with las position and which attack
-    result=None
-    if iteration<=0:
-        posX=battleLogPrey["xPosition"]
-        posY=battleLogPrey["yPosition"]
-        action=battleLogPrey["action"]
-        return (euristicaHuir(battleLogPrey,battleLogPredator,myMap),(posX,posY,action))
-        
-    moves=battleLogPrey["movements"]-battleLogPrey[""]
-    if True:
-        for i in range(len(dir1Row)):
-            pass
-    
 
 def mapCreator():
     result=[]
@@ -457,7 +512,7 @@ def fullCombat(predator,prey):
         i+=1
 
 def checkBorderEscape(pos,map):
-    if (pos[0]==0 or pos[0]==len(map) and pos[1]==0 or pos[1]==len(map[0])):
+    if (pos[0]==0 or pos[0]==len(map)-1) and (pos[1]==0 or pos[1]==len(map[0])-1):
         return True
     return False    
 
@@ -564,8 +619,11 @@ def battleLogGenerator(individuo):
     return battleLog
 
 def resetBattleLog(individuo,battleLog):
-    battleLog["currentMovements"]=int(individuo.naturalDefenseInd["Velocidad_agua"])
-    battleLog["action"] =None
+    result=copyBattleLog(battleLog)
+    
+    result["currentMovements"]=int(individuo.naturalDefenseInd["Velocidad_agua"])
+    result["action"] =None
+    return result
     
 def copyBattleLog(firstBattleLog):
     newBattleLog={}
