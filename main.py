@@ -8,7 +8,7 @@ import os
 
 
 def worldController():
-    i=50
+    i=500
     while (i>0):
         
         value=''
@@ -39,7 +39,7 @@ def worldController():
 
     
 def main():
-    globals.worldMap=map.Map(5,5,1)
+    globals.worldMap=map.Map(10,10,5)
     globals.allSpecies["1"]=especies.Especies(5,0,0)
     
     #Poner en true si se quiere guardar el mapa generado en un JSON
