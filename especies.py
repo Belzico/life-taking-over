@@ -514,7 +514,7 @@ class Individuo():
         eatSuccess=True
         listDestroy=[]
         for resource in globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict:
-            if self.saciedad>=self.naturalDefenseInd["Cantidad_de_energia_almacenable"]:
+            if float(self.saciedad)>=float(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
                 break
             ##################################
             #cosumiendo energia

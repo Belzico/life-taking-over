@@ -35,8 +35,6 @@ def worldController():
         #####################################
     print("Simulation finished!!!!!")        
 
-
-
     
 def main():
     globals.worldMap=map.Map(10,10,5)
@@ -44,10 +42,10 @@ def main():
     
     #Poner en true si se quiere guardar el mapa generado en un JSON
     save= True
-    if save == True:
-        filename = 'map.json'         
-        with open(filename, 'w') as file_object:
-            json.dump(globals.worldMap, file_object) 
+    #if save == True:
+    #    filename = 'map.json'         
+    #    with open(filename, 'w') as file_object:
+    #        json.dump(globals.worldMap, file_object) 
     
     #Poner en True si se quiere cargar el mapa de un JSON
     load = False
@@ -58,7 +56,7 @@ def main():
     print("star world")
     worldController()
     
-  
+
 
 main()
     

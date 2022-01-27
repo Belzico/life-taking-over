@@ -1,7 +1,7 @@
 import math
+from unittest import result
 
 from argon2 import Type
-from unittest import result
 import globals
 import queue
 import random
@@ -143,7 +143,7 @@ def pathFinder(currentIndividual,mapa):
     
     #borrar 
     a=globals.worldMap
-     
+
     i=1
     temp=fixRoad(road,destination,myPosition)
     currentPosition=None
@@ -280,7 +280,7 @@ def adyacencyMatrizBuilder(mapa):
 
 
 def findPrey(Individuo ):
-    individuoStats = Individuo.naturalDefenseInd["Vida"]+Individuo.naturalDefenseInd["Inteligencia"]+Individuo.naturalDefenseInd["Sigilo"]
+    individuoStats = Individuo.naturalDefenseInd["Vida"]+Individuo.naturalDefenseInd["Inteligencia"]+Individuo.naturalDefenseInd["Sigilo"]+Individuo.naturalDefenseInd["Percepcion_de_mundo"]
     + Individuo.naturalDefenseInd["Armadura"]+ Individuo.naturalDefenseInd["Armadura_debil"]+Individuo.naturalDefenseInd["Armadura_debil_porciento"]
     +Individuo.naturalDefenseInd["Crit_chance_increase"]+ Individuo.naturalDefenseInd["Bleed_chance"]+Individuo.naturalDefenseInd["Crit_chance_increase"]
     + Individuo.naturalDefenseInd["Bleed_damage"]+Individuo.naturalDefenseInd["Slow_chance"]+Individuo.naturalDefenseInd["Slow_done"]+Individuo.naturalDefenseInd["Velocidad_agua"]
@@ -290,26 +290,33 @@ def findPrey(Individuo ):
     actualTile = globals.worldMap.Tiles[Individuo.xMundo][Individuo.yMundo]
     
     for creature in actualTile.CreatureList:
-        if creature.especie == Individuo.especie:
+        #modificar para canibalismo
+        if creature.especie == Individuo.especie and not creature.especie.basicInfo["Canibal"]:
             pass
         
         else:
-            creatureStats= creature.naturalDefenseInd["Vida"]+creature.naturalDefenseInd["Inteligencia"]+creature.naturalDefenseInd["Sigilo"]
+            creatureStats= creature.naturalDefenseInd["Vida"]+creature.naturalDefenseInd["Inteligencia"]+creature.naturalDefenseInd["Percepcion_de_mundo"]
             + creature.naturalDefenseInd["Armadura"]+ creature.naturalDefenseInd["Armadura_debil"]+creature.naturalDefenseInd["Armadura_debil_porciento"]
             +creature.naturalDefenseInd["Crit_chance_increase"]+ creature.naturalDefenseInd["Bleed_chance"]+creature.naturalDefenseInd["Crit_chance_increase"]
             + creature.naturalDefenseInd["Bleed_damage"]+creature.naturalDefenseInd["Slow_chance"]+creature.naturalDefenseInd["Slow_done"]+creature.naturalDefenseInd["Velocidad_agua"]
             
-            if prey == None and individuoStats*(globals.Weakness/10) > creatureStats:
+            
+            hunger=int(Individuo.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(Individuo.saciedad)
+            #modificar esto dependiendo del hambre
+            careless=hunger/int(Individuo.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+            
+                
+            if prey == None and (individuoStats*careless+ individuoStats)/3 > creatureStats:
                 preyStats = creatureStats
                 prey = creature
             
-            elif preyStats< creatureStats < individuoStats*(globals.Weakness/10):
+            elif preyStats< creatureStats < (individuoStats*careless+ individuoStats)/3:
                 preyStats = creatureStats
                 prey = creature
             
     return prey
 
-     
+
 
     
 
