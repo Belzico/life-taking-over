@@ -465,12 +465,16 @@ class Individuo():
 ###########################################################################################
 
 
+
+
 ####################################feed###################################################
 
     def eat(self):
+        eatSuccess=True
         listDestroy=[]
         for resource in globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict:
-            
+            if float(self.saciedad)>=float(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
+                break
             ##################################
             #cosumiendo energia
             #self.saciedad=int(self.saciedad)-int(self.especie.naturalDefense["Cantidad_de_energia_necesaria"])
@@ -479,20 +483,58 @@ class Individuo():
             ###################################################
             
             neededFood= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(self.saciedad)
-           
+
             if resource in self.especie.alimentos:
-                #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
-                if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood/int(self.especie.alimentos[resource]):
-                    listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
-                    self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                if resource=="Cazador":
+                    prey= misc.FindPrey(self)
                     
-                    break
+                    combatResult=misc.fullCombat(self,prey)
+                    if combatResult==0:
+                        print(self.name+" intento cazar a "+prey.name+" y lo consiguio")
+                        if int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3>1+neededFood//int(self.especie.alimentos[resource]):
+                            print(self.name+" se comio a "+prey.name+" y se lleno")
+                            self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                            prey.die()
+                            break
+                        else:
+                            print(self.name+" se comio a "+prey.name+" pero pero no se lleno")
+                            self.saciedad+=int(self.especie.alimentos[resource])*(int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3)
+                            prey.die()
+                    elif combatResult==1:
+                        print(self.name+" intento cazar a "+prey.name+" y murio")
+                        if  "cazador" in prey.especie.alimentos:
+                            
+                            preyNeededFood=int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(prey.saciedad)
+                            if int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3>1+preyNeededFood//int(prey.especie.alimentos[resource]):
+                                print(prey.name+" comio a "+self.name+" y se lleno")
+                                prey.saciedad=int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                                
+                            else:
+                                print(prey.name+" comio a "+self.name+" y no se lleno")
+                                prey.saciedad+=int(prey.especie.alimentos[resource])*(int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3)
+                    
+                        self.die()
+                        eatSuccess=False
+                        break
+                    #sdfdsaf
+                    #la presa escapo
+                    elif combatResult==2:
+                        print(self.name+" intento cazar a "+prey.name+" pero se le escapo")
+                        continue
                 
-                #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
                 else:
-                    self.saciedad+=globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource]*int(self.alimentos[resource])
-                    listDestroy.append((resource,int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])))
-    	            
+                    #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
+                    if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood//int(self.especie.alimentos[resource]):
+                        listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
+                        self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+
+                        break
+                
+                    #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
+                    else:
+                        self.saciedad+=globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource]*int(self.alimentos[resource])
+                        listDestroy.append((resource,int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])))
+
         #comprobando si ya esta lleno
             if int(self.saciedad) >= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
                 self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
@@ -502,7 +544,8 @@ class Individuo():
         for item in listDestroy:
             print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidades de "+str(item[0]))
             #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
-###########################################################################################
+        return eatSuccess
+######################################################################################################################################################################################
 
     #en este metodo se decidira lo que hara el individuos 
     def resolveIteration(self,map):
@@ -518,7 +561,12 @@ class Individuo():
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
                 self.saciedad=str(int(self.saciedad)+1)
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="element":
-               self.eat()
+                eatSucces=self.eat()
+                if not eatSucces:
+                    return
+
+
+
                         
         self.move(map)
                 
