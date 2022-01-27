@@ -299,4 +299,41 @@ def mapZone(myMap):
     print("z")
     return newMap
                 
-                
+
+
+
+#-------------------------------------------------------------NEW STUFF----------------------------------------------------------------------
+
+
+def findPrey(Individuo):
+    individuoStats = Individuo.naturalDefenseInd["Vida"]+Individuo.naturalDefenseInd["Inteligencia"]+Individuo.naturalDefenseInd["Sigilo"]
+    + Individuo.naturalDefenseInd["Armadura"]+ Individuo.naturalDefenseInd["Armadura_debil"]+Individuo.naturalDefenseInd["Armadura_debil_porciento"]
+    +Individuo.naturalDefenseInd["Crit_chance_increase"]+ Individuo.naturalDefenseInd["Bleed_chance"]+Individuo.naturalDefenseInd["Crit_chance_increase"]
+    + Individuo.naturalDefenseInd["Bleed_damage"]+Individuo.naturalDefenseInd["Slow_chance"]+Individuo.naturalDefenseInd["Slow_done"]+Individuo.naturalDefenseInd["Velocidad_agua"]
+    
+    prey = None
+    preyStats= -1
+    actualTile = globals.worldMap.Tiles[Individuo.xMundo][Individuo.yMundo]
+    
+    for creature in actualTile.CreatureList:
+        if creature.especie == Individuo.especie:
+            pass
+        
+        else:
+            creatureStats= creature.naturalDefenseInd["Vida"]+creature.naturalDefenseInd["Inteligencia"]+creature.naturalDefenseInd["Sigilo"]
+            + creature.naturalDefenseInd["Armadura"]+ creature.naturalDefenseInd["Armadura_debil"]+creature.naturalDefenseInd["Armadura_debil_porciento"]
+            +creature.naturalDefenseInd["Crit_chance_increase"]+ creature.naturalDefenseInd["Bleed_chance"]+creature.naturalDefenseInd["Crit_chance_increase"]
+            + creature.naturalDefenseInd["Bleed_damage"]+creature.naturalDefenseInd["Slow_chance"]+creature.naturalDefenseInd["Slow_done"]+creature.naturalDefenseInd["Velocidad_agua"]
+            
+            if prey == None and individuoStats*(globals.Weakness/10) > creatureStats:
+                preyStats = creatureStats
+                prey = creature
+            
+            elif preyStats< creatureStats < individuoStats*(globals.Weakness/10):
+                preyStats = creatureStats
+                prey = creature
+            
+    return prey
+
+
+#-------------------------------------------------------------NEW STUFF----------------------------------------------------------------------
