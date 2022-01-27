@@ -354,6 +354,8 @@ def mapZone(myMap):
             newMap[i].append(simpleNode(globals.voidValue,None,False))
             j+=1
         i+=1
+    #dsfagsadg
+    print("z")
     return newMap
                 
                 
@@ -689,3 +691,4 @@ def copyBattleLog(firstBattleLog):
         newBattleLog[key]=firstBattleLog[key]
         
     return newBattleLog
+                
