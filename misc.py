@@ -295,5 +295,8 @@ def mapZone(myMap):
             newMap[i].append(simpleNode(globals.voidValue,None,False))
             j+=1
         i+=1
+    #dsfagsadg
+    print("z")
     return newMap
+                
                 
