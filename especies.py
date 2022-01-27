@@ -81,7 +81,7 @@ class Especies():
         basicInfo["Cantidad_de_miembros"]=0
 
         
-        basicInfo["Canibal"]==True
+        basicInfo["Canibal"]=True
         
         #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
         basicInfo["Tipo_de_alimentacion"]="element"

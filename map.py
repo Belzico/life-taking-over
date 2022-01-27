@@ -22,7 +22,8 @@ class Map:
 
     
     def SaveInJson(self):
-        globals.jasonstr = json.dumps(self.__dict__,'map.json')
+        pass
+        #globals.jasonstr = json.dumps(self.__dict__,'map.json')
         
 
     
