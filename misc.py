@@ -135,8 +135,8 @@ def pathFinder(currentIndividual,mapa):
     
     myPosition=(int((len(foodMatrix)-1)/2),int((len(foodMatrix)-1)/2))
     
-    if destination==None:
-        print("a")
+    #if destination==None:
+    #   print("a")
     
     
     road= ucsSmart(myFixMap,adyacencyList,myPosition,destination)
@@ -153,8 +153,8 @@ def pathFinder(currentIndividual,mapa):
             currentPosition=temp[i]
             currentIndividual.xMundo+=currentPosition[0] - lastPosition[0] 
             currentIndividual.yMundo+=currentPosition[1] - lastPosition[1] 
-            if not indexChecker((currentIndividual.xMundo,currentIndividual.yMundo),globals.worldMap.SizeX):
-                print("a")
+            #if not indexChecker((currentIndividual.xMundo,currentIndividual.yMundo),globals.worldMap.SizeX):
+            #    print("a")
             if chanceToDie(dangerMatrix[currentPosition[0]][currentPosition[1]]):
                 globals.worldMap.udpdateIndividual(currentIndividual,previusX,previusY)
                 print("Yo "+currentIndividual.name+" me movi hacia "+str(currentIndividual.xMundo) +","+str(currentIndividual.yMundo)+"")
