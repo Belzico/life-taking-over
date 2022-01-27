@@ -27,7 +27,7 @@ def worldController():
                     h.startEvolving(globals.allSpecies[j])
                 
         
-        
+        #test
         #globals.worldMap.PrintMap()
         print('---------------------------------NEW CYCLE-------------------------------------------------')
         #####################################    
@@ -53,7 +53,7 @@ def main():
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))
-    print("star world")
+    print("star world!!!!")
     worldController()
     
 

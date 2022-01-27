@@ -25,7 +25,7 @@ class Subnami(Fenomeno):
     def Efectuar_Subnami(mapas,especies,pos):
         pass
     
-
+#dsfdas
 
 def General_Nombre_Random():
     pass

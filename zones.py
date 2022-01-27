@@ -146,6 +146,7 @@ class Zone:
             if i[1]<= randomIndex:
                 return i[0]
         
+        #sadfsdafsda
         return 'Solar Light'
         
     

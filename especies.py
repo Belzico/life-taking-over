@@ -557,7 +557,7 @@ class Individuo():
                         self.die()
                         eatSuccess=False
                         break
-                    
+                    #sdfdsaf
                     #la presa escapo
                     elif combatResult==2:
                         print(self.name+" intento cazar a "+prey.name+" pero se le escapo")

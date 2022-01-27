@@ -348,6 +348,6 @@ class Map:
             for j in range(len(perceptionList)):
                 perceptionList[i][j] = self.Tiles[Individuo.xMundo  - perceptionValue + i][Individuo.yMundo - perceptionValue + j]
                 
-     
+        #asdfsaf    
         return perceptionList
      
