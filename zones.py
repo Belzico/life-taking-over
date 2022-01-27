@@ -138,7 +138,7 @@ class Zone:
         ElementsPctTupleList.append(('Solar Light', ElementsPctTupleList[count - 1][1] + ElementsPctTupleList[count - 1][1]/10))
         
         ElementsPctTupleList.append(('Water', ElementsPctTupleList[count - 1][1] + ElementsPctTupleList[count - 1][1]/10))
-        
+        ElementsPctTupleList.append(('Cazador', ElementsPctTupleList[count - 1][1] + (ElementsPctTupleList[count - 1][1]/10)* globals.Hunting))
         randomIndex = randint(0 , int(ElementsPctTupleList[-1][1]))
         
         for i in ElementsPctTupleList:
