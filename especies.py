@@ -28,6 +28,7 @@ class Especies():
         #lista de elementos de donde puede sacar parte de la energix
         self.alimentos={}
         
+        
         #llamada al generador
         self.especieGenerator(x,y,individuos)
         #nueva especie a la que puede estar evolucionando
@@ -79,6 +80,8 @@ class Especies():
         basicInfo["Tipo_de_reproduccion"]="asexual"
         #sexo del indi
         basicInfo["Cantidad_de_miembros"]=0
+        
+        basicInfo["Canibal"]=True
 
         #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
         basicInfo["Tipo_de_alimentacion"]="element"
@@ -149,7 +152,8 @@ class Especies():
         return resistenciasElementales
     
     def foodListGenerator(self):
-        self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
+        self.alimentos["Cazador"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
+        #self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
         
     
     #metodo para evolucionar una especie
@@ -179,6 +183,15 @@ class Especies():
             if tempRandom>50:
                 print("La especie "+str(self.basicInfo["name"])+" es pluricelular")   
                 self.basicInfo["Tipo_de_celula"]="pluricelular"
+                
+        if self.basicInfo["Tipo_de_celula"]=="unicelular":
+            tempRandom=random.randint(0,100)
+            if tempRandom>50:
+                print("La especie "+str(self.basicInfo["name"])+" es canibal")   
+                self.basicInfo["Canibal"]=True
+            else:
+                print("La especie "+str(self.basicInfo["name"])+" es pluricelular")   
+                self.basicInfo["Canibal"]=True
         
         #chance de evolucionar a reproduccion sexual
         if self.basicInfo["Tipo_de_reproduccion"]=="asexual":
@@ -331,6 +344,8 @@ class Individuo():
             
         if self.naturalDefenseInd["Percepcion_de_mundo"]<=0:
             self.naturalDefenseInd["Percepcion_de_mundo"]=1
+        if self.naturalDefenseInd["Percepcion_de_mundo"] >=globals.worldMap.SizeX:
+            self.naturalDefenseInd["Percepcion_de_mundo"]=globals.worldMap.SizeX-1
             
         if int(self.naturalDefenseInd["Armadura_debil_porciento"])<0:
             self.naturalDefenseInd["Armadura_debil_porciento"]=0
