@@ -117,7 +117,13 @@ class Zone:
 
         
 
+
     
+    def ChangeDanger(self, newDangerInt):
+        self.Danger = newDangerInt
+        
+    
+#--------------------------------------------------------NEW STUFF--------------------------------------------------------
     def SelectPopularElement(self,Tile):
         ElementsPctTupleList = []
         count = 0
@@ -148,7 +154,4 @@ class Zone:
         
         #sadfsdafsda
         return 'Solar Light'
-        
-    
-    def ChangeDanger(self, newDangerInt):
-        self.Danger = newDangerInt
+#--------------------------------------------------------NEW STUFF--------------------------------------------------------
