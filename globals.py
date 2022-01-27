@@ -20,6 +20,17 @@ MediumRandomRange = (1000, 3000)
 LowRandomRange = (200, 1000)
 NoneRandomRange = (0, 200)
 
+#Variable de caza, mientra más grande más probable que el individuo decida cazar (0--->infinito)
+    # 0: nunca cazará, 
+    # 1: podrá cazar aprox un 1/10 porciento de veces que evolucione , 
+    # 1000000: siempre cazará(probablemente))
+Hunting = 1
+
+#Que tan débil debe ser la craitura que se va a cazar, (1---->10)
+    # 10: más debil que yo, pero no me importa cuan débil
+    # 5: siempre será el doble de débil o más que yo
+    # 1: siempre será 10 veces más debil que yo
+Weakness = 10
 
 
 PrairieGenerationList = {'Solar Light' : InfiniteRange ,
