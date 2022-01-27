@@ -46,8 +46,8 @@ def main():
     save= True
     if save == True:
         filename = 'map.json'         
-        with open(filename, 'w') as file_object:
-            json.dump(globals.worldMap, file_object) 
+    #    with open(filename, 'w') as file_object:
+        #    json.dump(globals.worldMap, file_object) 
     
     #Poner en True si se quiere cargar el mapa de un JSON
     load = False
