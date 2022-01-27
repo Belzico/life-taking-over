@@ -80,6 +80,9 @@ class Especies():
         #sexo del indi
         basicInfo["Cantidad_de_miembros"]=0
 
+        
+        basicInfo["Canibal"]==True
+        
         #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
         basicInfo["Tipo_de_alimentacion"]="element"
         #sexo del individuo
@@ -131,7 +134,7 @@ class Especies():
         #cuantos hijos por reproduccion puede consebir por reproduccion
         naturalDefense["Tiempo_entre_reproducccion"]="5"
         naturalDefense["Tiempo_de_vida_en_dias"]=str(random.randint(50,101))
-       
+
         #cuanta energia daran al que los mate y se alimente de ellos
         naturalDefense["Cantidad_de_energia_dropeada"]=str(life)
         #cantidad de energia diaria requerida por individuo
@@ -180,6 +183,16 @@ class Especies():
                 print("La especie "+str(self.basicInfo["name"])+" es pluricelular")   
                 self.basicInfo["Tipo_de_celula"]="pluricelular"
         
+        
+        if self.basicInfo["Canibal"]==True:
+            tempRandom=random.randint(0,100)
+            if tempRandom>50:
+                print("La especie "+str(self.basicInfo["name"])+" es canibal")   
+                self.basicInfo["Canibal"]=True
+            else:
+                print("La especie "+str(self.basicInfo["name"])+" no es canibal")   
+                self.basicInfo["Canibal"]=False
+        
         #chance de evolucionar a reproduccion sexual
         if self.basicInfo["Tipo_de_reproduccion"]=="asexual":
             tempRandom=random.randint(0,100)
@@ -212,7 +225,7 @@ class Individuo():
         #coordenadas
         self.xMundo=xMundo
         self.yMundo=yMundo
-       
+
         #la cantidad de energia con la que empiezan
         self.saciedad=especie.naturalDefense["Cantidad_de_energia_almacenable"]
         #string con el nombre de la especie
@@ -253,29 +266,28 @@ class Individuo():
         self.setPriorities()
         
             
-
     
-    def battleLogGenerator(individuo):
-        battleLog={}
-        battleLog["life"]=int(individuo.naturalDefenseInd["Vida"])
-        battleLog["currentLife"] =int(individuo.naturalDefenseInd["Vida"])
-        battleLog["movements"] =int(individuo.naturalDefenseInd["Velocidad_agua"])
-        battleLog["xPosition"] =0
-        battleLog["xPosition"] =0
-        
-        battleLog["debuffSlow"]=0
-        battleLog["debuffBleed"]=0
-        return battleLog
+    #def battleLogGenerator(individuo):
+    #    battleLog={}
+    #    battleLog["life"]=int(individuo.naturalDefenseInd["Vida"])
+    #    battleLog["currentLife"] =int(individuo.naturalDefenseInd["Vida"])
+    #    battleLog["movements"] =int(individuo.naturalDefenseInd["Velocidad_agua"])
+    #    battleLog["xPosition"] =0
+    #    battleLog["xPosition"] =0
+    #    
+    #    battleLog["debuffSlow"]=0
+    #    battleLog["debuffBleed"]=0
+    #    return battleLog
 
-    def resetBattleLog(individuo,battleLog):
-        battleLog["currentMovements"]=int(individuo.naturalDefenseInd["Velocidad_agua"])
-        
-    def copyBattleLog(firstBattleLog):
-        newBattleLog={}
-        for key in firstBattleLog:
-            newBattleLog[key]=firstBattleLog[key]
-            
-        return newBattleLog
+    #def resetBattleLog(individuo,battleLog):
+    #    battleLog["currentMovements"]=int(individuo.naturalDefenseInd["Velocidad_agua"])
+    #    
+    #def copyBattleLog(firstBattleLog):
+    #    newBattleLog={}
+    #    for key in firstBattleLog:
+    #        newBattleLog[key]=firstBattleLog[key]
+    #        
+    #    return newBattleLog
     
     def setPriorities(self):
         self.priorities["hambre"]=1 +(1-self.saciedad/self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
@@ -318,8 +330,8 @@ class Individuo():
 
 
         if varianza!=None:
-           
-           
+
+
             self.naturalDefenseInd["Vida"]=int(self.naturalDefenseInd["Vida"])+int(random.randint( int(varianza["Vida"]),int(varianza["Vida"])))
             self.naturalDefenseInd["Percepcion_de_mundo"]=int(self.naturalDefenseInd["Percepcion_de_mundo"])+int(random.randint(int(varianza["Percepcion_de_mundo"]),int(varianza["Percepcion_de_mundo"])))
             self.naturalDefenseInd["Inteligencia"]=int(self.naturalDefenseInd["Inteligencia"])+int(random.randint(int(varianza["Inteligencia"]),int(varianza["Inteligencia"])))
@@ -449,7 +461,7 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
-                                     #move
+                                    #move
     #############################################################################
     #movimiento del individuo
     def move(self,mapa):
@@ -499,9 +511,11 @@ class Individuo():
 ####################################feed###################################################
 
     def eat(self):
+        eatSuccess=True
         listDestroy=[]
         for resource in globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict:
-            
+            if self.saciedad>=self.naturalDefenseInd["Cantidad_de_energia_almacenable"]:
+                break
             ##################################
             #cosumiendo energia
             #self.saciedad=int(self.saciedad)-int(self.especie.naturalDefense["Cantidad_de_energia_necesaria"])
@@ -510,20 +524,58 @@ class Individuo():
             ###################################################
             
             neededFood= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(self.saciedad)
-           
+
             if resource in self.especie.alimentos:
-                #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
-                if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood/int(self.especie.alimentos[resource]):
-                    listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
-                    self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                if resource=="Cazador":
+                    prey= misc.FindPrey(self)
                     
-                    break
+                    combatResult=misc.fullCombat(self,prey)
+                    if combatResult==0:
+                        print(self.name+" intento cazar a "+prey.name+" y lo consiguio")
+                        if int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3>1+neededFood//int(self.especie.alimentos[resource]):
+                            print(self.name+" se comio a "+prey.name+" y se lleno")
+                            self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                            prey.die()
+                            break
+                        else:
+                            print(self.name+" se comio a "+prey.name+" pero pero no se lleno")
+                            self.saciedad+=int(self.especie.alimentos[resource])*(int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3)
+                            prey.die()
+                    elif combatResult==1:
+                        print(self.name+" intento cazar a "+prey.name+" y murio")
+                        if  "cazador" in prey.especie.alimentos:
+                            
+                            preyNeededFood=int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(prey.saciedad)
+                            if int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3>1+preyNeededFood//int(prey.especie.alimentos[resource]):
+                                print(prey.name+" comio a "+self.name+" y se lleno")
+                                prey.saciedad=int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                                
+                            else:
+                                print(prey.name+" comio a "+self.name+" y no se lleno")
+                                prey.saciedad+=int(prey.especie.alimentos[resource])*(int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3)
+                    
+                        self.die()
+                        eatSuccess=False
+                        break
+                    
+                    #la presa escapo
+                    elif combatResult==2:
+                        print(self.name+" intento cazar a "+prey.name+" pero se le escapo")
+                        continue
                 
-                #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
                 else:
-                    self.saciedad+=globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource]*int(self.alimentos[resource])
-                    listDestroy.append((resource,int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])))
-    	            
+                    #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
+                    if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood//int(self.especie.alimentos[resource]):
+                        listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
+                        self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+
+                        break
+                
+                    #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
+                    else:
+                        self.saciedad+=globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource]*int(self.alimentos[resource])
+                        listDestroy.append((resource,int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])))
+
         #comprobando si ya esta lleno
             if int(self.saciedad) >= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
                 self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
@@ -533,6 +585,7 @@ class Individuo():
         for item in listDestroy:
             print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidades de "+str(item[0]))
             #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
+        return eatSuccess
 ###########################################################################################
 
     #en este metodo se decidira lo que hara el individuos 
@@ -549,7 +602,9 @@ class Individuo():
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
                 self.saciedad=str(int(self.saciedad)+1)
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="element":
-               self.eat()
+                eatSucces=self.eat()
+                if not eatSucces:
+                    return
                         
         self.move(map)
                 

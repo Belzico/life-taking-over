@@ -108,7 +108,7 @@ class Zone:
     
         
     
-  
+
         #Calculando el promedio de la varianza de todos los valores
 
 

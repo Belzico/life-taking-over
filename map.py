@@ -24,7 +24,7 @@ class Map:
     def SaveInJson(self):
         globals.jasonstr = json.dumps(self.__dict__,'map.json')
         
-   
+
     
     #actualiza en el mundo
     def udpdateIndividual(self,tempInd,x,y):
