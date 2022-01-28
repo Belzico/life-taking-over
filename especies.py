@@ -152,7 +152,7 @@ class Especies():
         return resistenciasElementales
     
     def foodListGenerator(self):
-        self.alimentos["Cazador"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
+        self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
         #self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
         
     
