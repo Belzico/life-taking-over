@@ -246,6 +246,8 @@ class Map:
                 #Parche de casillas vacías
                 if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in Individuo.especie.alimentos.keys():
+                    #revisar esto
+                    if h=="Cazador": continue
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if tempvalue>savedValue:
                     savedValue = tempvalue
@@ -257,6 +259,7 @@ class Map:
                 #Parche de casillas vacías
                 if TilePerceptionMatrix[i][j] == globals.voidValue: continue
                 for h in Individuo.especie.alimentos.keys():
+                    if h=="Cazador": continue
                     tempvalue += TilePerceptionMatrix[i][j].ComponentsDict[h]
                 if savedValue == tempvalue:
                     valuesList[i][j] = 5

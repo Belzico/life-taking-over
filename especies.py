@@ -487,7 +487,7 @@ class Individuo():
     def eat(self):
         eatSuccess=True
         listDestroy=[]
-        for resource in globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict:
+        for resource in self.especie.alimentos:
             if float(self.saciedad)>=float(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
                 break
             ##################################
@@ -499,10 +499,10 @@ class Individuo():
             
             neededFood= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(self.saciedad)
 
-            if resource in self.especie.alimentos:
+            if resource in globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict or resource=="Cazador":
                 if resource=="Cazador":
-                    prey= misc.FindPrey(self)
-                    
+                    prey= misc.findPrey(self)
+                    if prey==None: continue
                     combatResult=misc.fullCombat(self,prey)
                     if combatResult==0:
                         print(self.name+" intento cazar a "+prey.name+" y lo consiguio")

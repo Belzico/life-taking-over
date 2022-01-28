@@ -314,6 +314,10 @@ def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosP
     #(value,tuple) tuple is a tuple with las position and which attack
     fullResult=None
     result4=None
+    result1=None
+    result2=None
+    result3=None
+    result5=None
     
     
     
@@ -326,18 +330,20 @@ def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosP
     
     if iteration<0:
         action=battleLogPredator["action"]
-        return (euristicaHunt(battleLogPredator,battleLogPrey,myMap),(posX,posY,action))
+        value=euristicaHunt(battleLogPredator,battleLogPrey,myMap)
+        return (value,(posX,posY,action))
     
     
         
     moves=battleLogPredator["movements"]-battleLogPredator["debuffSlow"]
     if moves > 0:
-        for i in range(len(dir1Row)+1):
+        for i in range(len(dir1Row)):
             if indexChecker((posX+dir1Row[i],posY+dir2Col[i]),len(myMap)):
                 newDiccPredator=copyBattleLog(battleLogPredator)
                 newDiccPrey=copyBattleLog(battleLogPrey)
-                newDiccPredator["movements"]==newDiccPredator["movements"]-1
-                tempresult=combatTurnPredator(predator,prey,newDiccPredator,newDiccPrey,myMap,iteration)
+                newDiccPredator["movements"]=newDiccPredator["movements"]-1
+                tempresult=combatTurnPredator(predator,prey,newDiccPredator,newDiccPrey,myMap,whosPredicting,iteration)
+                if tempresult==None:continue
                 if result4==None:
                     result4=tempresult
                 if whosPredicting == "Predator":
@@ -367,9 +373,10 @@ def combatTurnPredator(predator,prey,battleLogPredator,battleLogPrey,myMap,whosP
         standarAttack(predator,prey,newDiccPredator1,(1,1,2))
         result3=combatTurnPredator(predator,prey,newDiccPredator3,newDiccPrey3,myMap,whosPredicting,iteration)
 
-    if moves<=0 and battleLogPredator["action"]!=None:
-        valueTemp=combatTurnPrey(predator,prey,resetBattleLog(battleLogPredator),battleLogPrey,myMap,iteration-1)
-        result5=(valueTemp,(posX,posY,battleLogPredator["action"]))
+    if moves<=0 : #and battleLogPredator["action"]!=None
+        reseted=resetBattleLog(predator,battleLogPredator)
+        valueTemp=combatTurnPrey(predator,prey,reseted,battleLogPrey,myMap,whosPredicting,iteration-1)
+        result5=(valueTemp[0],(posX,posY,battleLogPredator["action"]))
 
     fullResult=bestResult([result1,result2,result3,result4,result5])
     return fullResult
@@ -381,6 +388,10 @@ def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,whosPredi
     #(value,tuple) tuple is a tuple with las position and which attack
     fullResult=None
     result4=None
+    result5=None
+    result1=None
+    result2=None
+    result3=None
     
     posX=battleLogPrey["xPosition"]
     posY=battleLogPrey["yPosition"]
@@ -389,18 +400,24 @@ def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,whosPredi
     if battleLogPrey["life"]<=0: return (-1000000,(posX,posY,battleLogPrey["action"]))
     if checkBorderEscape((battleLogPrey["xPosition"],battleLogPrey["yPosition"]),myMap): return (5000,(posX,posY,battleLogPrey["action"]))
     
+    
+    
     if iteration<0:
         action=battleLogPrey["action"]
-        return (euristicaHuir(battleLogPrey,battleLogPredator,myMap),(posX,posY,action))
+        value=euristicaHuir(battleLogPrey,battleLogPredator,myMap)
+        return (value,(posX,posY,action))
 
     moves=battleLogPrey["movements"]-battleLogPrey["debuffSlow"]
     if moves > 0:
-        for i in range(len(dir1Row)+1):
+        for i in range(len(dir1Row)):
             if indexChecker((posX+dir1Row[i],posY+dir2Col[i]),len(myMap)):
+                #if myMap[posX+dir1Row[i]][posY+dir2Col[i]][1]==
+                
                 newDiccPredator=copyBattleLog(battleLogPredator)
                 newDiccPrey=copyBattleLog(battleLogPrey)
-                newDiccPrey["movements"]==newDiccPrey["movements"]-1
-                tempresult=combatTurnPrey(predator,prey,newDiccPredator,newDiccPrey,myMap,iteration)
+                newDiccPrey["movements"]=newDiccPrey["movements"]-1
+                tempresult=combatTurnPrey(predator,prey,newDiccPredator,newDiccPrey,myMap,whosPredicting,iteration)
+                if tempresult==None:continue
                 if result4==None:
                     result4=tempresult
                 if whosPredicting == "Prey":
@@ -429,9 +446,10 @@ def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,whosPredi
         standarAttack(prey,predator,newDiccPredator1,(1,1,2))
         result3=combatTurnPredator(predator,prey,newDiccPredator3,newDiccPrey3,myMap,whosPredicting,iteration)
 
-    if moves<=0 and battleLogPrey["action"]!=None:
-        valueTemp=combatTurnPredator(predator,prey,battleLogPredator,resetBattleLog(battleLogPrey),myMap,iteration-1)
-        result5=(valueTemp,(posX,posY,battleLogPrey["action"]))
+    if moves<=0 : #and battleLogPrey["action"]!=None
+        reseted=resetBattleLog(prey,battleLogPrey)
+        valueTemp=combatTurnPredator(predator,prey,battleLogPredator,reseted,myMap,whosPredicting,iteration-1)
+        result5=(valueTemp[0],(posX,posY,battleLogPrey["action"]))
 
     fullResult=bestResult([result1,result2,result3,result4,result5])
     return fullResult
@@ -439,11 +457,16 @@ def combatTurnPrey(predator,prey,battleLogPredator,battleLogPrey,myMap,whosPredi
 
 
 def bestResult(listRes):
-    if listRes!=None:
-        tempMax=listRes[0]
+    tempMax=None
+        
     for i in range(len(listRes)):
-        if listRes[i]!=None and listRes[i][0]>tempMax[0]:
+        if listRes[i]==None:
+            continue
+        if tempMax==None:
             tempMax=listRes[i]
+        else:
+            if listRes[i][0]>tempMax[0]:
+                tempMax=listRes[i]
     
     return tempMax
     
@@ -453,10 +476,13 @@ def hitRange(predatorPos,preyPos):
         return True
     return False
 
-def mapCreator():
+def mapCreator(sizeMap):
     result=[]
-    for i in range(21):
+    for i in range(sizeMap):
         result.append([])
+        for j in range(sizeMap):
+            #predator,prey 
+            result[i].append((0,0))
     
     return result
 
@@ -470,11 +496,12 @@ def fullCombat(predator,prey):
     if mapLentgh>100 :
         mapLentgh=100
     myMap=mapCreator(mapLentgh*10+1)
+    #refillMpap(myMap,euristicaHunt(predator,prey,myMap),euristicaHunt(predator,prey,myMap))
     
     predatorBattleLog=battleLogGenerator(predator)
     preyBattleLog=battleLogGenerator(prey)
-    prey["xPosition"]=len(myMap)//2
-    prey["yPosition"]=len(myMap)//2
+    preyBattleLog["xPosition"]=len(myMap)//2
+    preyBattleLog["yPosition"]=len(myMap)//2
     
     sneakWalk(predator,prey,predatorBattleLog,preyBattleLog,myMap)
     
@@ -489,22 +516,22 @@ def fullCombat(predator,prey):
             move= combatTurnPredator(predator,prey,predatorBattleLog,preyBattleLog,myMap,0,futureSigth)
             predatorBattleLog["xPosition"]=move[1][0]
             predatorBattleLog["yPosition"]=move[1][1]
-            if(move[1][2])==0:
+            if(move[1][2])=="normalHit":
                 standarAttack(predator,prey,preyBattleLog,(2,1,1))
-            elif (move[1][2])==0:
+            elif (move[1][2])=="critHit":
                 standarAttack(predator,prey,preyBattleLog,(1,2,1))
-            elif (move[1][2])==0:
+            elif (move[1][2])=="slowHit":
                 standarAttack(predator,prey,preyBattleLog,(1,1,2))
         else : 
             futureSigth=(prey.naturalDefenseInd["Inteligencia"]+prey.naturalDefenseInd["Percepcion_de_mundo"])//2
             combatTurnPrey(predator,prey,predatorBattleLog,preyBattleLog,myMap,futureSigth)
             preyBattleLog["xPosition"]=move[1][0]
             preyBattleLog["yPosition"]=move[1][1]
-            if(move[1][2])==0:
+            if(move[1][2])=="normalHit":
                 standarAttack(prey,predator,predatorBattleLog,(2,1,1))
-            elif (move[1][2])==0:
+            elif (move[1][2])=="critHit":
                 standarAttack(prey,predator,predatorBattleLog,(1,2,1))
-            elif (move[1][2])==0:
+            elif (move[1][2])=="slowHit":
                 standarAttack(prey,predator,predatorBattleLog,(1,1,2))
         if preyBattleLog["life"]<=0: return 0
         if predatorBattleLog["life"]<=0: return 1
@@ -512,6 +539,8 @@ def fullCombat(predator,prey):
             return 2
         
         i+=1
+
+#def refillMpap(myMap, huntValue,)
 
 def checkBorderEscape(pos,map):
     if (pos[0]==0 or pos[0]==len(map)-1) and (pos[1]==0 or pos[1]==len(map[0])-1):
@@ -526,16 +555,16 @@ def euristicaHuir(firstIndividualBattlelog,secondIndividualBattlelog,mapa,peso=1
     distYEdge=max(len(mapa[0])-firstIndividualBattlelog["yPosition"],firstIndividualBattlelog["yPosition"])//2
     
     
-    return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentlife"]-firstIndividualBattlelog["currentlife"])*peso
+    return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentLife"]-firstIndividualBattlelog["currentLife"])*peso
     
 def euristicaHunt(firstIndividualBattlelog,secondIndividualBattlelog,mapa,peso=1):
     distXPredator=len(mapa)-abs( firstIndividualBattlelog["xPosition"]-secondIndividualBattlelog["xPosition"])
     distYPredator=len(mapa)-abs(firstIndividualBattlelog["yPosition"]-secondIndividualBattlelog["yPosition"])
-    distXEdge=min(len(mapa)-secondIndividualBattlelog.BattleLog["xPosition"],secondIndividualBattlelog["xPosition"])
-    distYEdge=min(len(mapa[0])-secondIndividualBattlelog.BattleLog["xPosition"],secondIndividualBattlelog["yPosition"])   
+    distXEdge=min(len(mapa)-secondIndividualBattlelog["xPosition"],secondIndividualBattlelog["xPosition"])
+    distYEdge=min(len(mapa[0])-secondIndividualBattlelog["xPosition"],secondIndividualBattlelog["yPosition"])   
     
     
-    return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentlife"]-secondIndividualBattlelog.BattleLog["currentlife"])*peso
+    return (distXEdge+distYEdge+distXPredator+distYPredator+firstIndividualBattlelog["currentLife"]-secondIndividualBattlelog["currentLife"])*peso
 
 #realiza un ataque recibe un peso para ver que tipo de ataque sera
 #weithgs=(min%attack,max%attack,critIncrease,slowIncrease,)
@@ -590,14 +619,14 @@ def sneakWalk(predator,prey,battleLogPredator,battleLogPrey,mapa):
             if dirX+battleLogPredator["xPosition"]== battleLogPrey["xPosition"] and dirY+battleLogPredator["yPosition"]==battleLogPrey["yPosition"]:
                 standarAttack(predator,prey,battleLogPrey,(2,2,2))
                 return
-        else:
-            predatorChance=20*(int(predator.naturalDefenseInd["Sigilo"])-(int(prey.naturalDefenseInd["Intelgencia"])+(int(prey.naturalDefenseInd["Intelgencia"])))//2)
-            sneakChance=random.randint(0,100)
-            if predatorChance>sneakChance:
-                battleLogPredator["xPosition"]=dirX+battleLogPredator["xPosition"]
-                battleLogPredator["yPosition"]=dirY+battleLogPredator["yPosition"]
             else:
-                return    
+                predatorChance=20*(int(predator.naturalDefenseInd["Sigilo"])-(int(prey.naturalDefenseInd["Inteligencia"])+(int(prey.naturalDefenseInd["Inteligencia"])))//2)
+                sneakChance=random.randint(0,100)
+                if predatorChance>sneakChance:
+                    battleLogPredator["xPosition"]=dirX+battleLogPredator["xPosition"]
+                    battleLogPredator["yPosition"]=dirY+battleLogPredator["yPosition"]
+                else:
+                    return    
     
     
 def calculatePercent(number,percent):
@@ -610,7 +639,7 @@ def battleLogGenerator(individuo):
     battleLog["currentLife"] =int(individuo.naturalDefenseInd["Vida"])
     battleLog["movements"] =int(individuo.naturalDefenseInd["Velocidad_agua"])
     battleLog["xPosition"] =0
-    battleLog["xPosition"] =0
+    battleLog["yPosition"] =0
     
     battleLog["action"] =None
     
@@ -651,30 +680,33 @@ def findPrey(Individuo ):
     
     for creature in actualTile.CreatureList:
         #modificar para canibalismo
-        if creature.especie == Individuo.especie and not creature.especie.basicInfo["Canibal"]:
+        if (creature.especie == Individuo.especie and not creature.especie.basicInfo["Canibal"]) or creature==Individuo:
             pass
         
         else:
-            #adfdsaf
-            creatureStats= creature.naturalDefenseInd["Vida"]+creature.naturalDefenseInd["Inteligencia"]+creature.naturalDefenseInd["Percepcion_de_mundo"]
-            + creature.naturalDefenseInd["Armadura"]+ creature.naturalDefenseInd["Armadura_debil"]+creature.naturalDefenseInd["Armadura_debil_porciento"]
-            +creature.naturalDefenseInd["Crit_chance_increase"]+ creature.naturalDefenseInd["Bleed_chance"]+creature.naturalDefenseInd["Crit_chance_increase"]
-            + creature.naturalDefenseInd["Bleed_damage"]+creature.naturalDefenseInd["Slow_chance"]+creature.naturalDefenseInd["Slow_done"]+creature.naturalDefenseInd["Velocidad_agua"]
             
-            
-            hunger=int(Individuo.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(Individuo.saciedad)
-            #modificar esto dependiendo del hambre
-            careless=hunger/int(Individuo.naturalDefenseInd["Cantidad_de_energia_almacenable"])
-            
-                
-            if prey == None and (individuoStats*careless+ individuoStats)/3 > creatureStats:
-                preyStats = creatureStats
-                prey = creature
-            
-            elif preyStats< creatureStats < (individuoStats*careless+ individuoStats)/3:
-                preyStats = creatureStats
-                prey = creature
-            
+            if Individuo.naturalDefenseInd["Inteligencia"]>=5:
+                creatureStats= creature.naturalDefenseInd["Vida"]+creature.naturalDefenseInd["Inteligencia"]+creature.naturalDefenseInd["Percepcion_de_mundo"]
+                + creature.naturalDefenseInd["Armadura"]+ creature.naturalDefenseInd["Armadura_debil"]+creature.naturalDefenseInd["Armadura_debil_porciento"]
+                +creature.naturalDefenseInd["Crit_chance_increase"]+ creature.naturalDefenseInd["Bleed_chance"]+creature.naturalDefenseInd["Crit_chance_increase"]
+                + creature.naturalDefenseInd["Bleed_damage"]+creature.naturalDefenseInd["Slow_chance"]+creature.naturalDefenseInd["Slow_done"]+creature.naturalDefenseInd["Velocidad_agua"]
+
+
+                hunger=int(Individuo.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(Individuo.saciedad)
+                #modificar esto dependiendo del hambre
+                careless=hunger/int(Individuo.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+
+
+                if prey == None and (individuoStats*careless+ individuoStats)/3 > creatureStats:
+                    preyStats = creatureStats
+                    prey = creature
+
+                elif preyStats< creatureStats < (individuoStats*careless+ individuoStats)/3:
+                    preyStats = creatureStats
+                    prey = creature
+            else:
+                prey=creature
+                break
     return prey
 
 
