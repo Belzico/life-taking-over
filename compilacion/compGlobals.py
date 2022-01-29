@@ -40,7 +40,7 @@ class TokeTypes(enum.Enum):
     
     
     tokComma=29 #,
-    tokDot=30 #.
+    tokNextLine=30 # /n
     tokColom=31 #.
     
     tokEqual=32 #==
@@ -59,3 +59,15 @@ class TokeTypes(enum.Enum):
     
     tokAnd=43 #&&
     tokOr=44 #||
+    
+    
+    
+
+
+
+
+keywordsDicc={}
+
+operatorsDicc={}
+
+puntuationDicc={}
