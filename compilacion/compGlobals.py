@@ -68,10 +68,72 @@ class TokeTypes(enum.Enum):
 
 
 
-keywordsDicc={}
+keywordsDicc={
+    #Keywords Condicionales
+    "if"       : TokeTypes.tokIf, 
+    "elif"     : TokeTypes.tokElif,
+    "else"     : TokeTypes.tokElse,
+    
+    #Keywords de Ciclos
+    "loop"     : TokeTypes.tokLoop,
+    
+    "break"    : TokeTypes.tokBreak,
+    "continue" : TokeTypes.tokContinue,
+    
+    #Keywords de tipos
+    "int"      : TokeTypes.tokInt,
+    "double"   : TokeTypes.tokDouble,
+    "string"   : TokeTypes.tokString,
+    
+    #Keywords de valor
+    "bool"     : TokeTypes.tokBool,
+    "None"     : TokeTypes.tokNone,
+    "True"     : TokeTypes.tokTrue,
+    "False "   : TokeTypes.tokFalse,
+    
+    #Kewords del trabajo
+    "Individuo": TokeTypes.tokIndividual,
+    "Especie"  : TokeTypes.tokSpecies,
+    "mapa"     : TokeTypes.tokMap,
+    "fenomeno" : TokeTypes.tokphenomenon
+}
 
-operatorsDicc={}
+operatorsDicc={
+    #Operadores de calculo
+    "+" : TokeTypes.tokSum,
+    "-" : TokeTypes.tokSub,
+    "*" : TokeTypes.tokMul,
+    ":" : TokeTypes.tokDiv,
+    "%" : TokeTypes.tokModDiv,
+    "^" : TokeTypes.tokPow,
+    
+    #Operadores condicionales
+    "&&" : TokeTypes.tokAnd,
+    "||" : TokeTypes.tokOr,
+    
+    #Operadores de comparacion
+    "==" : TokeTypes.tokEqual,
+    "!=" : TokeTypes.tokNotEqual,
+    "<=" : TokeTypes.tokLessOrEqual,
+    ">=" : TokeTypes.tokGreaterOrEqual,
+    ">"  : TokeTypes.tokGreater,
+    "<"  : TokeTypes.tokLess
+}
 
-puntuationDicc={}
+puntuationDicc={
+    #Signos de comentario
+    "#"        : TokeTypes.tokComennt,
+    
+    #Signos de puntuacion
+    ";" :  TokeTypes.tokSemicolon,
+    "." :  TokeTypes.tokPoint,
+    
+    #Signos de Separacion
+    ","  : TokeTypes.tokComma, 
+    #"."  : TokeTypes.tokColom,
+    
+    #Signos Especiales
+    "\n" : TokeTypes.tokNextLine
+}
 
 errorsList=[]
