@@ -60,7 +60,7 @@ class TokeTypes(enum.Enum):
     tokAnd=43 #&&
     tokOr=44 #||
     
-    tokID=45
+    tokID=45 #
     
     
     
@@ -73,3 +73,5 @@ keywordsDicc={}
 operatorsDicc={}
 
 puntuationDicc={}
+
+errorsList=[]

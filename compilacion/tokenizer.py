@@ -1,11 +1,24 @@
+from logging import error
 import compGlobals
 import tokens
+import compErrors
 
-
-
+def readOperator(chain,currentPos,mytokens,line,column):
+    currentToken=chain[currentPos]
+    currentPos+=1
+    
+    while currentPos<len(chain):
+        tempOperator=currentToken+chain[currentPos]
+        if tempOperator in compGlobals.operatorsDicc:
+            currentPos+=1
+            currentToken+=chain[currentPos]
+    tempType=compGlobals.operatorsDicc[currentToken]
+    mytokens.append(tokens.Token(tempType),line,column)
+    
+    return currentPos
 
 def readString(chain,currentPos,mytokens,line,column):
-    currentToken=""
+    currentToken=chain[currentPos]
     currentPos+=1
     while currentPos<len(chain):
         if chain[currentPos]=="\"":
@@ -22,7 +35,7 @@ def readAlphaNumeric(chain,currentPos,mytokens,line,column):
             currenToken+=chain[currentPos]
         currentPos+=1
     if currentPos!=" ":
-        #error
+        compGlobals.errorsList.append(compErrors.CompError("Wrong alphanumeric token declared",line,column))
         return -1
     if currenToken in compGlobals.keywordsDic:
         tempType=compGlobals.keywordsDicc[currenToken]
@@ -39,7 +52,7 @@ def readNumeric(chain, currentPos,mytokens,line,column):
     while currentPos<len(chain):
         if chain[currentPos]==".":
             if point==1:
-                #error
+                compGlobals.errorsList.append(compErrors.CompError("Wrong number token declared",line,column))
                 return -1
             else:
                 currentToken+=chain[currentPos]
@@ -50,7 +63,7 @@ def readNumeric(chain, currentPos,mytokens,line,column):
         currentPos+=1
     
     if chain[currentPos]!=" ":
-        #error 
+        compGlobals.errorsList.append(compErrors.CompError("Wrong numer token declared",line,column)) 
         return-1
     
     if point==0:
@@ -109,42 +122,41 @@ def tokenizer(chain):
         elif currentToken=="#":
             currentPos=readComment(chain,currentPos)-1
         elif currentToken.isnumeric():
-            numericResult=readNumeric(chain,currentPos,mytokens,line,column)
-            if numericResult==-1:
-                #error wrong number
-                pass
+            numericResult=readNumeric(chain,currentPos,mytokens,line,column)-1
+            if numericResult<=-1:
+                return None
             else:
                 currentPos=numericResult-1
         elif currentToken.isalpha():
             alphaResult=readAlphaNumeric(chain,currentPos,mytokens,line,column)-1
             if alphaResult==-1:
-                #error wrong number
-                pass
+                return None
             else:
-                currentPos=numericResult-1
+                currentPos=alphaResult-1
         elif currentToken=="\"":
             stringResult=readString(chain,currentPos,mytokens,line,column)
-        elif currentToken in compGlobals.operatorsDicc:
-            tempType=compGlobals.operatorsDicc[currentToken]
-            mytokens.append(tempType,line,column,currentToken)
-        
+        elif currentToken in compGlobals.operatorsDicc :
+            currentPos=readOperator(chain,currentPos,mytokens,line,column)-1
         else:
-            #error
-            pass
+            compGlobals.errorsList.append(compErrors.CompError("Unexpected token",line,column)) 
+            return None
                     
         currentPos+=1
         column+=currentPos-initialPos
         initialPos=currentPos
-        balanceEverything(parenthesis,squareBracket,brackect)
+        if balanceEverything(parenthesis,squareBracket,brackect):
+            return mytokens
+        return None
+        
         
         
 def balanceEverything(parenthesis, squareBracket, brackect):
     if parenthesis!=0:
-        #error
-        pass
+        compGlobals.errorsList.append(compErrors.CompError("Unbalance parenthesis",-1,-1)) 
+        return -1
     if squareBracket!=0:
-        #error
-        pass
+        compGlobals.errorsList.append(compErrors.CompError("Unbalance squareBracket",-1,-1)) 
+        return -1
     if brackect!=0:
-        #error
-        pass
+        compGlobals.errorsList.append(compErrors.CompError("Unbalance brackect",-1,-1)) 
+        return -1
