@@ -41,7 +41,7 @@ class TokeTypes(enum.Enum):
     
     tokComma=29 #,
     tokNextLine=30 # /n
-    tokColom=31 #.
+    tokNot=31 #!
     
     tokEqual=32 #==
     tokNotEqual=33 #!=
@@ -61,6 +61,22 @@ class TokeTypes(enum.Enum):
     tokOr=44 #||
     
     tokID=45 #
+    
+    tokModify=46 # $Modify
+    tokCreate=47 # $Create
+    tokDie=48 # $Die
+    tokEvolve=49 # $Evolve
+    tokAdd=50 # $Add
+    tokMove=51 # $Move
+    tokEat=52   # $Eat
+    
+    tokMSum=53 # $MatrixSum
+    tokMSub=54 # $MatrixSub
+    tokMMul=55 # $MatrixMul
+    tokMDiv=56 # $MatrixDiv
+    
+    tokAssign=57 # Assign
+    
     
     
     
@@ -107,17 +123,36 @@ operatorsDicc={
     "%" : TokeTypes.tokModDiv,
     "^" : TokeTypes.tokPow,
     
+    #operador de asignacion
+    "=" : TokeTypes.tokAssign,
+    
     #Operadores condicionales
     "&&" : TokeTypes.tokAnd,
     "||" : TokeTypes.tokOr,
-    
+    "!":    TokeTypes.tokNot,
     #Operadores de comparacion
     "==" : TokeTypes.tokEqual,
     "!=" : TokeTypes.tokNotEqual,
     "<=" : TokeTypes.tokLessOrEqual,
     ">=" : TokeTypes.tokGreaterOrEqual,
     ">"  : TokeTypes.tokGreater,
-    "<"  : TokeTypes.tokLess
+    "<"  : TokeTypes.tokLess,
+    
+    #solo para la tokenizacion
+    "&":None,
+    "|":None,
+    
+    
+    
+}
+
+bracketDicc={
+    "("        : TokeTypes.tokOpenParen,
+    ")"        : TokeTypes.tokClosedParen,
+    "["        : TokeTypes.tokOpenSquareBracket,
+    "]"        : TokeTypes.tokClosedSquareBracket,
+    "{"        : TokeTypes.tokOpenBracket,
+    "}"        : TokeTypes.tokClosedBracket,
 }
 
 puntuationDicc={
@@ -126,14 +161,31 @@ puntuationDicc={
     
     #Signos de puntuacion
     ";" :  TokeTypes.tokSemicolon,
-    "." :  TokeTypes.tokPoint,
+    #"." :  TokeTypes.tokPoint,
     
     #Signos de Separacion
     ","  : TokeTypes.tokComma, 
     #"."  : TokeTypes.tokColom,
     
     #Signos Especiales
-    "\n" : TokeTypes.tokNextLine
+    #"\n" : TokeTypes.tokNextLine
+}
+
+specialKeywordsDicc={
+    
+    "$Modify": TokeTypes.tokModify, 
+    "$Create" :TokeTypes.tokCreate,
+    "$Die": TokeTypes.tokDie,
+    "$Evolve":TokeTypes.tokEvolve,
+    "$Add":TokeTypes.tokAdd, 
+    "$Move":TokeTypes.tokMove,
+    "$Eat":TokeTypes.tokEat,
+    
+    "$MatrixSum":TokeTypes.tokMSum, 
+    "$MatrixSub":TokeTypes.tokMSub,
+    "$MatrixMul":TokeTypes.tokMMul,
+    "$MatrixDiv":TokeTypes.tokMDiv
+    
 }
 
 errorsList=[]
