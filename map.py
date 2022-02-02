@@ -148,6 +148,8 @@ class Map:
        
         matrixDict["Peligro"] = self.dangerMatrix(Individuo,perceptionList)
         
+        matrixDict["Peligro Real"] = self.dangerRealMatrix(Individuo,perceptionList)
+        
         return matrixDict
         
         
@@ -210,25 +212,41 @@ class Map:
             for j in range(len(TilePerceptionMatrix[i])):
                 #Parche de casillas vacías
                 if TilePerceptionMatrix[i][j] == globals.voidValue: continue
-                if savedValue > TilePerceptionMatrix[i][j].Zone.Danger:
-                    savedValue = TilePerceptionMatrix[i][j].Zone.Danger
+                if savedValue > TilePerceptionMatrix[i][j].Danger:
+                    savedValue = TilePerceptionMatrix[i][j].Danger
                     
         for i in range(len(TilePerceptionMatrix)):
             for j in range(len(TilePerceptionMatrix[i])):
                 #Parche de casillas vacías
                 if TilePerceptionMatrix[i][j] == globals.voidValue: continue
-                if savedValue == TilePerceptionMatrix[i][j].Zone.Danger:
+                if savedValue == TilePerceptionMatrix[i][j].Danger:
                     valuesList[i][j] = 5
-                if savedValue<TilePerceptionMatrix[i][j].Zone.Danger< savedValue*1.5:
+                if savedValue<TilePerceptionMatrix[i][j].Danger< savedValue*1.5:
                     valuesList[i][j] = 4
-                if savedValue*1.5<=TilePerceptionMatrix[i][j].Zone.Danger< savedValue*2:
+                if savedValue*1.5<=TilePerceptionMatrix[i][j].Danger< savedValue*2:
                     valuesList[i][j] = 3
-                if savedValue*2 == TilePerceptionMatrix[i][j].Zone.Danger:
+                if savedValue*2 == TilePerceptionMatrix[i][j].Danger:
                     valuesList[i][j] = 2
-                if savedValue*2 < TilePerceptionMatrix[i][j].Zone.Danger:
+                if savedValue*2 < TilePerceptionMatrix[i][j].Danger:
                     valuesList[i][j] = 1
          
         return valuesList   
+    
+    def dangerRealMatrix(self,Individuo, TilePerceptionMatrix):
+        valuesList = []
+        for i in range(len(TilePerceptionMatrix)):
+            valuesList.append([])
+            for j in range(len(TilePerceptionMatrix[i])):
+                valuesList[i].append(globals.voidValue)
+    
+        #Buscando la casilla de menor peligrosidad
+        for i in range(len(TilePerceptionMatrix)):
+            for j in range(len(TilePerceptionMatrix[i])):
+                #Parche de casillas vacías
+                if TilePerceptionMatrix[i][j] == globals.voidValue: continue
+                valuesList[i][j] = TilePerceptionMatrix[i][j].Danger
+                
+        return valuesList  
     
     def FoodMatrix(self,Individuo, TilePerceptionMatrix):
         valuesList = []

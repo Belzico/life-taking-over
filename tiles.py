@@ -17,6 +17,7 @@ class Tile:
         self.Zone = zone
         self.CreatureList = []
         self.ComponentsDict = {}
+        self.Danger = zone.Danger
         #self.EnergyValue = -1
         if zone.ZoneType == 'Prairie'  :
             self.createPrairieTile()
