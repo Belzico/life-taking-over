@@ -271,7 +271,7 @@ class Map:
                     valuesList[i][j] = 2
                 if savedValue*0.3> tempvalue:
                     valuesList[i][j] = 1
-         
+
         return valuesList   
 
     def speciesMatrix(self,Individuo, TilePerceptionMatrix):

@@ -59,6 +59,9 @@ OceanGenerationList = {'Solar Light' : InfiniteRange ,
                         'Nitrogen' :LowRandomRange}
 
 
+#numero de predicciones en el combate 9 por defecto
+tempPredictions=3
+
 
 #diccionario de especies
 allSpecies ={}

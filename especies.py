@@ -1,4 +1,6 @@
 import random
+
+from pyparsing import WordEnd
 import globals
 import misc
 import copy
@@ -134,7 +136,7 @@ class Especies():
         #cuantos hijos por reproduccion puede consebir por reproduccion
         naturalDefense["Tiempo_entre_reproducccion"]="5"
         naturalDefense["Tiempo_de_vida_en_dias"]=str(random.randint(50,101))
-       
+
         #cuanta energia daran al que los mate y se alimente de ellos
         naturalDefense["Cantidad_de_energia_dropeada"]=str(life)
         #cantidad de energia diaria requerida por individuo
@@ -152,8 +154,9 @@ class Especies():
         return resistenciasElementales
     
     def foodListGenerator(self):
-        self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
-        #self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
+        
+        #self.alimentos["Cazador"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])
+        self.alimentos["Solar Light"]=int(self.naturalDefense["Cantidad_de_energia_almacenable"])//4
         
     
     #metodo para evolucionar una especie
@@ -225,9 +228,9 @@ class Individuo():
         #coordenadas
         self.xMundo=xMundo
         self.yMundo=yMundo
-       
+
         #la cantidad de energia con la que empiezan
-        self.saciedad=especie.naturalDefense["Cantidad_de_energia_almacenable"]
+        self.saciedad=int(especie.naturalDefense["Cantidad_de_energia_almacenable"])
         #string con el nombre de la especie
         self.especie=especie
         #sexo del individuo, en caso de ser asexual sera por defecto cero
@@ -308,8 +311,8 @@ class Individuo():
 
 
         if varianza!=None:
-           
-           
+
+
             self.naturalDefenseInd["Vida"]=int(self.naturalDefenseInd["Vida"])+int(random.randint( int(varianza["Vida"]),int(varianza["Vida"])))
             self.naturalDefenseInd["Percepcion_de_mundo"]=int(self.naturalDefenseInd["Percepcion_de_mundo"])+int(random.randint(int(varianza["Percepcion_de_mundo"]),int(varianza["Percepcion_de_mundo"])))
             self.naturalDefenseInd["Inteligencia"]=int(self.naturalDefenseInd["Inteligencia"])+int(random.randint(int(varianza["Inteligencia"]),int(varianza["Inteligencia"])))
@@ -433,7 +436,7 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
-                                     #move
+                                    #move
     #############################################################################
     #movimiento del individuo
     def move(self,mapa):
@@ -539,25 +542,25 @@ class Individuo():
                 
                 else:
                     #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
-                    if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood//int(self.especie.alimentos[resource]):
-                        listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
-                        self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
+                    #if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood//int(self.especie.alimentos[resource]):
+                    #    listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
+                    #    self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
 
-                        break
+                        
                 
                     #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
-                    else:
-                        self.saciedad+=globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource]*int(self.alimentos[resource])
-                        listDestroy.append((resource,int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])))
+                    #else:
+                    self.saciedad+=self.especie.alimentos[resource]
+                    listDestroy.append((resource,1))
 
         #comprobando si ya esta lleno
             if int(self.saciedad) >= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
                 self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
-        
+                break
         
         
         for item in listDestroy:
-            print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidades de "+str(item[0]))
+            print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidad de "+str(item[0]))
             #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
         return eatSuccess
 ######################################################################################################################################################################################
@@ -566,7 +569,7 @@ class Individuo():
     def resolveIteration(self,map):
         mySpecie=self.especie
         #cosumiendo energia
-        self.saciedad=str(int(self.saciedad)-int(mySpecie.naturalDefense["Cantidad_de_energia_necesaria"]))
+        self.saciedad=int(self.saciedad)-int(mySpecie.naturalDefense["Cantidad_de_energia_necesaria"])
         #revisando el hambre de la especie
         hambre=int(mySpecie.naturalDefense["Nivel_de_Hambre"]) 
 
@@ -574,7 +577,7 @@ class Individuo():
         if int(self.saciedad)<=int(hambre):
             #caso especial de Alfie
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="entorno":
-                self.saciedad=str(int(self.saciedad)+1)
+                self.saciedad=int(self.saciedad)+1
             if mySpecie.basicInfo["Tipo_de_alimentacion"]=="element":
                 eatSucces=self.eat()
                 if not eatSucces:

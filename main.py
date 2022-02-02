@@ -45,6 +45,6 @@ def main():
     print("star world")
     worldController()
     
-
+print(type(3)==int)
 main()
     
