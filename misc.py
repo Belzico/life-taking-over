@@ -9,6 +9,10 @@ import random
 dir1Row=[0,-1,-1,-1, 0, 1,1,1]
 dir2Col=[1,1,  0,-1,-1,-1,0,1]
 
+def round_half_up(n, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(n*multiplier + 0.5) / multiplier
+
 def dictMergeSum(dict1, dict2):
     tempdict ={}
     

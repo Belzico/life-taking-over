@@ -8,8 +8,26 @@ ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
 
 voidValue = 10000000
 
+#Un entero de 1 hasta 100 que representa el porcentaje de posibilidad
+#con la que puede ocurrir un fenómeno al inicio de la simulación
+#o luego de que haya acabado de ocurrir otro fenómeno
+CatastrophyPosibility = 5
+
+#Aumento de probabilidad por turno con la que ocurrirá un fenómeno
+TurnsToCatastrophy = 5
+
+#Máximo de fenómenos que pueden estar ocurriendo al mismo tiempo
+MaxCatastrophy = 20
+
+#Categoría máxima que puede tener un fenómeno(cantidad máxima de peligro en zona)
+MaxCategory = 3
+
+#Lista de fenómenos
+CatastrophyList = []
+
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
 EvolutionFrequency = 1
+
 
 #Todos los elementos con los que trabaja la simulación
 WorldComponents = { 'Solar Light','Water', 'Organic Matter', 'Phosil' ,'Iron' , 'Aluminum' , 'Oxygen' , 'Carbon Dioxide' , 'Helium' , 'Nitrogen' }
