@@ -14,19 +14,22 @@ voidValue = 10000000
 CatastrophyPosibility = 5
 
 #Aumento de probabilidad por turno con la que ocurrirá un fenómeno
-TurnsToCatastrophy = 5
+TurnsToCatastrophy = 2
 
 #Máximo de fenómenos que pueden estar ocurriendo al mismo tiempo
-MaxCatastrophy = 20
+MaxCatastrophy = 15
 
-#Categoría máxima que puede tener un fenómeno(cantidad máxima de peligro en zona)
-MaxCategory = 3
+#Categoría máxima que puede tener generalmente un fenómeno(cantidad máxima de peligro en zona)
+MaxCategory = 5
 
 #Lista de fenómenos
 CatastrophyList = []
 
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
 EvolutionFrequency = 1
+
+
+MaxDangerinTile = 9*MaxCategory*5
 
 
 #Todos los elementos con los que trabaja la simulación
