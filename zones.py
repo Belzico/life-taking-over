@@ -150,3 +150,42 @@ class Zone:
     
     def ChangeDanger(self, newDangerInt):
         self.Danger = newDangerInt
+        
+        
+
+
+
+
+#--------------------------------------------------------NEW STUFF--------------------------------------------------------
+    def SelectPopularElement(self,Tile):
+        ElementsPctTupleList = []
+        count = 0
+        for i in Tile.ComponentsDict.keys():
+            if i == 'Solar Light' or i == 'Water':
+                pass
+            else:
+                if Tile.ComponentsDict[i] == 0:
+                    pass
+                else: 
+                    if count == 0: 
+                        ElementsPctTupleList.append((i,Tile.ComponentsDict[i]))
+                    else:
+                        ElementsPctTupleList.append((i, Tile.ComponentsDict[i] + ElementsPctTupleList[-1][1]))
+                    
+                    count += 1
+            
+        ElementsPctTupleList.append(('Solar Light', ElementsPctTupleList[count - 1][1] + ElementsPctTupleList[count - 1][1]/10))
+        
+        ElementsPctTupleList.append(('Water', ElementsPctTupleList[count - 1][1] + ElementsPctTupleList[count - 1][1]/10))
+        ElementsPctTupleList.append(('Cazador', ElementsPctTupleList[count - 1][1] + (ElementsPctTupleList[count - 1][1]/10)* globals.Hunting))
+        
+        randomIndex = randint(0 , int(ElementsPctTupleList[-1][1]))
+        
+        for i in ElementsPctTupleList:
+            if i[1]<= randomIndex:
+                return i[0]
+        
+        #sadfsdafsda
+        return 'Solar Light'
+#--------------------------------------------------------NEW STUFF--------------------------------------------------------
+

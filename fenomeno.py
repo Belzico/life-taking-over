@@ -170,53 +170,6 @@ class ErupcionVolcánica(Fenomeno):
                     return Lpos_caida_rocas
     
 
-    def Lluvia_De_Rocas(self,mapa,list_rocas):
-        for roca_cor in range(0,len(list_rocas)):
-            for zone in mapa.Zones:
-                for tile in zone.TileList:
-                    if tile.Coordinates == roca_cor:
-                        i = 0
-                        while i < len(tile.CreatureList):
-                            #Cambiar por probabilidades:
-                            creature = tile.CreatureList[i]
-                            death = randint(0,1)
-                            if death == 1:
-                                tile.CreatureList.pop(i)
-                            else: 
-                                i += 1
-                                 
-        
-    def LavaRecorrido(self,mapa,cor):
-        if self.Recorrido[self.pos] != None: 
-            for zone in mapa.Zones:
-                for tile in zone.TileList:
-                    if tile.Coordinates == self.Recorrido[self.pos]:
-                        ErupcionVolcánica.DamageLava(tile)
-    
-    def DamageLava(self,tile):
-        i = 0
-        while i < len(tile.CreatureList):
-            creature = tile.CreatureList[i]
-            death = randint(0,1)
-            if death == 1:
-                tile.CreatureList.pop(i)
-            else: 
-                i += 1
-            
-    
-        
-class Terremoto(Fenomeno):
-    def __init__(self, nombre, grado, cor, mapa):
-        super().__init__(nombre, grado, cor, mapa)
-        
-    def EfectuarFenomeno(self,mapa,cor):
-        if cor[1] == None:
-            return
-        
-        for zone in mapa.Zones:
-            for tile in zone.TileList:
-                if tile.Coordinates == self.corini:
-                    return
-                
-    def Agrietar():
-        pass
+
+def General_Nombre_Random():
+    pass
