@@ -1,8 +1,8 @@
 from compGlobals import TokeTypes 
 
 
-               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO  3-CONDICIONAL
-production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],   ["K"]],
+               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL
+production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"], ["R",TokeTypes.tokSemicolon],  ["K"] , [TokeTypes.tokClosedBracket,"Q"]],
             #Primero las declaraciones
             "D":[ [TokeTypes.tokBool, TokeTypes.tokID, TokeTypes.tokAssign,"E"], [TokeTypes.tokInt, TokeTypes.tokID, TokeTypes.tokAssign, "E"],  [TokeTypes.tokString, TokeTypes.tokID, TokeTypes.tokAssign, "E"], [TokeTypes.tokDouble, TokeTypes.tokID, TokeTypes.tokAssign, "E"] ],
               #Luego las  expresiones de valores (que pueden estar formadas por valores o cálculos)
@@ -22,6 +22,9 @@ production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],   ["K"]],
             #Ciclos
             "L":[[TokeTypes.tokLoop,TokeTypes.tokOpenBracket]],
             
+            #Luego del ciclo puede venir
+            "R":[[TokeTypes.tokContinue], [TokeTypes.tokBreak]],
+            
             #Condicional
             "K":[[TokeTypes.tokIf, TokeTypes.tokOpenParen, "X", TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket]],
                 #Cuerpo de condicional: Una Expresión y/o una comparación
@@ -30,6 +33,10 @@ production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],   ["K"]],
                 #Comparación
                 "C": [[TokeTypes.tokGreaterOrEqual], [TokeTypes.tokLessOrEqual], [TokeTypes.tokNotEqual],[TokeTypes.tokEqual],[TokeTypes.tokGreater], [TokeTypes.tokLess]],
                 #Comparación compuesta
-                "N": [["empty"],[TokeTypes.tokOr,"X"],[TokeTypes.tokAnd,"X"]]
+                "N": [["empty"],[TokeTypes.tokOr,"X"],[TokeTypes.tokAnd,"X"]],
             
+            #Luego de la condicional puede venir:
+            "Q": [["empty"],[TokeTypes.tokElse, TokeTypes.tokOpenBracket],[TokeTypes.tokElif, TokeTypes.tokOpenParen, "X", TokeTypes.tokClosedParen, TokeTypes.tokOpenBracket]],
+                
                 }
+
