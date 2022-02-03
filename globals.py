@@ -60,7 +60,7 @@ OceanGenerationList = {'Solar Light' : InfiniteRange ,
 
 
 #numero de predicciones en el combate 9 por defecto
-tempPredictions=3
+tempPredictions=9
 
 
 #diccionario de especies
