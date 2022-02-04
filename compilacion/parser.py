@@ -1,8 +1,8 @@
 from compGlobals import TokeTypes 
 
 
-               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL
-production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"], ["R",TokeTypes.tokSemicolon],  ["K"] , [TokeTypes.tokClosedBracket,"Q"]],
+               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
+production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"], ["R",TokeTypes.tokSemicolon],  ["K"] , [TokeTypes.tokClosedBracket,"Q"], ["U",TokeTypes.tokOpenParen,TokeTypes.tokID,"A",TokeTypes.tokClosedParen,TokeTypes.tokSemicolon] , ["I",TokeTypes.tokSemicolon]],
             #Primero las declaraciones
             "D":[ [TokeTypes.tokBool, TokeTypes.tokID, TokeTypes.tokAssign,"E"], [TokeTypes.tokInt, TokeTypes.tokID, TokeTypes.tokAssign, "E"],  [TokeTypes.tokString, TokeTypes.tokID, TokeTypes.tokAssign, "E"], [TokeTypes.tokDouble, TokeTypes.tokID, TokeTypes.tokAssign, "E"] ],
               #Luego las  expresiones de valores (que pueden estar formadas por valores o cálculos)
@@ -38,5 +38,20 @@ production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"], ["R",TokeTypes.tokSemi
             #Luego de la condicional puede venir:
             "Q": [["empty"],[TokeTypes.tokElse, TokeTypes.tokOpenBracket],[TokeTypes.tokElif, TokeTypes.tokOpenParen, "X", TokeTypes.tokClosedParen, TokeTypes.tokOpenBracket]],
                 
+                
+            #Nuestros métodos:
+            "U":[[TokeTypes.tokModify],[TokeTypes.tokModify], [TokeTypes.tokDie] ,[TokeTypes.tokEvolve], [TokeTypes.tokAdd], [TokeTypes.tokMove], [TokeTypes.tokEat]],
+            #Los otros términos que reciben nuestros métodos
+            "A":[["empty"],[TokeTypes.tokComma,TokeTypes.tokID], ["A"]],
+            
+            #Nuestras clases:
+            "I":[["Z","B"]],
+                #Declaraciones de nuestras clases
+                "Z":[[TokeTypes.tokList, TokeTypes.tokID],[TokeTypes.tokMatrix, TokeTypes.tokID],[TokeTypes.tokIndividual, TokeTypes.tokID],[TokeTypes.tokMap, TokeTypes.tokID],[TokeTypes.tokphenomenon, TokeTypes.tokID]],
+                #Lo que reciben nuestras clases
+                "B":[[TokeTypes.tokAssign,"R"]],
+                #Declarando listas y arrays para las matrices (y nuestras listas)
+                "R":[[TokeTypes.tokOpenSquareBracket,"F","N",TokeTypes.tokClosedSquareBracket]],
+                "F":[["empty"],["R"],["E"]],
+                "N": [["empty"], [TokeTypes.tokComma ,"E", "N"]],
                 }
-
