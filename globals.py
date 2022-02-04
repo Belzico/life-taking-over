@@ -1,5 +1,6 @@
 import sys
 import queue
+from ArbolEvolutivo.arbolEvolutivo import Arbol_Evo
 
 #Todas las zonas con las que trabaja la simulación
 ZoneList = ['Prairie', 'Mountain', 'Ocean']
@@ -97,3 +98,4 @@ Weakness = 10
 
 #-------------------------------------------------NEW STUFF--------------------------------------------------------------------
 
+arb_evo = Arbol_Evo()
