@@ -9,6 +9,10 @@ import random
 dir1Row=[0,-1,-1,-1, 0, 1,1,1]
 dir2Col=[1,1,  0,-1,-1,-1,0,1]
 
+def round_half_up(n, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(n*multiplier + 0.5) / multiplier
+
 def dictMergeSum(dict1, dict2):
     tempdict ={}
     
@@ -103,8 +107,13 @@ def pathFinder(currentIndividual,mapa):
     dangerMatrix=mapa["Peligro"]
     mateMatrix=mapa["Pareja"]
     especiesMatrix=mapa["Especie"]
+    deathMatrix=mapa["Peligro Real"]
+    
+    
     mapMaker(myMap,mapa["Tile"])
     mapMaker(myFixMap,mapa["Tile"])
+    
+    
     if currentIndividual.naturalDefenseInd["Inteligencia"]>=2:
         sumMatrix(myMap,mulMatrix(foodMatrix,currentIndividual.priorities['hambre']) )
     if currentIndividual.naturalDefenseInd["Inteligencia"]>5:
@@ -127,7 +136,7 @@ def pathFinder(currentIndividual,mapa):
     
     #borrar 
     a=globals.worldMap
-     
+
     i=1
     temp=fixRoad(road,destination,myPosition)
     currentPosition=None
@@ -139,7 +148,7 @@ def pathFinder(currentIndividual,mapa):
             currentIndividual.yMundo+=currentPosition[1] - lastPosition[1] 
             if not indexChecker((currentIndividual.xMundo,currentIndividual.yMundo),globals.worldMap.SizeX):
                 print("a")
-            if chanceToDie(dangerMatrix[currentPosition[0]][currentPosition[1]]):
+            if chanceToDie(deathMatrix[currentPosition[0]][currentPosition[1]]):
                 globals.worldMap.udpdateIndividual(currentIndividual,previusX,previusY)
                 print("Yo "+currentIndividual.name+" me movi hacia "+str(currentIndividual.xMundo) +","+str(currentIndividual.yMundo)+"")
                 currentIndividual.die()
@@ -149,13 +158,21 @@ def pathFinder(currentIndividual,mapa):
             lastPosition=currentPosition                
         i+=1
     return True
-    print("3")
 
-def chanceToDie(risk,index=10):
+def chanceToDie(risk):
+    chanceToDie=secondPercent(risk,globals.MaxDangerinTile)*globals.killerModifier 
+    #if chanceToDie>20:
+    #    print("a")
     tempInt=random.randint(0,100)
-    if tempInt<risk*index:
+    if tempInt<chanceToDie:
         return True
     return False
+
+#def chanceToDie(risk,index=10):
+#    tempInt=random.randint(0,100)
+#    if tempInt<risk*index:
+#        return True
+#    return False
 
 def bestLocationFinder(myMap):
     i=0
