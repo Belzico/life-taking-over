@@ -26,7 +26,7 @@ class Arbol_Evo:
         
         return None
         
-    def InsertEvolution(self,esp_ant, esp_new):
+    def InsertEvolution(self,esp_new, esp_ant = "origen"):
         if esp_ant == 'origen':
             self.hijos.append(Arbol_Evo(esp_new))
             return True
