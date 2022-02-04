@@ -1,7 +1,7 @@
 from compGlobals import TokeTypes 
 
 
-               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO  3-CONDICIONAL
+              #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO  3-CONDICIONAL
 production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],   ["K"]],
             #Primero las declaraciones
             "D":[ [TokeTypes.tokBool, TokeTypes.tokID, TokeTypes.tokAssign,"E"], [TokeTypes.tokInt, TokeTypes.tokID, TokeTypes.tokAssign, "E"],  [TokeTypes.tokString, TokeTypes.tokID, TokeTypes.tokAssign, "E"], [TokeTypes.tokDouble, TokeTypes.tokID, TokeTypes.tokAssign, "E"] ],

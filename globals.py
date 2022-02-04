@@ -28,7 +28,9 @@ CatastrophyList = []
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
 EvolutionFrequency = 1
 
-
+#valor para aumentar el chance de muerte cuando se pasa por una zona al caminar
+killerModifier=3
+#maximo peligro posible de una zona
 MaxDangerinTile = 9*MaxCategory*5
 
 
