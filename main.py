@@ -3,6 +3,7 @@ import especies
 import globals
 import map
 import misc
+import fenomeno
 
 
 def worldController():
@@ -24,6 +25,11 @@ def worldController():
                 for j in globals.allSpecies.keys():
                     h.startEvolving(globals.allSpecies[j])
                 
+        fenomeno.Euristics(globals.worldMap)
+        for n in globals.CatastrophyList:
+            n.Executing()
+
+        
         
         
         #globals.worldMap.PrintMap()
