@@ -30,7 +30,7 @@ CatastrophyList = []
 EvolutionFrequency =1
 
 #valor para aumentar el chance de muerte cuando se pasa por una zona al caminar
-killerModifier=3
+killerModifier=2
 #maximo peligro posible de una zona
 MaxDangerinTile = 9*MaxCategory*5
 

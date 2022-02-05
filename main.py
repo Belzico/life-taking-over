@@ -47,7 +47,12 @@ def worldController():
     
 def main():
     globals.worldMap=map.Map(10,10,5)
-    globals.allSpecies["1"]=especies.Especies(5,0,0)
+    especies.Especies(5,0,0)
+    especies.Especies(5,0,0)
+    #globals.allSpecies["1"].ModifyCaracteristic("Vida",100)
+    #globals.allSpecies["2"].ModifyCaracteristic("Inteligencia",200)
+    especies.Especies.initSpecies()
+    
     #current=globals.allSpecies["Alfie"]
     #current.individuos["Alfie1"].breed()
     #print(len(current.individuos))

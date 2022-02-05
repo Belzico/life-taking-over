@@ -35,6 +35,11 @@ class Especies():
         
         #data de la especie
         self.dataDicc={}
+        
+        #añadiendo al diccionario global
+        name=str(int(globals.lastNameSpecie)+1)
+        globals.allSpecies[name]=self
+        
         #llamada al generador
         self.especieGenerator(x,y,individuos)
         #nueva especie a la que puede estar evolucionando
@@ -44,8 +49,39 @@ class Especies():
 
         #numero del proximo individuo
         self.nextName=int(individuos)
+        #waitingForInit
+        self.WFI=(x,y,individuos)
+        
+        
+    def ModifyCaracteristic(self,caracteristic,newValue):
+        
+        done=False
+        if caracteristic in self.basicInfo:
+            self.basicInfo[caracteristic]=newValue
+            done=True
+            
+        if caracteristic in self.naturalDefense:
+            self.naturalDefense[caracteristic]=newValue
+            done=True
+            
+        if caracteristic in self.resistenciaElemental:
+            self.resistenciaElemental[caracteristic]=newValue
+            done=True
+            
+        if caracteristic in self.alimentos:
+            self.alimentos[caracteristic]=newValue
+            done=True
+        return done
 
-    
+    def initSpecies():
+        dicc=globals.allSpecies
+        for specie in dicc:
+            dicc[specie].setReadyForMap()
+        print("Species ready.")
+        globals.lastNameSpecie+=1
+        
+    def setReadyForMap(self):
+        self.individuos=self.listaIndividuosGenerator(self.WFI[0],self.WFI[1],self.WFI[2])
         
     #aca generaremos especies siguiendo algunos criterios pero de forma aleatoria
     def especieGenerator(self,x,y,individuos):
@@ -56,7 +92,7 @@ class Especies():
         self.naturalDefense=Especies.naturalDefenseGenerator()
         self.foodListGenerator()
         self.resistenciaElemental=Especies.resistenciasElementalesGenerator()
-        self.individuos=self.listaIndividuosGenerator(x,y,individuos)
+        
         self.dataDiccGenerator()
         
     def dataDiccGenerator(self):
@@ -102,7 +138,7 @@ class Especies():
         name=str(int(globals.lastNameSpecie)+1)
         globals.lastNameSpecie+=1
         basicInfo["name"]=name
-        globals.lastNameSpecie+=1
+        
         #dos tipos unicelular y pluricelular
         basicInfo["Tipo_de_celula"]="unicelular"
         #por definir, por ahora asexual y sexual entre 2 individuos de distinto sexo
@@ -191,13 +227,15 @@ class Especies():
         #se reciben todos los parametros en el dic
         father=paramsDic["EspeciePadre"] 
         self.basicInfo= copy.deepcopy(father.basicInfo)
+        self.basicInfo["Cantidad_de_miembros"]=0
+        self.basicInfo["Ultimo_numero"]=paramsDic["Individuos"]
+        
         self.naturalDefense=paramsDic["Promedio"]
         self.resistenciaElemental=copy.deepcopy(father.resistenciaElemental)
         self.alimentos=copy.deepcopy(father.alimentos)
         self.nextName=paramsDic["Individuos"]
 
-        self.dataDicc={}
-        self.dataDiccGenerator()
+
         
         #revisando si se agrega el elemento a los comestibles o se elimina alguno existente
         if int(father.naturalDefense["Vida"])>int(self.naturalDefense["Vida"]):
@@ -205,6 +243,8 @@ class Especies():
         if int(father.naturalDefense["Vida"])<int(self.naturalDefense["Vida"]):
             self.addFood(paramsDic["Elemento"])
             
+        self.dataDicc={}
+        self.dataDiccGenerator()
         
         self.basicInfo["name"]=int(globals.lastNameSpecie)
         globals.lastNameSpecie=int(globals.lastNameSpecie)+1
@@ -239,8 +279,7 @@ class Especies():
         
         
         self.individuos=self.listaIndividuosGenerator(paramsDic["x"] ,paramsDic["y"],paramsDic["Individuos"],varianza)
-        self.basicInfo["Cantidad_de_miembros"]=paramsDic["Individuos"]
-        self.basicInfo["Ultimo_numero"]=paramsDic["Individuos"]
+        
         #print("a")
         
     
@@ -459,6 +498,8 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
+        
+        #self.especie.basicInfo["Cantidad_de_miembros"]+=1
     
     #este metodo crea un nuevo individuo promedio de los dos padres
     def sexualReproduction(self,mate):
@@ -473,6 +514,7 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
+        #self.especie.basicInfo["Cantidad_de_miembros"]+=1
                                     #move
     #############################################################################
     #movimiento del individuo
@@ -682,6 +724,9 @@ class Individuo():
         #######ESTA ES UNA SOLUCIÓN TEMPORAL
         if self.name in self.especie.individuos.keys():
             del self.especie.individuos[self.name]
+        if int(self.especie.basicInfo["Cantidad_de_miembros"])<0 or int(self.especie.basicInfo["Cantidad_de_miembros"])!=len(self.especie.individuos):
+            print("zzzzz")
+        
         #matar en casilla de mapa
         if self in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
             globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.remove(self)

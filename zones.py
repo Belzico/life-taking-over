@@ -91,7 +91,7 @@ class Zone:
 
 
         #Si la varianza general es lo suficientemente grande entonces evoluciona
-        if varianza >= globals.EvolutionFrequency or varianza <= -1*(globals.EvolutionFrequency) and MajorityOfindividuals>globals.minSizeOfNewEspecies:
+        if (varianza >= globals.EvolutionFrequency or varianza <= -1*(globals.EvolutionFrequency)) and MajorityOfindividuals>globals.minSizeOfNewEspecies:
             print("Una especie ha evolucionado en la casilla ( "+ str(TileToEvolve.Coordinates[0])+", " +str(TileToEvolve.Coordinates[1]) +")" )
             if MajorityOfindividuals <= (len(especie.individuos)/2):
                 AllDictionary["Individuos"] = MajorityOfindividuals

@@ -175,6 +175,9 @@ def pathFinder(currentIndividual,mapa):
         i+=1
     return True
 
+
+
+
 def chanceToDie(risk):
     chanceToDie=secondPercent(risk,globals.MaxDangerinTile)*globals.killerModifier 
     #if chanceToDie>20:
