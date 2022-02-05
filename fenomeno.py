@@ -1,175 +1,275 @@
-from MyQueue import MyQueue
-from random import Random, randint, random
-from types import coroutine
-import map
-import especies
+import random
+import numpy
+import globals
 import misc
-import queue
-from tiles import Tile
+import tiles
 
 class Fenomeno():
-    def __init__(self, nombre, grado, cor, mapa):
-        self.nombre = nombre
-        self.grado = grado
-        self.Recorrido = MyQueue()
-        self.pos = 0
-        self.cor = cor
-        self.count_maxDistance = randint(0,10)
-        self.vecmov = []
-        self.map = map
+    def __init__(self, Magnitude, position):
         
-        #cambiar por probabilidad
-        duracion = randint(1,7)
-        self.Recorrido.put((duracion, None))
+        self.Magnitude = Magnitude 
+        self.ExecutingTimes = 0
+        self.Range = 2
+        self.Position = position
+        self.xMundo = position.Coordinates[0]
+        self.yMundo = position.Coordinates[1]
+        self.DangerSumMatrix = []
+        self.MapMatrix =  []
+        self.amount_of_turns = 0
+        
+    def Finalize(self):
+        raise ValueError('Method not implemented.')
+        
+    
+    def Executing(self):
+        
+        if self.amount_of_turns <= 0:
+            self.Finalize()
+            return
 
-    
-    def GenerarRecorrido(self,mapa,corulti):
-        duracion = randint(0,7)
-        if corulti[2] == self.count_maxDistance:
-            return []
-        
-        elif corulti[1] == None:
-            return [(duracion,self.cor,0)]
-        
-        elif self.vecmov == "Random":
-            ult_pos = corulti
-            
-            x = randint(-1,1)
-            y = randint(-1,1)
-            
-            cornew = (ult_pos[1][0] + x, ult_pos[1][1] + y)
-            if cornew[0] < mapa.SizeX and cornew[1] < mapa.SizeY:
-                return [(duracion,cornew,corulti[2]+ 1)]
-            
-        return []
+        for i in range(len(self.MapMatrix)):
+            for j in range(len(self.MapMatrix[i])):
+                if self.MapMatrix[i][j] == globals.voidValue: continue
+                self.DangerSumMatrix[i][j] += max( min(self.Magnitude - (self.Range -i),self.Magnitude - (self.Range -j)), 0)
+                self.MapMatrix[i][j].Danger += max( min(self.Magnitude - (self.Range -i),self.Magnitude - (self.Range -j)), 0)
                 
+        self.amount_of_turns -=1
     
-    def GenerateVector(self):
-        self.vecmov.append("Random")
-    
-    def Refresc(self,time):
-        queueCom = MyQueue()
-        lenrecorrido = len(self.Recorrido)
-        for i in range(0,lenrecorrido):
-            posrecorrido = self.Recorrido.get()
-            queueCom.put((posrecorrido[0],posrecorrido[1],time))
-            
-            while len(queueCom) != 0:
-                posrecorrido = queueCom.get()
-                move = (posrecorrido[0],posrecorrido[1],posrecorrido[2])
-                duracion = posrecorrido[0]
-                rest = posrecorrido[2]
-                if duracion > rest:
-                    posrecorrido = (duracion - time,posrecorrido[1],posrecorrido[2])
-                    self.EfectuarFenomeno(self.map)
-                    self.Recorrido.put(posrecorrido)
+    def Prepare(self, map):
+        self.MapMatrix = RangeMatrix(self,self.Range,globals.worldMap)
         
-                elif duracion == rest:
-                    duracion = duracion - time
-                    self.EfectuarFenomeno(self.map,move)
-                    listmove = self.GenerarRecorrido(self.map,move)
-                    self.CambiarZona(self.map,posrecorrido,listmove)
-                    for i in range(0,len(listmove) - 1):
-                        self.Recorrido.append(listmove[i])
+        self.DangerSumMatrix = []
         
-                elif duracion < rest:
-                    rest = rest - duracion
-                    self.EfectuarFenomeno(self.map,move)
-                    duracion = 0
-                    self.CambiarZona(time,self.map,move)
-                    for i in range(0,len(listmove)):
-                        queueCom.put((listmove[i][0],listmove[i][1],rest))
-                
-            
-    def EfectuarFenomeno(self,mapa,move):
-        print("Efectuando Fenomeno")
-        return
-    
-    def CambiarZona(self,mapa,corulti,listmove):
-        i = 0
-        for zone in mapa.Zones:
-            for tile in zone.TileList:
-                if tile.Coordinates == corulti:
-                   i += 1
-                   #eliminar fenomeno
-                
-                for j in range(0,len(listmove)):
-                    if tile.Coordinates == listmove[j]:
-                        i += 1
-                        #añadir fenomeno
-                    
-                if i == 1 + len(listmove):
-                    return
-                    
-                    
+        for i in range(len(self.MapMatrix)):
+            self.DangerSumMatrix.append([])
+            for j in range(len(self.MapMatrix[i])):
+                self.DangerSumMatrix[i].append(0)
+        
+        self.amount_of_turns = misc.round_half_up(numpy.random.normal(5,1,1)[0])
         
 class Ciclon(Fenomeno):
-    def __init__(self, nombre, grado, cor, mapa):
-        super().__init__(nombre,grado,cor,mapa)
+    def __init__(self, Magnitude, position):
+        super().__init__( Magnitude, position)
         
-    def Rand_Mov_CC(cor_ciclon, map, poder_ciclon):
-        cor_EjeX_low = cor_ciclon[1]
-        cor_EjeX_up = map.SizeY-cor_ciclon[1]
         
-        cor_EjeY_low = cor_ciclon[0]
-        cor_EjeY_up = cor_ciclon[0]
+    def Finalize(self):
+        globals.CatastrophyList.remove(self)
         
-        cord_rand_move = misc.randCord(-cor_EjeY_low, cor_EjeY_up, -cor_EjeX_low, cor_EjeX_up)
-        cor_new = (cor_ciclon[0] + cord_rand_move[0]*poder_ciclon, cor_ciclon[1] + cord_rand_move[1]*poder_ciclon)
-        return cor_new
-    
-    def EfectuarFenomeno(self,mapas,cor):
-        if cor[1] == None:
-            return
+        for individuo in self.Position.CreatureList:
+            rand = random.randint(0, globals.MaxCategory)
+            if rand > self.Magnitude:
+                individuo.die()
         
-        ListaCriaturas = Ciclon.DetectarCriaturas(mapas,cor)
-        Ciclon.MoverCriaturas(mapas,ListaCriaturas)
-    
-    def DetectarCriaturas(self,mapas,cor):
-        creaturesMoves = []
-        if self.Recorrido[self.pos] != None: 
-            for zone in mapas.Zones:
-                for tile in zone.TileList:
-                    if tile.Coordinates == self.Recorrido[self.pos]:
-                        while tile.CreatureList > 0:
-                            cordnew = Ciclon.Rand_Mov_CC(cor,mapas,1)
-                            creature = tile.CreatureList.pop()
-                            creaturesMoves.append((creature,cordnew))
-                        return creaturesMoves
+        for i in range(len(self.MapMatrix)):
+            for j in range(len(self.MapMatrix[i])):
+                if self.MapMatrix[i][j] == globals.voidValue: continue
+                self.MapMatrix[i][j].Danger -= self.DangerSumMatrix[i][j]
 
-    def MoverCriaturas(mapa, ListCreature):
-        while len(ListCreature) > 0:
-            t = ListCreature.pop()
-            for zone in mapa:
-                for tile in zone.TileList:
-                    if tile.Coordinates == t[1]:
-                        #Cambiar las coordenadas de la ubicacion de la especie
-                        tile.CreatureList.append(t[0])
+    
 
-class ErupcionVolcánica(Fenomeno):
-    def __init__(self, nombre, grado, cor, mapa):
-        super().__init__(nombre,grado,cor,mapa)
-                
+class Landslide(Fenomeno):
+    def __init__(self, Magnitude, position):
+        super().__init__(Magnitude, position)
         
     def EfectuarFenomeno(self,mapa,cor):
         if cor[1] == None:
             return
         
-        if cor == self.cor:
-            list_caida_rocas = ErupcionVolcánica.PosCaida_Rocas(mapa,self.corvolcan)
-            ErupcionVolcánica.Lluvia_De_Rocas(mapa,list_caida_rocas)
+    def Finalize(self):
+        globals.CatastrophyList.remove(self)
         
-        ErupcionVolcánica.LavaRecorrido(mapa)
+        for individuo in self.Position.CreatureList:
+            rand = random.randint(0, globals.MaxCategory)
+            if rand > self.Magnitude:
+                individuo.die()
         
-    def PosCaida_Rocas(self,mapa):
-        for zone in mapa.Zones:
-            for tile in zone.TileList:
-                if tile.Coordinates == self.cor_volcan:
-                    cantidad_rocas = randint(0,20)
-                    Lpos_caida_rocas = ErupcionVolcánica.Coordenadas_Caida_Rocas(cantidad_rocas)
-                    return Lpos_caida_rocas
+        for i in range(len(self.MapMatrix)):
+            for j in range(len(self.MapMatrix[i])):
+                if self.MapMatrix[i][j] == globals.voidValue: continue
+                self.MapMatrix[i][j].Danger -= self.DangerSumMatrix[i][j]
+                self.MapMatrix[i][j].createPrairieTile()
+                
+                
+                
+            
+class Volcan(Fenomeno):
+    def __init__(self, Magnitude, position):
+        super().__init__(Magnitude, position)
+            
+        
+        
+    def Finalize(self):
+        globals.CatastrophyList.remove(self)
+        
+        for individuo in self.Position.CreatureList:
+            rand = random.randint(0, globals.MaxCategory)
+            if rand > self.Magnitude:
+                individuo.die()
+        
+        for i in range(len(self.MapMatrix)):
+            for j in range(len(self.MapMatrix[i])):
+                if self.MapMatrix[i][j] == globals.voidValue: continue
+                self.MapMatrix[i][j].Danger -= self.DangerSumMatrix[i][j]
+                self.MapMatrix[i][j].createMountainTile()
+                
+                
     
 
 
-def General_Nombre_Random():
-    pass
+class Tsunami(Fenomeno):
+    def __init__(self, Magnitude, position):
+        super().__init__(Magnitude, position)
+        
+        
+        
+    def Finalize(self):
+        globals.CatastrophyList.remove(self)
+        
+        for individuo in self.Position.CreatureList:
+            rand = random.randint(0, globals.MaxCategory)
+            if rand > self.Magnitude:
+                individuo.die()
+        
+        for i in range(len(self.MapMatrix)):
+            for j in range(len(self.MapMatrix[i])):
+                if self.MapMatrix[i][j] == globals.voidValue: continue
+                self.MapMatrix[i][j].Danger -= self.DangerSumMatrix[i][j]
+                self.MapMatrix[i][j].createOceanTile()
+                
+                
+
+
+def Euristics(mapa):
+    
+    globals.CatastrophyPosibility += globals.TurnsToCatastrophy
+    if random.randint(0,100) > globals.CatastrophyPosibility:
+        return
+
+    if len(globals.CatastrophyList) >= globals.MaxCatastrophy:
+        globals.CatastrophyPosibility = 5
+        return
+    
+
+    
+    #Seleccionando la posición
+    positionX = random.choice(mapa.Tiles)
+    position = random.choice(positionX)
+    
+    #Seleccionando la zona
+    zoneToCreate = position.Zone
+    
+    #Seleccionando la probabilidad del tipo de fenómeno(normal)
+    normalDistrib = numpy.random.normal(5,1,1)
+    
+    #Seleccionando la catgoría del fenómeno
+    catgoryNormalDistrib = misc.round_half_up(numpy.random.normal(globals.MaxCategory/2,1))
+    
+    phenomena = -1
+    if zoneToCreate.ZoneType == 'Prairie':
+        if 4<=normalDistrib<=6:
+            phenomena = Landslide(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif 3<=normalDistrib<4 or 6<normalDistrib<=7:
+            phenomena = Ciclon(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif 2<=normalDistrib<3 or 7<normalDistrib<=8:
+            phenomena = Volcan(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif normalDistrib<2 or normalDistrib> 8:
+            phenomena = Tsunami(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+    
+    elif zoneToCreate.ZoneType == 'Mountain':
+        if 4<=normalDistrib<=6:
+            phenomena = Volcan(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif 3<=normalDistrib<4 or 6<normalDistrib<=7:
+            phenomena = Ciclon(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif 2<=normalDistrib<3 or 7<normalDistrib<=8:
+            phenomena = Landslide(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif normalDistrib<2 or normalDistrib> 8:
+            phenomena = Tsunami(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+
+    elif zoneToCreate.ZoneType == 'Ocean':
+        if 4<=normalDistrib<=6:
+            phenomena = Tsunami(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif 3<=normalDistrib<4 or 6<normalDistrib<=7:
+            phenomena = Ciclon(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif 2<=normalDistrib<3 or 7<normalDistrib<=8:
+            phenomena = Volcan(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        elif normalDistrib<2 or normalDistrib> 8:
+            phenomena = Landslide(catgoryNormalDistrib,position)
+            phenomena.Prepare(mapa)
+            globals.CatastrophyList.append(phenomena)
+            
+        
+    
+        pass
+    
+        
+
+def RangeMatrix (Individuo, valor_de_percepcion,mapa):
+    perceptionValue = int(valor_de_percepcion)
+ 
+    #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+    actRow = Individuo.xMundo  - perceptionValue
+    actCol = Individuo.yMundo - perceptionValue
+    perceptionList = []
+    tileCount = 0
+    ##LLenando perceptionlist
+    for i in range(0, 1  + 2 * int(perceptionValue)):
+        newList = []
+        for j in range(0,  1  + 2 * int(perceptionValue)):
+            newList.append(globals.voidValue)
+            tileCount +=1
+        perceptionList.append(newList)
+    
+    
+         
+    countX=0
+    countY=0
+    
+    #Movimiento con límites del mapa
+    while actRow <= Individuo.xMundo  + perceptionValue:
+        actCol = Individuo.yMundo - perceptionValue
+        countY=0
+        while actCol <= Individuo.yMundo + perceptionValue:
+            if not(0<=actRow< mapa.SizeX) or not(0<=actCol< mapa.SizeY):
+                perceptionList[countX][countY]= globals.voidValue
+            else:
+                perceptionList[countX][countY]= mapa.Tiles[actRow][actCol]
+        
+            countY+=1
+            actCol +=1
+        actRow+=1
+        countX+=1
+ 
+    return perceptionList
+ 
