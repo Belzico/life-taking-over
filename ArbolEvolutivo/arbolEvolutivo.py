@@ -1,5 +1,5 @@
 from ArbolEvolutivo.node import Node
-from queue import PriorityQueue
+import queue  
 
 class Arbol_Evo:
     def __init__(self, especie = "origen"):
@@ -18,7 +18,7 @@ class Arbol_Evo:
     def ChangeValue(self,values):
         self.node.ChangeValues(values)
         
-    def Evolution(self,especie):
+    def IsSpecieEqual(self,especie):
         nodEsp = self.node
         value = nodEsp.peek()
         if value == especie:
@@ -41,13 +41,13 @@ class Arbol_Evo:
         
         
     def SearchEvolution(especie, arb_evo):
-        queueArboles = PriorityQueue()
+        queueArboles = queue.Queue()
         queueArboles.put(arb_evo)
         
         while not queueArboles.empty():
             arbol = queueArboles.get()
             
-            cmp = arbol.Evolution(especie)
+            cmp = arbol.IsSpecieEqual(especie)
             if cmp != None:
                 return cmp
             

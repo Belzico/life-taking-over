@@ -27,7 +27,7 @@ MaxCategory = 5
 CatastrophyList = []
 
 #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
-EvolutionFrequency = 1
+EvolutionFrequency =1
 
 #valor para aumentar el chance de muerte cuando se pasa por una zona al caminar
 killerModifier=3
@@ -121,4 +121,23 @@ Weakness = 10
 
 #-------------------------------------------------NEW STUFF--------------------------------------------------------------------
 
+#el arbol que muestra la evolucion de las especies
 arb_evo = Arbol_Evo()
+
+#tamaño minimo de individuos de una nueva especie
+minSizeOfNewEspecies=20
+
+#lista para agregar nuevas especies
+waitSpeciesList=[]
+
+#tipos de muertes posibles
+deadTypesList=["Natural","Hunted","Hunting","Ciclon","Landslide","Volcan","Tsunami","Moving","Evolving"]
+
+#cantidad de ciclos que se van a realizar
+iterationCicles=1000
+
+#iteracion actual del ciclo o dia del ciclo
+globalTime=1
+
+#cada cuanto tiempo se revisan las evoluciones
+evolutionTimeCheck=10
