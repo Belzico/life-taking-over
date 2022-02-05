@@ -76,6 +76,7 @@ class TokeTypes(enum.Enum):
     tokMDiv=56 # $MatrixDiv
     
     tokAssign=57 # Assign     -------
+    tokReturn=58 # Return
     
     
     
