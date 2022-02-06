@@ -1,0 +1,134 @@
+\documentclass{llncs}
+\usepackage{makeidx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+
+%opening
+\title{\large\huge Proyecto de Sistema \\de \\ Recuperación de la Información}
+\author{Integrantes: \\ Julio José Horta C312 \\Javier Villar Alonso C311 \\ Dayron Fernández C311}
+
+\begin{document}
+	
+\maketitle
+
+\newpage
+
+\section{General}
+En este trabajo nuestro objetivo es simular el desarrollo de la vida en nuestro planeta y acercarnos lo más posible a la forma adaptativa de las especies ante los cambios naturales, la evolución de la misma y la competencia entre estas tal cual como ocurren en nuestro mundo natural.
+\newline
+\newline
+Esto tiene como objetivo reunir datos estadísticos del comportamiento natural de las especies para asi asimilar mejor su expansión natural y la adaptabilidad en el mundo, asi como que tan dañino pueda ser un fenómeno en específico. 
+
+
+\section{Aplicación}
+
+\section{Código}
+
+\subsection{Mapa}
+El mapa es el mundo en el que vamos a llevar a cabo la simulación. Este mundo consta de una matriz donde establecemos el tamaño de nuestro mapa de acuerdo al largo y ancho, a lo cual nombramos tamaño del eje X y tamaño del Eje Y respectivamente, además de mandar la cantidad de zonas que crearemos genéricamente para nuestro mundo
+\newline
+\newline
+Para recorrer nuestro mapa usaremos una matriz adecuada a los tamaños mandados, en el que cada una de las coordenadas es un Tile (la cual estaremos explicando posteriormente). También llevaremos como variable cada una de las zonas existentes en el mundo de forma independientes aunque sean del mismo tipo
+\newline
+\newline
+Este mapa está diseñado para que no existan límites ya que tiene más sentido para nuestra simulación que sea un entorno circular antes que cuadrático
+
+\subsection{Zones}
+Una zona es un ambiente natural que consta de un conjunto de tiles que expresan la expansión en la que vivirán nuestras especies.
+\newline
+\newline
+Estas constan de una variable Tiles que agrupará en un array todos los tiles que corresponden a la zona, un string que nos diga el tipo de zona, una variable danger que nos expresará cuan peligroso es la zona, y por último un contador de cuantos tiles hay en la zona
+
+
+\subsection{Tiles}
+Un tile es una ubicación de una zona natural del mapa en el que los individuos de las diferentes especies interactúan en ella, ya sea en busca de alimentos, de compañeros de una especie o la caza de estos para alimentarse.
+\newline
+\newline
+Estos tiles constan de las coordenadas de ubicación de la zona, las cantidad de criaturas que se encuentran en ella, los recursos disponibles en ella guardados en una variable llamada ComponentsDict
+
+\subsection{Especies}
+Para poder crear una interacción en el mundo creado decidimos añadir especies para que formen parte de este mundo, estos se caracterizarán por individuos que realizarán funciones básicas para vivir en ese mundo.
+\newline
+\newline
+Este recibe un número que especifica la cantidad de individuos que se quiere para añadirlos en una posición determinada en el mapa, para ello les mandaremos también las coordenadas en donde se quiere ubicar. Luego también mandaremos una variable evolve que en caso de no mandarlo se interpretará como que no es posible que evolucione
+\newline
+\newline
+Estas especies serán insertadas en un árbol de evolución para crear un árbol geneológico para tener una relación evolutiva de cada uno se registrarán
+\newline
+\newline
+Luego tenemos unos diccionarios que se encargan de guardar información de una especie. Entre ellas tenemos el ´basicinfo´ que se encargará de guardar informaciones básicas de una especie, como lo es el nombre, tipo de células, entre otros.
+\newline
+\newline
+Otro de los diccionarios es el naturaldefence, en el cual guardaremos las características numéricas de la especie, como lo es la vida, la percepción para saber cuantas casillas puede ver a su alrededor, inteligencia, tiempo de reproducción, cualquier estadística que tenga que ver con la forma de comportarse en el mundo
+\newline
+\newline
+También tenemos un diccionario de alimentos que nos permite guardar que acostumbra a comer cada animal y cuanta energía recibe al comer dicho alimento
+\newline
+\newline
+Por último tenemos un diccionario de data que es para guardar información de interés de la especie, como por ejemplo la forma que murió cierto individuo, que han comido los individuos, cuales fue los que más comió, y otras informaciones de interés que queramos consultar en la simulación
+\newline
+\newline
+Como antes informamos las especies son un grupo de individuos, por lo que miremos como creamos esta clase
+
+\subsection{Individuos}
+Los individuos son entidades particulares de una especie que tienen los valores cercanamente iguales a los establecidos en la especie, así podemos establecer una diversidad entre varios individuos.
+\newline
+\newline
+Estos individuos serán creados mediante las coordenadas XY de mundo, su especie padre, nombre de individuo y una varianza que servirán para la evolución
+\newline
+\newline
+También se inicializará en el constructor variables como la saciedad para saber la cantidad de energía que presenta este individuo, la edad, además de las naturaldefence del propio individuo que son parecidas a las del padre pero con una probabilidad de ser diferente.
+\newline
+\newline
+Entre las funciones añadimos un método breed para simular la simulación, en el cual si un individuo tiene reproducción asexual se realiza una clonación, mientras que si tiene reproducción sexual entonces verificamos si la especie femenina es fertil.
+\newline
+\newline
+Cada individuo puede moverse de acuerdo a una velocidad traducida en la cantidad de casillas a poder moverse, este se moverá de acuerdo a la inteligencia del individuo
+\newline
+\newline
+Cuando tiene inteligencia menor que 2 solo podrá moverse para un lado (permitiendo diagonal).
+\newline
+\newline
+Tenemos también un movimiento random y un movimiento inteligente.
+\newline
+\newline
+El move recibe un variable mapa que se destaca en un diccionario que tiene varios mapas adentro donde nos podemos mover.
+\newline
+\newline
+Cada vez que el individuo se mueva comprobará si el individuo se muere al moverse o incluso si se muere en la posición en donde estaba por el nivel de peligrosidad de la zona a la que se movió
+\newline
+\newline
+Otra función que pueden hacer los individuos es comer, la cual radica registrar una lista de alimentos que se encuentran en la lista del tile y revisa si se encuentran los alimentos que puede comer en esa zona para luego saciar su energía en caso de encontrar alguno. Es importante destacar que cada alimento consumido será eliminado de la zona
+\newline
+Adicionalmente añadimos el string cazador que permite a los individuos cazar a otras especies, por lo que tratará de buscar un individuo que esté por su zona que se pueda comer de forma inteligente, es decir, que el enemigo sea factible como objetivo a comer en cuanto a sus características de especie comparados a la de este cazador.
+\newline
+Una vez identificado y encontrada una presa se efectuará un combate, en el cual si el individuo muere se manda a matar al cazador, si la presa muere entonces se manda a morir a la presa y el cazador recupera energía. También las presas pueden huir, por lo que no necesariamente habrán ganadores.
+\newline
+\newline
+También tenemos la función die que es la que se encarga de mandar a morir al individio y a realizar todas las modificaciones que implican eliminarlo, como es modificar los individuos en el mapa, modificar los individuos de nuestro diccionario de especies, entre otros.
+\newline
+\newline
+Por ultimo tenemos la función resolveIteration que es la función que se encarga de ejecutar las acciones de mover y comer por parte del individuo
+ 
+
+\subsection{Fenómenos}
+
+Los fenómenos los incorporamos como los accidentes meteorológicos que ocurrirán en nuestro mundo para afectar el número de las especies y los recursos que existen en la zonas, además de la peligrosidad en cada zona que afectará al movimiento de cada criatura de acuerdo a la percepción
+\newline
+\newline
+Estos tienen como parametros la magnitud de escala del fenómeno que establece el nivel de propagación y peligrosidad de este, las coordenadas de ubicación donde se generará dicho fenómeno
+\newline
+\newline
+Estos fenómenos tienen una probabilidad de ocurrir de acuerdo a la zona en la que esté de acuerdo a una curva de probabilidad, la cual va cambiando de acuerdo al tiempo de ocurrencia de los fenómenos de forma incremental, es decir, mientras más tiempo demore en ocurrir un fenómeno va incrementando su probabilidad. Esta probabilidad de aparición se encargaría nuestra heurística, la cual calculará un random para saber si ocurrirá una catástrofe para luego calcular bajo unas coordenadas randoms el valor de una distribución normal para poder saber que fenómeno se generará en ese momento.
+%\newline
+%\newline
+%A la hora de ejecutar un los fenómenos
+
+%volcan añade a cada zona afectada minerales
+%subnamis añade a cada zona afectadas materiales del tipo oceano
+
+
+\end{document}
