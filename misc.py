@@ -141,23 +141,42 @@ def pathFinder(currentIndividual,mapa):
     temp=fixRoad(road,destination,myPosition)
     currentPosition=None
     lastPosition=temp[0]
+    
+    #caso en que no se mueve
+    if currentIndividual.naturalDefenseInd["Velocidad_agua"]<=i:
+        if chanceToDie(deathMatrix[currentPosition[0]][currentPosition[1]]):
+                globals.worldMap.udpdateIndividual(currentIndividual,previusX,previusY)
+                print("Yo "+currentIndividual.name+" me movi hacia "+str(currentIndividual.xMundo) +","+str(currentIndividual.yMundo)+"")
+                currentIndividual.die("Moving")
+                #actualizando las zonas de estancia de la especie
+                currentIndividual.especie.dataDicc["Zone"][globals.worldMap.Tiles[currentIndividual.xMundo][currentIndividual.yMundo].Zone.ZoneType]+=1
+                return False    
+        
+        
     while(currentIndividual.naturalDefenseInd["Velocidad_agua"]>i):
         if  len(temp)>i:
             currentPosition=temp[i]
             currentIndividual.xMundo+=currentPosition[0] - lastPosition[0] 
             currentIndividual.yMundo+=currentPosition[1] - lastPosition[1] 
+            
+            #actualizando las zonas de estancia de la especie
+            currentIndividual.especie.dataDicc["Zone"][globals.worldMap.Tiles[currentIndividual.xMundo][currentIndividual.yMundo].Zone.ZoneType]+=1
+            
             if not indexChecker((currentIndividual.xMundo,currentIndividual.yMundo),globals.worldMap.SizeX):
                 print("a")
             if chanceToDie(deathMatrix[currentPosition[0]][currentPosition[1]]):
                 globals.worldMap.udpdateIndividual(currentIndividual,previusX,previusY)
                 print("Yo "+currentIndividual.name+" me movi hacia "+str(currentIndividual.xMundo) +","+str(currentIndividual.yMundo)+"")
-                currentIndividual.die()
+                currentIndividual.die("Moving")
                 return False    
 
             previusX,previusY=currentIndividual.xMundo,currentIndividual.yMundo
             lastPosition=currentPosition                
         i+=1
     return True
+
+
+
 
 def chanceToDie(risk):
     chanceToDie=secondPercent(risk,globals.MaxDangerinTile)*globals.killerModifier 
@@ -315,7 +334,7 @@ def mapZone(myMap):
             j+=1
         i+=1
     #dsfagsadg
-    print("z")
+    #print("z")
     return newMap
                 
 

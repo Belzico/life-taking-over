@@ -16,8 +16,11 @@ class Especies():
         #para ver si se cae en el caso de la evolucion donde se reciben todos los parametros en un dic
         if evolve!=None:
             self.evolve(evolve)
+            globals.arb_evo.InsertEvolution(self,evolve["EspeciePadre"])
             return
-            
+        
+        #añadiendo al arbol evolutivo
+        globals.arb_evo.InsertEvolution(self)
         #datos como el tiempo de vida, tipo de alimentacion...etc
         self.basicInfo={}
         #datos como partes de veneno, piel dura, colmillos afilados...etc
@@ -30,18 +33,55 @@ class Especies():
         #lista de elementos de donde puede sacar parte de la energix
         self.alimentos={}
         
+        #data de la especie
+        self.dataDicc={}
+        
+        #añadiendo al diccionario global
+        name=str(int(globals.lastNameSpecie)+1)
+        globals.allSpecies[name]=self
         
         #llamada al generador
         self.especieGenerator(x,y,individuos)
         #nueva especie a la que puede estar evolucionando
-        self.newEvolution="0"
+        #self.newEvolution="0"
         #proximo numero de reproducciones que degeneran en la nueva especies
-        self.countEvolutions="0"
+        #self.countEvolutions="0"
 
         #numero del proximo individuo
         self.nextName=int(individuos)
+        #waitingForInit
+        self.WFI=(x,y,individuos)
+        
+        
+    def ModifyCaracteristic(self,caracteristic,newValue):
+        
+        done=False
+        if caracteristic in self.basicInfo:
+            self.basicInfo[caracteristic]=newValue
+            done=True
+            
+        if caracteristic in self.naturalDefense:
+            self.naturalDefense[caracteristic]=newValue
+            done=True
+            
+        if caracteristic in self.resistenciaElemental:
+            self.resistenciaElemental[caracteristic]=newValue
+            done=True
+            
+        if caracteristic in self.alimentos:
+            self.alimentos[caracteristic]=newValue
+            done=True
+        return done
 
-    
+    def initSpecies():
+        dicc=globals.allSpecies
+        for specie in dicc:
+            dicc[specie].setReadyForMap()
+        print("Species ready.")
+        globals.lastNameSpecie+=1
+        
+    def setReadyForMap(self):
+        self.individuos=self.listaIndividuosGenerator(self.WFI[0],self.WFI[1],self.WFI[2])
         
     #aca generaremos especies siguiendo algunos criterios pero de forma aleatoria
     def especieGenerator(self,x,y,individuos):
@@ -52,8 +92,31 @@ class Especies():
         self.naturalDefense=Especies.naturalDefenseGenerator()
         self.foodListGenerator()
         self.resistenciaElemental=Especies.resistenciasElementalesGenerator()
-        self.individuos=self.listaIndividuosGenerator(x,y,individuos)
         
+        self.dataDiccGenerator()
+        
+    def dataDiccGenerator(self):
+        
+        #cada vez que coma se actualiza esto sumando 1 al elemento que comio
+        self.dataDicc["Food"]={}
+        for food in self.alimentos:
+            self.dataDicc["Food"][food]=0
+        
+        #se agrega la causa de muerte en forma de tupla con la info relevante de lo que la ocasiono
+        self.dataDicc["Death"]={}
+        for dead in globals.deadTypesList:
+            self.dataDicc["Death"][dead]=0
+        
+        
+        #Zonas por las que mas paso la especie
+        self.dataDicc["Zone"]={}
+        for zone in globals.ZoneList:
+            self.dataDicc["Zone"][zone]=0
+        
+        #fecha de nacimiento
+        self.dataDicc["Born"]=globals.globalTime    
+        #si se extingue guardamos la fecha de extincion
+        self.dataDicc["Extinct"]=None
     
     def listaIndividuosGenerator(self,x,y,miembros,varianzas=None):
         individuals={}
@@ -75,7 +138,7 @@ class Especies():
         name=str(int(globals.lastNameSpecie)+1)
         globals.lastNameSpecie+=1
         basicInfo["name"]=name
-        globals.lastNameSpecie+=1
+        
         #dos tipos unicelular y pluricelular
         basicInfo["Tipo_de_celula"]="unicelular"
         #por definir, por ahora asexual y sexual entre 2 individuos de distinto sexo
@@ -164,11 +227,15 @@ class Especies():
         #se reciben todos los parametros en el dic
         father=paramsDic["EspeciePadre"] 
         self.basicInfo= copy.deepcopy(father.basicInfo)
+        self.basicInfo["Cantidad_de_miembros"]=0
+        self.basicInfo["Ultimo_numero"]=paramsDic["Individuos"]
+        
         self.naturalDefense=paramsDic["Promedio"]
         self.resistenciaElemental=copy.deepcopy(father.resistenciaElemental)
         self.alimentos=copy.deepcopy(father.alimentos)
         self.nextName=paramsDic["Individuos"]
-        
+
+
         
         #revisando si se agrega el elemento a los comestibles o se elimina alguno existente
         if int(father.naturalDefense["Vida"])>int(self.naturalDefense["Vida"]):
@@ -176,9 +243,13 @@ class Especies():
         if int(father.naturalDefense["Vida"])<int(self.naturalDefense["Vida"]):
             self.addFood(paramsDic["Elemento"])
             
+        self.dataDicc={}
+        self.dataDiccGenerator()
         
         self.basicInfo["name"]=int(globals.lastNameSpecie)
         globals.lastNameSpecie=int(globals.lastNameSpecie)+1
+        
+        globals.waitSpeciesList.append((str(self.basicInfo["name"]),self))
         
         #chance de evolucionar a pluricelular
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
@@ -189,7 +260,7 @@ class Especies():
                 
         if self.basicInfo["Tipo_de_celula"]=="unicelular":
             tempRandom=random.randint(0,100)
-            if tempRandom>50:
+            if tempRandom>60:
                 print("La especie "+str(self.basicInfo["name"])+" es canibal")   
                 self.basicInfo["Canibal"]=True
             else:
@@ -197,15 +268,20 @@ class Especies():
                 self.basicInfo["Canibal"]=True
         
         #chance de evolucionar a reproduccion sexual
-        if self.basicInfo["Tipo_de_reproduccion"]=="asexual":
+        if self.basicInfo["Tipo_de_reproduccion"]=="asexual" and self.basicInfo["Tipo_de_celula"]=="pluricelular":
             tempRandom=random.randint(0,100)
-            if tempRandom>-1:
+            if tempRandom>70:
                 self.basicInfo["Tipo_de_reproduccion"]="sexual"        
                 print("La especie "+str(self.basicInfo["name"])+" tiene reproduccion sexual")
         
         #varianza de las especies
         varianza=paramsDic["Varianza"]
+        
+        
         self.individuos=self.listaIndividuosGenerator(paramsDic["x"] ,paramsDic["y"],paramsDic["Individuos"],varianza)
+        
+        #print("a")
+        
     
     #agrega un elemento comestible o aumenta su eficacia    
     def addFood(self,food):
@@ -422,6 +498,8 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
+        
+        #self.especie.basicInfo["Cantidad_de_miembros"]+=1
     
     #este metodo crea un nuevo individuo promedio de los dos padres
     def sexualReproduction(self,mate):
@@ -436,6 +514,7 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
+        #self.especie.basicInfo["Cantidad_de_miembros"]+=1
                                     #move
     #############################################################################
     #movimiento del individuo
@@ -447,11 +526,25 @@ class Individuo():
         previusY=self.yMundo
         #por ahora solo nos movemos random
         if self.naturalDefenseInd["Inteligencia"]<2:
+            myPositionX=int(len(list(mapa["Tile"]))/2)
+            myPositionY=int(len(list(mapa["Tile"]))/2)
+            
             tup=self.moveRandom(mapa["Tile"])
-            self.xMundo+=tup[0]
-            self.yMundo+=tup[1]
-            globals.worldMap.udpdateIndividual(self,previusX,previusY)
-            print("Yo "+self.name+" me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
+            if tup!=None:
+                self.xMundo+=tup[0]
+                myPositionX+=tup[0]
+                self.yMundo+=tup[1]
+                myPositionY+=tup[1]
+                globals.worldMap.udpdateIndividual(self,previusX,previusY)
+                print("Yo "+self.name+" me movi hacia "+str(self.xMundo) +","+str(self.yMundo)+"")
+            
+            #actualizando las zonas de estancia de la especie
+            self.especie.dataDicc["Zone"][globals.worldMap.Tiles[self.xMundo][self.yMundo].Zone.ZoneType]+=1
+            
+            #cheaquando si muere
+            deathMatrix=mapa["Peligro Real"]
+            if misc.chanceToDie(deathMatrix[myPositionX][myPositionY]):
+                self.die("Moving")
         else:
             #tempDic=globals.worldMap.movementMatrix(self)   
             #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
@@ -466,18 +559,22 @@ class Individuo():
     def moveRandom(seflf,myMap):
         #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
         myPosition=int(len(list(myMap))/2)
+        succed=False
         i=10
         while i>0:
             xRandom=random.randint(-1,1)
             yRandom=random.randint(-1,1)
             if myMap[xRandom+myPosition][yRandom+myPosition]!=globals.voidValue:
+                succed=True
                 break
             i-=1
             #caso donde no se mueve
             if i==0:
                 xRandom=0
                 yRandom=0
-        return (xRandom,yRandom)  
+        if succed:
+            return (xRandom,yRandom)
+        return None
 
 
 ###########################################################################################
@@ -512,12 +609,12 @@ class Individuo():
                         if int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3>1+neededFood//int(self.especie.alimentos[resource]):
                             print(self.name+" se comio a "+prey.name+" y se lleno")
                             self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
-                            prey.die()
+                            prey.die("Hunted")
                             break
                         else:
                             print(self.name+" se comio a "+prey.name+" pero pero no se lleno")
                             self.saciedad+=int(self.especie.alimentos[resource])*(int(prey.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3)
-                            prey.die()
+                            prey.die("Hunted")
                     elif combatResult==1:
                         print(self.name+" intento cazar a "+prey.name+" y murio")
                         if  "cazador" in prey.especie.alimentos:
@@ -531,7 +628,7 @@ class Individuo():
                                 print(prey.name+" comio a "+self.name+" y no se lleno")
                                 prey.saciedad+=int(prey.especie.alimentos[resource])*(int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])//3)
                     
-                        self.die()
+                        self.die("Hunting")
                         eatSuccess=False
                         break
                     #sdfdsaf
@@ -561,6 +658,7 @@ class Individuo():
         
         for item in listDestroy:
             print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidad de "+str(item[0]))
+            self.especie.dataDicc["Food"][item[0]]+=1
             #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
         return eatSuccess
 ######################################################################################################################################################################################
@@ -607,19 +705,28 @@ class Individuo():
         #actualizacion de edad del individuo                
         self.edad=int(self.edad)-1
         if int(self.edad)==0:
-            self.die()
+            self.die("Natural")
     
     def giveMeRealAge(self):
         return int(self.naturalDefenseInd["Tiempo_de_vida_en_dias"]) - int(self.edad)
-        
-    def die(self):
+    
+    #recibe una string donde lo que hay es la causa de muerte
+    def die(self,cause):
         globals.deadIndividuals.append(self.name)
         self.especie.basicInfo["Cantidad_de_miembros"]=int(self.especie.basicInfo["Cantidad_de_miembros"])-1
+        
+        #actulizando la data de la especie
+        self.especie.dataDicc["Death"][cause]+=1
+        if int(self.especie.basicInfo["Cantidad_de_miembros"])==0:
+            self.especie.dataDicc["Extinct"]=globals.globalTime
         
         #######AQUI INTENTAS ELIMINAR A ALGUIEN QUE YA NO EXISTE
         #######ESTA ES UNA SOLUCIÓN TEMPORAL
         if self.name in self.especie.individuos.keys():
             del self.especie.individuos[self.name]
+        if int(self.especie.basicInfo["Cantidad_de_miembros"])<0 or int(self.especie.basicInfo["Cantidad_de_miembros"])!=len(self.especie.individuos):
+            print("zzzzz")
+        
         #matar en casilla de mapa
         if self in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
             globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList.remove(self)

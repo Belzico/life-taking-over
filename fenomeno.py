@@ -58,7 +58,7 @@ class Ciclon(Fenomeno):
         for individuo in self.Position.CreatureList:
             rand = random.randint(0, globals.MaxCategory)
             if rand > self.Magnitude:
-                individuo.die()
+                individuo.die("Ciclon")
         
         for i in range(len(self.MapMatrix)):
             for j in range(len(self.MapMatrix[i])):
@@ -81,7 +81,7 @@ class Landslide(Fenomeno):
         for individuo in self.Position.CreatureList:
             rand = random.randint(0, globals.MaxCategory)
             if rand > self.Magnitude:
-                individuo.die()
+                individuo.die("Landslide")
         
         for i in range(len(self.MapMatrix)):
             for j in range(len(self.MapMatrix[i])):
@@ -104,7 +104,7 @@ class Volcan(Fenomeno):
         for individuo in self.Position.CreatureList:
             rand = random.randint(0, globals.MaxCategory)
             if rand > self.Magnitude:
-                individuo.die()
+                individuo.die("Volcan")
         
         for i in range(len(self.MapMatrix)):
             for j in range(len(self.MapMatrix[i])):
@@ -128,7 +128,7 @@ class Tsunami(Fenomeno):
         for individuo in self.Position.CreatureList:
             rand = random.randint(0, globals.MaxCategory)
             if rand > self.Magnitude:
-                individuo.die()
+                individuo.die("Tsunami")
         
         for i in range(len(self.MapMatrix)):
             for j in range(len(self.MapMatrix[i])):
