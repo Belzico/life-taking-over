@@ -1,6 +1,6 @@
 import zones
 import misc
-import graphics
+import visuals.graphics as graphics
 import globals
 import random
 import tiles
