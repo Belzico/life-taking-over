@@ -1,6 +1,6 @@
 import zones
 import misc
-import graphics
+import visuals.graphics as graphics
 import globals
 import random
 import tiles
@@ -27,7 +27,6 @@ class Map:
 
         self.CreateZonesNotSoRandom()
         self.PopulateNotSoRandom()
-        self.Graphics = graphics.MapGraphics(self)
 
     
     def IsBorn(self, individuo):

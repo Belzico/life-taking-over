@@ -4,6 +4,7 @@ import math
 import globals
 import queue
 import random
+from ArbolEvolutivo.arbolEvolutivo import Arbol_Evo
 
 
 dir1Row=[0,-1,-1,-1, 0, 1,1,1]
@@ -866,3 +867,148 @@ def findPrey(Individuo ):
                 break
     return prey
 
+
+def reset():
+
+    globals.WorldSize = 10
+    globals.ZoneCount = 3
+
+    #Todas las zonas con las que trabaja la simulación
+    globals.ZoneList = ['Prairie', 'Mountain', 'Ocean']
+    #La peligrosidad de cada zona
+    globals.ZoneDanger = {'Prairie': 2, 'Mountain': 8, 'Ocean' : 5}
+
+    globals.voidValue = 10000000
+
+    #Un entero de 1 hasta 100 que representa el porcentaje de posibilidad
+    #con la que puede ocurrir un fenómeno al inicio de la simulación
+    #o luego de que haya acabado de ocurrir otro fenómeno
+    globals.CatastrophyPosibility = 5
+
+    #Aumento de probabilidad por turno con la que ocurrirá un fenómeno
+    globals.TurnsToCatastrophy = 2
+
+    #Máximo de fenómenos que pueden estar ocurriendo al mismo tiempo
+    globals.MaxCatastrophy = 15
+
+    #Categoría máxima que puede tener generalmente un fenómeno(cantidad máxima de peligro en zona)
+    globals.MaxCategory = 5
+
+    #Lista de fenómenos
+    globals.CatastrophyList = []
+
+    #Frecuencia con la que una especie evoluciona (mientras más grande, menos común son las evluciones)
+    globals.EvolutionFrequency =1
+
+    #valor para aumentar el chance de muerte cuando se pasa por una zona al caminar
+    globals.killerModifier=2
+    #maximo peligro posible de una zona
+    globals.MaxDangerinTile = 9*globals.MaxCategory*5
+
+
+    #Todos los elementos con los que trabaja la simulación
+    globals.WorldComponents = { 'Solar Light','Water', 'Organic Matter', 'Phosil' ,'Iron' , 'Aluminum' , 'Oxygen' , 'Carbon Dioxide' , 'Helium' , 'Nitrogen' }
+
+    globals.InfiniteRange = (10000, 100000)
+    globals.LargeRandomRange = (3000, 5000)
+    globals.MediumRandomRange = (1000, 3000)
+    globals.LowRandomRange = (200, 1000)
+    globals.NoneRandomRange = (0, 200)
+
+
+
+    globals.PrairieGenerationList = {'Solar Light' : globals.InfiniteRange ,
+                            'Water' : globals.LowRandomRange,
+                            'Organic Matter' : globals.MediumRandomRange,
+                            'Phosil' : globals.NoneRandomRange ,
+                            'Iron': globals.LowRandomRange ,
+                            'Aluminum' : globals.NoneRandomRange ,
+                            'Oxygen' : globals.LargeRandomRange,
+                            'Carbon Dioxide': globals.LargeRandomRange ,
+                            'Helium': globals.NoneRandomRange,
+                            'Nitrogen' :globals.NoneRandomRange}
+
+
+    MountainGenerationList = {'Solar Light' : globals.InfiniteRange ,
+                            'Water' : globals.NoneRandomRange,
+                            'Organic Matter' : globals.NoneRandomRange,
+                            'Phosil' : globals.LargeRandomRange ,
+                            'Iron': globals.MediumRandomRange ,
+                            'Aluminum' : globals.MediumRandomRange ,
+                            'Oxygen' : globals.MediumRandomRange,
+                            'Carbon Dioxide': globals.LargeRandomRange ,
+                            'Helium': globals.LowRandomRange,
+                            'Nitrogen' :globals.LowRandomRange}
+
+
+
+    OceanGenerationList = {'Solar Light' : globals.InfiniteRange ,
+                            'Water' : globals.InfiniteRange,
+                            'Organic Matter' : globals.MediumRandomRange,
+                            'Phosil' : globals.NoneRandomRange ,
+                            'Iron': globals.LowRandomRange ,
+                            'Aluminum' : globals.NoneRandomRange ,
+                            'Oxygen' : globals.MediumRandomRange,
+                            'Carbon Dioxide': globals.LowRandomRange ,
+                            'Helium': globals.LowRandomRange,
+                            'Nitrogen' :globals.LowRandomRange}
+
+
+    #numero de predicciones en el combate 9 por defecto
+    globals.tempPredictions=9
+
+
+    #diccionario de especies
+    globals.allSpecies ={}
+    globals.lastNameSpecie=0
+    #mapa
+    globals.worldMap=""
+    #lista de todos individuos
+    globals.worldIndividuals={}
+
+    #cola de fenomenos
+    globals.worldFenomenos=queue.PriorityQueue()
+
+    #lista de individuos muertos para eliminar al final del siglo
+    globals.deadIndividuals=[]
+
+    #lista de individuos nacidos para agregar al final del siglo
+    globals.bornIndividuals=[]
+
+
+    #-------------------------------------------------NEW STUFF--------------------------------------------------------------------
+
+    #Variable de caza, mientra más grande más probable que el individuo decida cazar (0--->infinito)
+        # 0: nunca cazará, 
+        # 1: podrá cazar aprox un 1/10 porciento de veces que evolucione , 
+        # 1000000: siempre cazará(probablemente))
+    globals.Hunting = 1
+
+    #Que tan débil debe ser la craitura que se va a cazar, (1---->10)
+        # 10: más debil que yo, pero no me importa cuan débil
+        # 5: siempre será el doble de débil o más que yo
+        # 1: siempre será 10 veces más debil que yo
+    globals.Weakness = 10
+
+    #-------------------------------------------------NEW STUFF--------------------------------------------------------------------
+
+    #el arbol que muestra la evolucion de las especies
+    globals.arb_evo = Arbol_Evo()
+
+    #tamaño minimo de individuos de una nueva especie
+    globals.minSizeOfNewEspecies=20
+
+    #lista para agregar nuevas especies
+    globals.waitSpeciesList=[]
+
+    #tipos de muertes posibles
+    globals.deadTypesList=["Natural","Hunted","Hunting","Ciclon","Landslide","Volcan","Tsunami","Moving","Evolving"]
+
+    #cantidad de ciclos que se van a realizar
+    globals.iterationCicles=500
+
+    #iteracion actual del ciclo o dia del ciclo
+    globals.globalTime=1
+
+    #cada cuanto tiempo se revisan las evoluciones
+    globals.evolutionTimeCheck=10
