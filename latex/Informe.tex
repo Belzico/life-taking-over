@@ -17,7 +17,7 @@
 \newpage
 
 \section{General}
-En este trabajo nuestro objetivo es simular el desarrollo de la vida en nuestro planeta y acercarnos lo más posible a la forma adaptativa de las especies ante los cambios naturales, la evolución de la misma y la competencia entre estas tal cual como ocurren en nuestro mundo natural.
+En este trabajo nuestro objetivo es simular el desarrollo de la vida en cualquier planeta y acercarnos lo más posible a la forma adaptativa de las especies ante los cambios naturales, la evolución de la misma y la competencia entre estas tal cual como ocurren en nuestro mundo natural.
 \newline
 \newline
 Esto tiene como objetivo reunir datos estadísticos del comportamiento natural de las especies para asi asimilar mejor su expansión natural y la adaptabilidad en el mundo, asi como que tan dañino pueda ser un fenómeno en específico. 
@@ -28,6 +28,12 @@ Esto tiene como objetivo reunir datos estadísticos del comportamiento natural d
 \section{Código}
 
 \subsection{Mapa}
+\begin{figure}[]
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenes/mapa}
+	\label{fig:mapa}
+\end{figure}
+
 El mapa es el mundo en el que vamos a llevar a cabo la simulación. Este mundo consta de una matriz donde establecemos el tamaño de nuestro mapa de acuerdo al largo y ancho, a lo cual nombramos tamaño del eje X y tamaño del Eje Y respectivamente, además de mandar la cantidad de zonas que crearemos genéricamente para nuestro mundo
 \newline
 \newline
@@ -37,6 +43,13 @@ Para recorrer nuestro mapa usaremos una matriz adecuada a los tamaños mandados,
 Este mapa está diseñado para que no existan límites ya que tiene más sentido para nuestra simulación que sea un entorno circular antes que cuadrático
 
 \subsection{Zones}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenes/Zona}
+	\label{fig:zona}
+\end{figure}
+
+
 Una zona es un ambiente natural que consta de un conjunto de tiles que expresan la expansión en la que vivirán nuestras especies.
 \newline
 \newline
@@ -44,12 +57,24 @@ Estas constan de una variable Tiles que agrupará en un array todos los tiles qu
 
 
 \subsection{Tiles}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenes/Tile}
+	\label{fig:tile}
+\end{figure}
+
 Un tile es una ubicación de una zona natural del mapa en el que los individuos de las diferentes especies interactúan en ella, ya sea en busca de alimentos, de compañeros de una especie o la caza de estos para alimentarse.
 \newline
 \newline
 Estos tiles constan de las coordenadas de ubicación de la zona, las cantidad de criaturas que se encuentran en ella, los recursos disponibles en ella guardados en una variable llamada ComponentsDict
 
 \subsection{Especies}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenes/Especie}
+	\label{fig:especie}
+\end{figure}
+
 Para poder crear una interacción en el mundo creado decidimos añadir especies para que formen parte de este mundo, estos se caracterizarán por individuos que realizarán funciones básicas para vivir en ese mundo.
 \newline
 \newline
@@ -74,6 +99,12 @@ Por último tenemos un diccionario de data que es para guardar información de i
 Como antes informamos las especies son un grupo de individuos, por lo que miremos como creamos esta clase
 
 \subsection{Individuos}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenes/Individuo}
+	\label{fig:individuo}
+\end{figure}
+
 Los individuos son entidades particulares de una especie que tienen los valores cercanamente iguales a los establecidos en la especie, así podemos establecer una diversidad entre varios individuos.
 \newline
 \newline
@@ -115,26 +146,34 @@ Por ultimo tenemos la función resolveIteration que es la función que se encarg
  
 
 \subsection{Fenómenos}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenes/fenomeno}
+	\label{fig:fenomeno}
+\end{figure}
 
 Los fenómenos los incorporamos como los accidentes meteorológicos que ocurrirán en nuestro mundo para afectar el número de las especies y los recursos que existen en la zonas, además de la peligrosidad en cada zona que afectará al movimiento de cada criatura de acuerdo a la percepción
 \newline
 \newline
-Estos tienen como parametros la magnitud de escala del fenómeno que establece el nivel de propagación y peligrosidad de este, las coordenadas de ubicación donde se generará dicho fenómeno
+Estos tienen como parámetros la magnitud de escala del fenómeno que establece el nivel de propagación y peligrosidad de este, las coordenadas de ubicación donde se generará dicho fenómeno, las matrices de percepción y daño que alcanza el fenómeno, la posición, el rango, la cantidad de turnos y el tiempo de duración
 \newline
 \newline
 Estos fenómenos tienen una probabilidad de ocurrir de acuerdo a la zona en la que esté de acuerdo a una curva de probabilidad, la cual va cambiando de acuerdo al tiempo de ocurrencia de los fenómenos de forma incremental, es decir, mientras más tiempo demore en ocurrir un fenómeno va incrementando su probabilidad. Esta probabilidad de aparición se encargaría nuestra heurística, la cual calculará un random para saber si ocurrirá una catástrofe para luego calcular bajo unas coordenadas randoms el valor de una distribución normal para poder saber que fenómeno se generará en ese momento.
-%\newline
-%\newline
-%A la hora de ejecutar un los fenómenos
 
-%volcan añade a cada zona afectada minerales
-%subnamis añade a cada zona afectadas materiales del tipo oceano
+\subsection{Misc}
+El misc incorpora todos los métodos útiles que necesitemos para nuestro trabajo, esto incluye las operaciones de matrices y las inteligencias artificiales implementadas en nuestro trabajo, la cual estaremos hablando un poco en estos momentos.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/pathfinder1}
+	\label{fig:pathfinder1}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/pathfinder2}
+	\label{fig:pathfinder2}
+\end{figure}
 
-\subsection{misc}
-El misc incorpora todos los métodos útiles que necesitemos para nuestro trabajo, esto incluye las inteligencias artificiales implementadas en nuestro trabajo, la cual estaremos hablando un poco en estos momentos.
-\newline
-\newline
 Al partir del método pathfinder empezaremos a trabajar el movimiento inteligente. Este recibe una instancia de individuos y un mapa que es un diccionario que contiene vario mapas de acuerdo a la percepción del individuo, es decir, si tienes percepción 1 entonces tomaremos el mapa que resulta de moverse en 1 a todas las casillas que impliquen solo dar un paso, incluyendo el movimiento adicional.
 \newline
 \newline
@@ -142,17 +181,28 @@ Luego de definir el rango de percepción del mapa evaluamos en cada matriz los d
 \newline
 \newline
 Luego sumamos los pesos de la matriz para luego tener un matriz pesada para hacer el A* para buscar la casilla que tenga con el mejor valor para tratar de llegar allí
-\newline
-\newline
-El método A*, la cuál en nuestro trabajo lo nombramos como UcsSmarth. Este método toma un mapa y unos pesos para la arista del grafo que empieza a revisar la aristas por el orden de prioridad con una heurística de distancia Euclediana. Todas nuestras casillas están pesadas entre 1 y 5, el camino más cercano de una casilla a otra solo puede ser 1 por lo que nuestra heurística es optimista ya que no habrá camino más corto que la línea recta.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/UcsSmart}
+	\caption{}
+	\label{fig:ucssmart}
+\end{figure}
+
+El método A*, la cuál en nuestro trabajo lo nombramos como UcsSmarth. Este método toma un mapa y unos pesos para la arista del grafo que empieza a revisar la aristas por el orden de prioridad con una heurística de distancia Euclediana. Todas nuestras casillas están pesadas entre 1 y 5, el camino más cercano de una casilla a otra solo puede ser 1 por lo que nuestra heurística Euclediana es optimista ya que no habrá camino más corto que la línea recta.
 \newline
 \newline
 Se van llenando los nodos hasta llegar a la casilla destino, por lo que devolveríamos el grafo resultante y el padre, con el que podremos ir construyendo el camino.
 \newline
 \newline
 Este ucsSmart funciona con un drijktra, un método estudiado en estructura de datos para determinar la longitud del camino más corto entre dos vértices de un grafo ponderado simple, conexo y no dirigido con n vértices.
-\newline
-\newline
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/FixRoad}
+	\label{fig:fixroad}
+\end{figure}
+
 Luego de tener el camino correcto llamamos al método fixroad que se encarga de ir regresando desde el nodo final hasta el inicial por los padres para saber el camino a tomar.
 \newline
 \newline
@@ -160,28 +210,55 @@ Luego por cada paso que se da comprobaremos si por moverte llega a morirse nuest
 \newline
 \newline
 Ahora hablaremos de la inteligencia artificial de combate:
-\newline
-\newline
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/fullCombat}
+	\label{fig:fullcombat}
+\end{figure}
+
 Esta caso nosotros lo iniciamos con el método llamado fullcombat, el cual da inicio a la situación de combate que se efectuarán entre dos individuos, depredador y presa. Tendrán una ubicación en el mapa donde el depredador andará en el medio del mapa y la presa en una esquina. El mapa tendrá un tamaño de acuerdo al tamaño entre las dos velocidades entre los dos individuos x 10, para que al menos haya 10 turnos.
 \newline
 \newline
 Para llevar a cabo el combate haremos un Min-max donde llevaremos unos diccionarios de registros llamados battlelog para cada individuos donde registraremos la vida, lenteos, daños y otros elementos.
-\newline
-\newline
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/sneakwalk}
+	\label{fig:sneakwalk}
+\end{figure}
+
 Una vez seteados los elementos empieza el combate, donde lo primero que haremos es acercar a la presa en el combate con un método llamado sneakwalk, en el que se recibe el sigilo del cazador y se lleva contra la inteligencia y percepción de la presa promediada, mientras mayor sea el sigilo comparado con las estadísticas antes dicha del cazador, mayor ventaja tendrá el cazador, de lo contrario la tendrá la presa.
+\newline
 \newline
 El cazador empezará a moverse una casilla a la vez, y se hará una distribución normal donde si se cae dentro de la zona segura para el cazador, entonces la presa no lo descubrirá y podrá moverse de nuevo. Si en algún momento es descubierto, detenemos el método y retornamos, obteniendo así las nuevas posiciones en el registro. En caso de que el cazador llegue al objetivo entonces la presa recibirá un golpe de mucho daño por parte del cazador.
 \newline
 \newline
 Una vez que llegue a ser descubierto el cazador y aun le quede vida a la presa realizaremos el Min-Max, llamando a los método CombatTurnPredetor y CombatTurnPray en dependencia si eres depredador o presa.
-\newline
-\newline
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{imagenesMisc/CombatTurnPredator}
+	\label{fig:combatturnpredator}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{imagenesMisc/CombatTurnPray}
+	\label{fig:combatturnpray}
+\end{figure}
+
+
 El cazador va a tener varias casillas a moverse y tendrá tres posibles ataques a realizar: ¨ataque normal¨, ¨ataque crítico¨ y ¨ataque de lenteo¨, atendiendo a esto el CombatTurnPredetor buscar todas las casillas a las que se puede mover y si tiene posibilidad de dar uno de los 3 golpes antes dicho. En caso de moverse, para evitar análisis de casos exponenciales usamos una variable global llamada tempPredictions y utilizamos una poda por debajo para evitar esto mediante el uso de la heuristicahunt para buscar un acercamiento del depredador hacia la presa.
 \newline
 \newline
 En caso de CombatTurnPray se basa parecido al CombatTurnPray, donde nos interesa más buscar rutas de escape mediante nuestra heuristica de huir si es que la presa sigue viva después de la acción del depredador.
-\newline
-\newline
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesMisc/HeuristicHH}
+	\label{fig:heuristichh}
+\end{figure}
+
 Una vez mandadas las opciones, tomamos el valor que nos otorga el min-max por tomar cierta opción o cierta acción y nos quedamos con el mayor. Para ello tenemos una heurística para saber que tan favorable es para el cazador y que tan favorable es la heurística y nos quedamos con el mejor de los resultados.
 \newline
 \newline
