@@ -110,7 +110,7 @@ file_list_column = [
     sg.Text("Weakness of Prey:",justification="right", )  ,
     sg.In(enable_events=True, key="-WEAKNESS OF PREY INPUT-",size=10),
     SlackCheckbox8,
-    sg.Text(" (Default: 10 )",justification="right", )  ,
+    sg.Text(" (Default: 5 )",justification="right", )  ,
     ],
     [
     sg.Text("Combat Min-Max Predictions:",justification="right", )  ,
@@ -153,7 +153,7 @@ file_list_column = [
     sg.Text("Amount of Cycles:",justification="right", )  ,
     sg.In(enable_events=True, key="-AMOUNT OF CYCLES INPUT-",size=10),
     SlackCheckbox13,
-    sg.Text(" (Default: 1000 )",justification="right", )  ,
+    sg.Text(" (Default: 500 )",justification="right", )  ,
     ],
     
     

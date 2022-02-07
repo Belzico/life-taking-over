@@ -335,8 +335,7 @@ class Map:
     
     def movementWithoutBoundries (self,Individuo, valor_de_percepcion):
         perceptionValue = int(valor_de_percepcion)
-     
-        #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+    
         actRow = Individuo.xMundo  - perceptionValue
         actCol = Individuo.yMundo - perceptionValue
         perceptionList = []

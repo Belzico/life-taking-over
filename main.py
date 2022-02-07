@@ -149,12 +149,12 @@ def worldController():
                 else:
                     SlackCheckbox8.Update(False)
                     SlackCheckbox8.Update(checkbox_color='red')
-                    globals.Weakness = 10
+                    globals.Weakness = 5
                     pass
             except:
                 SlackCheckbox8.Update(False)
                 SlackCheckbox8.Update(checkbox_color='red')
-                globals.Weakness = 10
+                globals.Weakness = 5
                 pass  
         
         if event == "-DEATHS POSIBILITY INPUT-" :
@@ -267,12 +267,12 @@ def worldController():
                 else:
                     SlackCheckbox13.Update(False)
                     SlackCheckbox13.Update(checkbox_color='red')
-                    globals.iterationCicles = 1000
+                    globals.iterationCicles = 500
                     pass
             except:
                 SlackCheckbox13.Update(False)
                 SlackCheckbox13.Update(checkbox_color='red')
-                globals.iterationCicles = 1000
+                globals.iterationCicles = 500
                 pass 
         
                 
@@ -410,7 +410,7 @@ def printData(window):
         window["-SHOW-"].write("\n")
         window["-SHOW-"].write("\n")
         window["-SHOW-"].write("\n")
-        window["-SHOW-"].write("\n Writing data of species:"+str(globals.allSpecies[speciesKey])+"---------------------------------")
+        window["-SHOW-"].write("\n Writing data of species:"+str(globals.allSpecies[speciesKey].basicInfo["name"])+"---------------------------------")
         for datakey in globals.allSpecies[speciesKey].dataDicc.keys():
             window["-SHOW-"].write("\n"+str(datakey)+ " : " + str(globals.allSpecies[speciesKey].dataDicc[datakey]))
     
