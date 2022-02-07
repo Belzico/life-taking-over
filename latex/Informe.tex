@@ -25,6 +25,22 @@ Esto tiene como objetivo reunir datos estadísticos del comportamiento natural d
 
 \section{Aplicación}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesapk/HomeForm}
+	\caption{}
+	\label{fig:homeform}
+\end{figure}
+
+Creamos un pequeño form para poder modificar parametros de la aplicación. Este aplicación permite cambiar parámetros a la simulación para poder interactuar con ellas y ver resultados atendiendo al número de ocurrencia de acciones, cantidad de individuos nacidos, cantidad de muertes, entre otras.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{imagenesapk/ResultForm}
+	\caption{}
+	\label{fig:resultform}
+\end{figure}
+
 \section{Código}
 
 \subsection{Mapa}
@@ -114,7 +130,7 @@ Estos individuos serán creados mediante las coordenadas XY de mundo, su especie
 También se inicializará en el constructor variables como la saciedad para saber la cantidad de energía que presenta este individuo, la edad, además de las naturaldefence del propio individuo que son parecidas a las del padre pero con una probabilidad de ser diferente.
 \newline
 \newline
-Entre las funciones añadimos un método breed para simular la simulación, en el cual si un individuo tiene reproducción asexual se realiza una clonación, mientras que si tiene reproducción sexual entonces verificamos si la especie femenina es fertil.
+Entre las funciones añadimos un método \textbf{breed} para simular la simulación, en el cual si un individuo tiene reproducción asexual se realiza una clonación, mientras que si tiene reproducción sexual entonces verificamos si la especie femenina es fertil.
 \newline
 \newline
 Cada individuo puede moverse de acuerdo a una velocidad traducida en la cantidad de casillas a poder moverse, este se moverá de acuerdo a la inteligencia del individuo
@@ -132,14 +148,14 @@ El move recibe un variable mapa que se destaca en un diccionario que tiene vario
 Cada vez que el individuo se mueva comprobará si el individuo se muere al moverse o incluso si se muere en la posición en donde estaba por el nivel de peligrosidad de la zona a la que se movió
 \newline
 \newline
-Otra función que pueden hacer los individuos es comer, la cual radica registrar una lista de alimentos que se encuentran en la lista del tile y revisa si se encuentran los alimentos que puede comer en esa zona para luego saciar su energía en caso de encontrar alguno. Es importante destacar que cada alimento consumido será eliminado de la zona
+Otra función que pueden hacer los individuos es \textbf{eat}, la cual radica registrar una lista de alimentos que se encuentran en la lista del tile y revisa si se encuentran los alimentos que puede comer en esa zona para luego saciar su energía en caso de encontrar alguno. Es importante destacar que cada alimento consumido será eliminado de la zona
 \newline
 Adicionalmente añadimos el string cazador que permite a los individuos cazar a otras especies, por lo que tratará de buscar un individuo que esté por su zona que se pueda comer de forma inteligente, es decir, que el enemigo sea factible como objetivo a comer en cuanto a sus características de especie comparados a la de este cazador.
 \newline
 Una vez identificado y encontrada una presa se efectuará un combate, en el cual si el individuo muere se manda a matar al cazador, si la presa muere entonces se manda a morir a la presa y el cazador recupera energía. También las presas pueden huir, por lo que no necesariamente habrán ganadores.
 \newline
 \newline
-También tenemos la función die que es la que se encarga de mandar a morir al individio y a realizar todas las modificaciones que implican eliminarlo, como es modificar los individuos en el mapa, modificar los individuos de nuestro diccionario de especies, entre otros.
+También tenemos la función \textbf{die} que es la que se encarga de mandar a morir al individio y a realizar todas las modificaciones que implican eliminarlo, como es modificar los individuos en el mapa, modificar los individuos de nuestro diccionario de especies, entre otros.
 \newline
 \newline
 Por ultimo tenemos la función resolveIteration que es la función que se encarga de ejecutar las acciones de mover y comer por parte del individuo

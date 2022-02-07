@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.12.5)  6 FEB 2022 23:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.12.5)  6 FEB 2022 23:42
 entering extended mode
 **./Informe.tex
 (Informe.tex
@@ -342,294 +342,307 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--24
 
  []
 
-<imagenes/mapa.png, id=8, 317.68687pt x 140.02313pt>
+<imagenesapk/HomeForm.png, id=8, 825.83531pt x 532.23843pt>
+File: imagenesapk/HomeForm.png Graphic file (type png)
+<use imagenesapk/HomeForm.png>
+Package pdftex.def Info: imagenesapk/HomeForm.png  used on input line 30.
+(pdftex.def)             Requested size: 242.98541pt x 156.59479pt.
+<imagenesapk/ResultForm.png, id=10, 818.30719pt x 535.2497pt>
+File: imagenesapk/ResultForm.png Graphic file (type png)
+<use imagenesapk/ResultForm.png>
+Package pdftex.def Info: imagenesapk/ResultForm.png  used on input line 39.
+(pdftex.def)             Requested size: 242.98541pt x 158.93452pt.
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `htbp') on input line 47.
+
+<imagenes/mapa.png, id=11, 317.68687pt x 140.02313pt>
 File: imagenes/mapa.png Graphic file (type png)
 <use imagenes/mapa.png>
-Package pdftex.def Info: imagenes/mapa.png  used on input line 33.
+Package pdftex.def Info: imagenes/mapa.png  used on input line 49.
 (pdftex.def)             Requested size: 242.98541pt x 107.10237pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--44
+Underfull \hbox (badness 10000) in paragraph at lines 53--60
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--44
+Underfull \hbox (badness 10000) in paragraph at lines 53--60
 
  []
 
-<imagenes/Zona.png, id=10, 322.95656pt x 104.64093pt>
+[2 <./imagenesapk/HomeForm.png>] [3 <./imagenesapk/ResultForm.png> <./imagenes/
+mapa.png>]
+<imagenes/Zona.png, id=23, 322.95656pt x 104.64093pt>
 File: imagenes/Zona.png Graphic file (type png)
 <use imagenes/Zona.png>
-Package pdftex.def Info: imagenes/Zona.png  used on input line 48.
+Package pdftex.def Info: imagenes/Zona.png  used on input line 64.
 (pdftex.def)             Requested size: 242.98541pt x 78.72957pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 53--57
+Underfull \hbox (badness 10000) in paragraph at lines 69--73
 
  []
 
-[2 <./imagenes/mapa.png>]
-<imagenes/Tile.png, id=16, 282.30469pt x 237.13594pt>
+<imagenes/Tile.png, id=24, 282.30469pt x 237.13594pt>
 File: imagenes/Tile.png Graphic file (type png)
 <use imagenes/Tile.png>
-Package pdftex.def Info: imagenes/Tile.png  used on input line 62.
+Package pdftex.def Info: imagenes/Tile.png  used on input line 78.
 (pdftex.def)             Requested size: 242.98541pt x 204.11021pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 66--70
+Underfull \hbox (badness 10000) in paragraph at lines 82--86
 
  []
 
-[3 <./imagenes/Zona.png> <./imagenes/Tile.png>]
-<imagenes/Especie.png, id=22, 628.59843pt x 389.20406pt>
+<imagenes/Especie.png, id=25, 628.59843pt x 389.20406pt>
 File: imagenes/Especie.png Graphic file (type png)
 <use imagenes/Especie.png>
-Package pdftex.def Info: imagenes/Especie.png  used on input line 74.
+Package pdftex.def Info: imagenes/Especie.png  used on input line 90.
 (pdftex.def)             Requested size: 242.98541pt x 150.44681pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--100
+Underfull \hbox (badness 10000) in paragraph at lines 94--116
 
  []
 
-[4 <./imagenes/Especie.png>]
-<imagenes/Individuo.png, id=28, 544.28343pt x 387.69844pt>
+[4 <./imagenes/Zona.png>] [5 <./imagenes/Tile.png> <./imagenes/Especie.png>]
+<imagenes/Individuo.png, id=35, 544.28343pt x 387.69844pt>
 File: imagenes/Individuo.png Graphic file (type png)
 <use imagenes/Individuo.png>
-Package pdftex.def Info: imagenes/Individuo.png  used on input line 104.
+Package pdftex.def Info: imagenes/Individuo.png  used on input line 120.
 (pdftex.def)             Requested size: 242.98541pt x 173.07838pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--146
-
- []
-
-[5 <./imagenes/Individuo.png>]
-<imagenes/fenomeno.png, id=33, 294.34969pt x 176.91093pt>
-File: imagenes/fenomeno.png Graphic file (type png)
-<use imagenes/fenomeno.png>
-Package pdftex.def Info: imagenes/fenomeno.png  used on input line 151.
-(pdftex.def)             Requested size: 242.98541pt x 146.04239pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--165
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--165
+Underfull \hbox (badness 10000) in paragraph at lines 124--162
 
  []
 
 [6]
-<imagenesMisc/pathfinder1.png, id=37, 581.92406pt x 374.14781pt>
+Underfull \vbox (badness 4846) has occurred while \output is active []
+
+ [7 <./imagenes/Individuo.png>]
+<imagenes/fenomeno.png, id=45, 294.34969pt x 176.91093pt>
+File: imagenes/fenomeno.png Graphic file (type png)
+<use imagenes/fenomeno.png>
+Package pdftex.def Info: imagenes/fenomeno.png  used on input line 167.
+(pdftex.def)             Requested size: 242.98541pt x 146.04239pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 171--178
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 171--178
+
+ []
+
+[8 <./imagenes/fenomeno.png>]
+<imagenesMisc/pathfinder1.png, id=50, 581.92406pt x 374.14781pt>
 File: imagenesMisc/pathfinder1.png Graphic file (type png)
 <use imagenesMisc/pathfinder1.png>
-Package pdftex.def Info: imagenesMisc/pathfinder1.png  used on input line 175.
+Package pdftex.def Info: imagenesMisc/pathfinder1.png  used on input line 184.
 (pdftex.def)             Requested size: 242.98541pt x 156.22185pt.
-<imagenesMisc/pathfinder2.png, id=38, 523.20468pt x 369.63094pt>
+<imagenesMisc/pathfinder2.png, id=51, 523.20468pt x 369.63094pt>
 File: imagenesMisc/pathfinder2.png Graphic file (type png)
 <use imagenesMisc/pathfinder2.png>
-Package pdftex.def Info: imagenesMisc/pathfinder2.png  used on input line 180.
+Package pdftex.def Info: imagenesMisc/pathfinder2.png  used on input line 189.
 (pdftex.def)             Requested size: 242.98541pt x 171.66228pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--191
+Underfull \hbox (badness 10000) in paragraph at lines 193--200
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--191
+Underfull \hbox (badness 10000) in paragraph at lines 193--200
 
  []
 
-[7 <./imagenes/fenomeno.png>] [8 <./imagenesMisc/pathfinder1.png> <./imagenesMi
-sc/pathfinder2.png>]
-<imagenesMisc/UcsSmart.png, id=49, 627.09282pt x 310.15875pt>
+[9 <./imagenesMisc/pathfinder1.png>]
+<imagenesMisc/UcsSmart.png, id=56, 627.09282pt x 310.15875pt>
 File: imagenesMisc/UcsSmart.png Graphic file (type png)
 <use imagenesMisc/UcsSmart.png>
-Package pdftex.def Info: imagenesMisc/UcsSmart.png  used on input line 194.
+Package pdftex.def Info: imagenesMisc/UcsSmart.png  used on input line 203.
 (pdftex.def)             Requested size: 242.98541pt x 120.18053pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 199--206
+Underfull \hbox (badness 10000) in paragraph at lines 208--215
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 199--206
+Underfull \hbox (badness 10000) in paragraph at lines 208--215
 
  []
 
-<imagenesMisc/FixRoad.png, id=50, 475.02469pt x 165.61874pt>
+[10 <./imagenesMisc/pathfinder2.png> <./imagenesMisc/UcsSmart.png>]
+<imagenesMisc/FixRoad.png, id=62, 475.02469pt x 165.61874pt>
 File: imagenesMisc/FixRoad.png Graphic file (type png)
 <use imagenesMisc/FixRoad.png>
-Package pdftex.def Info: imagenesMisc/FixRoad.png  used on input line 209.
+Package pdftex.def Info: imagenesMisc/FixRoad.png  used on input line 218.
 (pdftex.def)             Requested size: 242.98541pt x 84.71715pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 213--220
+Underfull \hbox (badness 10000) in paragraph at lines 222--229
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 213--220
+Underfull \hbox (badness 10000) in paragraph at lines 222--229
 
  []
 
-[9 <./imagenesMisc/UcsSmart.png> <./imagenesMisc/FixRoad.png>]
-<imagenesMisc/fullCombat.png, id=57, 627.84563pt x 289.83281pt>
+<imagenesMisc/fullCombat.png, id=63, 627.84563pt x 289.83281pt>
 File: imagenesMisc/fullCombat.png Graphic file (type png)
 <use imagenesMisc/fullCombat.png>
-Package pdftex.def Info: imagenesMisc/fullCombat.png  used on input line 223.
+Package pdftex.def Info: imagenesMisc/fullCombat.png  used on input line 232.
 (pdftex.def)             Requested size: 242.98541pt x 112.16753pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 227--231
+Underfull \hbox (badness 10000) in paragraph at lines 236--240
 
  []
 
-<imagenesMisc/sneakwalk.png, id=58, 630.10406pt x 372.64218pt>
+<imagenesMisc/sneakwalk.png, id=64, 630.10406pt x 372.64218pt>
 File: imagenesMisc/sneakwalk.png Graphic file (type png)
 <use imagenesMisc/sneakwalk.png>
-Package pdftex.def Info: imagenesMisc/sneakwalk.png  used on input line 234.
+Package pdftex.def Info: imagenesMisc/sneakwalk.png  used on input line 243.
 (pdftex.def)             Requested size: 242.98541pt x 143.69797pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 238--245
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 238--245
+[11 <./imagenesMisc/FixRoad.png> <./imagenesMisc/fullCombat.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 247--254
 
  []
 
-[10 <./imagenesMisc/fullCombat.png>]
-<imagenesMisc/CombatTurnPredator.png, id=63, 620.3175pt x 244.66406pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--254
+
+ []
+
+<imagenesMisc/CombatTurnPredator.png, id=70, 620.3175pt x 244.66406pt>
 File: imagenesMisc/CombatTurnPredator.png Graphic file (type png)
 <use imagenesMisc/CombatTurnPredator.png>
 Package pdftex.def Info: imagenesMisc/CombatTurnPredator.png  used on input lin
-e 248.
+e 257.
 (pdftex.def)             Requested size: 173.56177pt x 68.4532pt.
-<imagenesMisc/CombatTurnPredator2.png, id=64, 521.69907pt x 336.50719pt>
-File: imagenesMisc/CombatTurnPredator2.png Graphic file (type png)
-<use imagenesMisc/CombatTurnPredator2.png>
-Package pdftex.def Info: imagenesMisc/CombatTurnPredator2.png  used on input li
-ne 253.
-(pdftex.def)             Requested size: 173.56177pt x 111.9514pt.
-<imagenesMisc/CombatTurnPray.png, id=65, 627.84563pt x 282.30469pt>
+<imagenesMisc/CombatTurnPray.png, id=71, 627.84563pt x 282.30469pt>
 File: imagenesMisc/CombatTurnPray.png Graphic file (type png)
 <use imagenesMisc/CombatTurnPray.png>
-Package pdftex.def Info: imagenesMisc/CombatTurnPray.png  used on input line 25
-8.
+Package pdftex.def Info: imagenesMisc/CombatTurnPray.png  used on input line 26
+2.
 (pdftex.def)             Requested size: 173.56177pt x 78.03679pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--278
+Underfull \hbox (badness 10000) in paragraph at lines 267--271
+
+ []
+
+[12 <./imagenesMisc/sneakwalk.png> <./imagenesMisc/CombatTurnPredator.png>]
+<imagenesMisc/HeuristicHH.png, id=77, 638.385pt x 260.47313pt>
+File: imagenesMisc/HeuristicHH.png Graphic file (type png)
+<use imagenesMisc/HeuristicHH.png>
+Package pdftex.def Info: imagenesMisc/HeuristicHH.png  used on input line 274.
+(pdftex.def)             Requested size: 242.98541pt x 99.14377pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 278--288
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--278
+Underfull \hbox (badness 10000) in paragraph at lines 278--288
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--278
+Underfull \hbox (badness 10000) in paragraph at lines 278--288
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--278
+Underfull \vbox (badness 2547) has occurred while \output is active []
 
- []
+ [13 <./imagenesMisc/CombatTurnPray.png> <./imagenesMisc/HeuristicHH.png>] [14]
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 262--278
-
- []
-
-[11 <./imagenesMisc/sneakwalk.png> <./imagenesMisc/CombatTurnPredator.png> <./i
-magenesMisc/CombatTurnPredator2.png>] [12 <./imagenesMisc/CombatTurnPray.png>]
 (Informe.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 ) ) 
 Here is how much of TeX's memory you used:
- 4303 strings out of 478927
- 64315 string characters out of 2852061
- 381929 words of memory out of 3000000
- 22119 multiletter control sequences out of 15000+600000
+ 4328 strings out of 478927
+ 64881 string characters out of 2852061
+ 384948 words of memory out of 3000000
+ 22141 multiletter control sequences out of 15000+600000
  407896 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,6n,66p,630b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -640,9 +653,9 @@ public/amsfonts/cm/cmbx12.pfb><C:/Users/Propia/AppData/Local/Programs/MiKTeX/fo
 nts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/Propia/AppData/Local/Programs/
 MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Propia/AppData/Local/
 Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb>
-Output written on Informe.pdf (12 pages, 384044 bytes).
+Output written on Informe.pdf (14 pages, 469380 bytes).
 PDF statistics:
- 103 PDF objects out of 1000 (max. 8388607)
+ 114 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 76 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 86 words of extra memory for PDF output out of 10000 (max. 10000000)
 
