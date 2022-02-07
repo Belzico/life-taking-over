@@ -124,7 +124,7 @@ Hunting = 1
     # 10: más debil que yo, pero no me importa cuan débil
     # 5: siempre será el doble de débil o más que yo
     # 1: siempre será 10 veces más debil que yo
-Weakness = 10
+Weakness = 5
 
 #-------------------------------------------------NEW STUFF--------------------------------------------------------------------
 
