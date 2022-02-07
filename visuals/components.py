@@ -153,7 +153,7 @@ file_list_column = [
     sg.Text("Amount of Cycles:",justification="right", )  ,
     sg.In(enable_events=True, key="-AMOUNT OF CYCLES INPUT-",size=10),
     SlackCheckbox13,
-    sg.Text(" (Default: 500 )",justification="right", )  ,
+    sg.Text(" (Default: 100 )",justification="right", )  ,
     ],
     
     
