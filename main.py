@@ -340,7 +340,6 @@ def worldController():
         if event == "-SUBMIT-":
             
             start =time.time()
-   
             
             globals.worldMap=map.Map(globals.WorldSize,globals.WorldSize,globals.ZoneCount)
             
