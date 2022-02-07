@@ -141,7 +141,7 @@ waitSpeciesList=[]
 deadTypesList=["Natural","Hunted","Hunting","Ciclon","Landslide","Volcan","Tsunami","Moving","Evolving"]
 
 #cantidad de ciclos que se van a realizar
-iterationCicles=500
+iterationCicles=100
 
 #iteracion actual del ciclo o dia del ciclo
 globalTime=1

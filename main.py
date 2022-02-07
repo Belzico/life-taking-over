@@ -267,12 +267,12 @@ def worldController():
                 else:
                     SlackCheckbox13.Update(False)
                     SlackCheckbox13.Update(checkbox_color='red')
-                    globals.iterationCicles = 500
+                    globals.iterationCicles = 100
                     pass
             except:
                 SlackCheckbox13.Update(False)
                 SlackCheckbox13.Update(checkbox_color='red')
-                globals.iterationCicles = 500
+                globals.iterationCicles = 100
                 pass 
         
                 
