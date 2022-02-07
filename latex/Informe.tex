@@ -131,4 +131,66 @@ Estos fenómenos tienen una probabilidad de ocurrir de acuerdo a la zona en la q
 %subnamis añade a cada zona afectadas materiales del tipo oceano
 
 
+\subsection{misc}
+El misc incorpora todos los métodos útiles que necesitemos para nuestro trabajo, esto incluye las inteligencias artificiales implementadas en nuestro trabajo, la cual estaremos hablando un poco en estos momentos.
+\newline
+\newline
+Al partir del método pathfinder empezaremos a trabajar el movimiento inteligente. Este recibe una instancia de individuos y un mapa que es un diccionario que contiene vario mapas de acuerdo a la percepción del individuo, es decir, si tienes percepción 1 entonces tomaremos el mapa que resulta de moverse en 1 a todas las casillas que impliquen solo dar un paso, incluyendo el movimiento adicional.
+\newline
+\newline
+Luego de definir el rango de percepción del mapa evaluamos en cada matriz los diferentes mapas mandados en el diccionario bajo esa percepción sobre donde hay comida, donde hay peligro, parejas y especies, la cual identificaremos como 1 a los que más le interese al individuo, excepto peligro real que nos dará el valor real. Estos mapas serán los criterios de nuestro movimiento inteligente, la cual dependiendo de la inteligencia del individuo tomará cada criterio, de las cuales lo más complicado que puede prever es el moverse a donde está más concentrada su especie.
+\newline
+\newline
+Luego sumamos los pesos de la matriz para luego tener un matriz pesada para hacer el A* para buscar la casilla que tenga con el mejor valor para tratar de llegar allí
+\newline
+\newline
+El método A*, la cuál en nuestro trabajo lo nombramos como UcsSmarth. Este método toma un mapa y unos pesos para la arista del grafo que empieza a revisar la aristas por el orden de prioridad con una heurística de distancia Euclediana. Todas nuestras casillas están pesadas entre 1 y 5, el camino más cercano de una casilla a otra solo puede ser 1 por lo que nuestra heurística es optimista ya que no habrá camino más corto que la línea recta.
+\newline
+\newline
+Se van llenando los nodos hasta llegar a la casilla destino, por lo que devolveríamos el grafo resultante y el padre, con el que podremos ir construyendo el camino.
+\newline
+\newline
+Este ucsSmart funciona con un drijktra, un método estudiado en estructura de datos para determinar la longitud del camino más corto entre dos vértices de un grafo ponderado simple, conexo y no dirigido con n vértices.
+\newline
+\newline
+Luego de tener el camino correcto llamamos al método fixroad que se encarga de ir regresando desde el nodo final hasta el inicial por los padres para saber el camino a tomar.
+\newline
+\newline
+Luego por cada paso que se da comprobaremos si por moverte llega a morirse nuestro individuo, ya que existe una probabilidad de llegar a morirse al moverse y al quedarse en una casilla dependiendo del peligro real de cada casilla, dando respuesta a la razón del por qué llevamos la matriz de peligro. 
+\newline
+\newline
+Ahora hablaremos de la inteligencia artificial de combate:
+\newline
+\newline
+Esta caso nosotros lo iniciamos con el método llamado fullcombat, el cual da inicio a la situación de combate que se efectuarán entre dos individuos, depredador y presa. Tendrán una ubicación en el mapa donde el depredador andará en el medio del mapa y la presa en una esquina. El mapa tendrá un tamaño de acuerdo al tamaño entre las dos velocidades entre los dos individuos x 10, para que al menos haya 10 turnos.
+\newline
+\newline
+Para llevar a cabo el combate haremos un Min-max donde llevaremos unos diccionarios de registros llamados battlelog para cada individuos donde registraremos la vida, lenteos, daños y otros elementos.
+\newline
+\newline
+Una vez seteados los elementos empieza el combate, donde lo primero que haremos es acercar a la presa en el combate con un método llamado sneakwalk, en el que se recibe el sigilo del cazador y se lleva contra la inteligencia y percepción de la presa promediada, mientras mayor sea el sigilo comparado con las estadísticas antes dicha del cazador, mayor ventaja tendrá el cazador, de lo contrario la tendrá la presa.
+\newline
+El cazador empezará a moverse una casilla a la vez, y se hará una distribución normal donde si se cae dentro de la zona segura para el cazador, entonces la presa no lo descubrirá y podrá moverse de nuevo. Si en algún momento es descubierto, detenemos el método y retornamos, obteniendo así las nuevas posiciones en el registro. En caso de que el cazador llegue al objetivo entonces la presa recibirá un golpe de mucho daño por parte del cazador.
+\newline
+\newline
+Una vez que llegue a ser descubierto el cazador y aun le quede vida a la presa realizaremos el Min-Max, llamando a los método CombatTurnPredetor y CombatTurnPray en dependencia si eres depredador o presa.
+\newline
+\newline
+El cazador va a tener varias casillas a moverse y tendrá tres posibles ataques a realizar: ¨ataque normal¨, ¨ataque crítico¨ y ¨ataque de lenteo¨, atendiendo a esto el CombatTurnPredetor buscar todas las casillas a las que se puede mover y si tiene posibilidad de dar uno de los 3 golpes antes dicho. En caso de moverse, para evitar análisis de casos exponenciales usamos una variable global llamada tempPredictions y utilizamos una poda por debajo para evitar esto mediante el uso de la heuristicahunt para buscar un acercamiento del depredador hacia la presa.
+\newline
+\newline
+En caso de CombatTurnPray se basa parecido al CombatTurnPray, donde nos interesa más buscar rutas de escape mediante nuestra heuristica de huir si es que la presa sigue viva después de la acción del depredador.
+\newline
+\newline
+Una vez mandadas las opciones, tomamos el valor que nos otorga el min-max por tomar cierta opción o cierta acción y nos quedamos con el mayor. Para ello tenemos una heurística para saber que tan favorable es para el cazador y que tan favorable es la heurística y nos quedamos con el mejor de los resultados.
+\newline
+\newline
+Como controlamos la duración del combate?
+\newline
+\newline
+Cuando llamamos la primera vez a CombatTurnPredetor o a CombatTurnPray, en dependencia de quien predijo el combate, y mandamos una cantidad de turnos a revisar re escalando mediante la comparación de las inteligencia de los dos individuos.
+\newline
+\newline
+El método findPray se encarga de buscar una presa que no sea difícil de matar, no lo mate y que le permita llenarse. Esto se logra buscando el de menor características que le de mayor cantidad de vida, dependiendo del hambre que tenga el individuo
+
 \end{document}
