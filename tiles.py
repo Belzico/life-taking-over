@@ -1,16 +1,10 @@
 
-import zones
-import misc
 import random
 import globals
-import especies
-
-
 
 
 class Tile:
 
-    
 
     def __init__(self,x,y,zone):
         self.Coordinates =  (x,y)
@@ -18,7 +12,6 @@ class Tile:
         self.CreatureList = []
         self.ComponentsDict = {}
         self.Danger = zone.Danger
-        #self.EnergyValue = -1
         if zone.ZoneType == 'Prairie'  :
             self.createPrairieTile()
         if zone.ZoneType == 'Mountain' :
@@ -35,8 +28,6 @@ class Tile:
             else:
                 if j.especie == Especie:
                     j.die("Evolving")
-                    # self.CreatureList.delete(j)
-                    # j.especie.individuos.delete(j)
                     tempCount = tempCount -1
                     
     
@@ -52,7 +43,7 @@ class Tile:
     def createPrairieTile(self):
         for component in globals.PrairieGenerationList.items():
             self.ComponentsDict[component[0]]  =  random.randint(component[1][0], component[1][1])
-       
+    
 
     def createMountainTile(self):
         for component in globals.MountainGenerationList.items():
@@ -63,4 +54,4 @@ class Tile:
         for component in globals.OceanGenerationList.items():
             self.ComponentsDict[component[0]]  =  random.randint(component[1][0], component[1][1])
         
-     
+    

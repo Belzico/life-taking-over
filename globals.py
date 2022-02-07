@@ -1,4 +1,3 @@
-import sys
 import queue
 from ArbolEvolutivo.arbolEvolutivo import Arbol_Evo
 

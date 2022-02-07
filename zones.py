@@ -105,14 +105,6 @@ class Zone:
                 especies.Especies(MajorityOfindividuals//2,TileToEvolve.Coordinates[0],TileToEvolve.Coordinates[1],AllDictionary)
             
     
-        
-    
-        
-    
-
-        #Calculando el promedio de la varianza de todos los valores
-
-
     
         return AllDictionary
 
@@ -153,11 +145,6 @@ class Zone:
         self.Danger = newDangerInt
         
         
-
-
-
-
-#--------------------------------------------------------NEW STUFF--------------------------------------------------------
     def SelectPopularElement(self,Tile):
         ElementsPctTupleList = []
         count = 0
@@ -186,7 +173,5 @@ class Zone:
             if i[1]<= randomIndex:
                 return i[0]
         
-        #sadfsdafsda
         return 'Solar Light'
-#--------------------------------------------------------NEW STUFF--------------------------------------------------------
 

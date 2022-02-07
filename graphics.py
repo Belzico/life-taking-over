@@ -1,11 +1,9 @@
 from tkinter import *
-import globals
-import zones
-import map
+
 
 class MapGraphics:
     def __init__(self, map):
-      
+    
         # Create an instance of tkinter frame or window
         win=Tk()
 
@@ -21,9 +19,9 @@ class MapGraphics:
             for j in range(map.SizeY):
                 pass
                 
-       
+    
         return
-      
+    
         
     def updateMap(slef):
         return

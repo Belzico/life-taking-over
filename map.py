@@ -4,7 +4,6 @@ import graphics
 import globals
 import random
 import tiles
-import especies
 
 
 
@@ -70,7 +69,6 @@ class Map:
         oldTile = self.Tiles[Coordinates[0]][Coordinates[1]]
         actualTile = self.Tiles[Individuo.xMundo][Individuo.yMundo]
         
-        #########CHECKEAR EL PORQUE EL INDIVIDUO SE MOVIÓ SIN PERMISO
         if Individuo in oldTile.CreatureList:
             oldTile.CreatureList.remove(Individuo)
         if Individuo not in actualTile.CreatureList:
@@ -88,12 +86,11 @@ class Map:
                 print ('-----------------------------------------------------------------------')
                     
         
-         
+        
     
     def movementWithBoundries (self,Individuo, valor_de_percepcion):
         perceptionValue = int(valor_de_percepcion)
-     
-        #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+    
         actRow = Individuo.xMundo  - perceptionValue
         actCol = Individuo.yMundo - perceptionValue
         perceptionList = []
@@ -107,7 +104,7 @@ class Map:
             perceptionList.append(newList)
         
         
-             
+        
         countX=0
         countY=0
         
@@ -126,9 +123,9 @@ class Map:
                 actCol +=1
             actRow+=1
             countX+=1
-     
+
         return perceptionList
-     
+
 
     
     def movementMatrix(self,Individuo) -> dict:

@@ -237,8 +237,8 @@ def Euristics(mapa):
 
 def RangeMatrix (Individuo, valor_de_percepcion,mapa):
     perceptionValue = int(valor_de_percepcion)
- 
-    #ESSTO HAY QUE CAMBIARLOOOOO CUANDO SE CAMBIE EL TIPO DE COORDENADAS DE LA ESPECIE
+
+    
     actRow = Individuo.xMundo  - perceptionValue
     actCol = Individuo.yMundo - perceptionValue
     perceptionList = []
@@ -252,7 +252,7 @@ def RangeMatrix (Individuo, valor_de_percepcion,mapa):
         perceptionList.append(newList)
     
     
-         
+    
     countX=0
     countY=0
     
@@ -270,6 +270,6 @@ def RangeMatrix (Individuo, valor_de_percepcion,mapa):
             actCol +=1
         actRow+=1
         countX+=1
- 
+
     return perceptionList
- 
+

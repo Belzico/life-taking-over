@@ -42,10 +42,7 @@ class Especies():
         
         #llamada al generador
         self.especieGenerator(x,y,individuos)
-        #nueva especie a la que puede estar evolucionando
-        #self.newEvolution="0"
-        #proximo numero de reproducciones que degeneran en la nueva especies
-        #self.countEvolutions="0"
+        
 
         #numero del proximo individuo
         self.nextName=int(individuos)
@@ -72,7 +69,8 @@ class Especies():
             self.alimentos[caracteristic]=newValue
             done=True
         return done
-
+    
+    #instanciamos los individuos en el mapa
     def initSpecies():
         dicc=globals.allSpecies
         for specie in dicc:
@@ -148,13 +146,13 @@ class Especies():
         
         basicInfo["Canibal"]=True
 
-        #por definir, por ahora seran dos opciones, alimentarse del entorno(aire, minerales) o alimentarse de otro individuo o los restos de este
+        
         basicInfo["Tipo_de_alimentacion"]="element"
         #sexo del individuo
         basicInfo["Sexo"]="0"
         #el ultimo numero para nombrar al siguiente individuo
         basicInfo["Ultimo_numero"]=str(individuos)
-        #generamos los individuos
+        
         
         return basicInfo
     
@@ -188,10 +186,7 @@ class Especies():
         naturalDefense["Slow_done"]="1"
         #cantidad de casillas que puede recorrer en un dia en el agua
         naturalDefense["Velocidad_agua"]=str(random.randint(10,12))
-        #cantidad de casillas que puede recorrer en un dia en volando
-        #naturalDefense["Velocidad_aire"]=str(random.randint(0,1))
-        #cantidad de casillas que puede recorrer en un dia en la tierra
-        #naturalDefense["Velocidad_tierra"]=str(random.randint(0,1))
+        
         
         naturalDefense["Edad_de_madurez_sexual_en_dias"]=str(random.randint(10,21))
         naturalDefense["Tiempo_de_gestacion"]=str(random.randint(10,21))
@@ -374,8 +369,6 @@ class Individuo():
         self.naturalDefenseInd["Slow_chance"]=int(defences["Slow_chance"])+random.randint(a,b)
         self.naturalDefenseInd["Slow_done"]=int(defences["Slow_done"])+random.randint(a,b)
         self.naturalDefenseInd["Velocidad_agua"]=int(defences["Velocidad_agua"])+random.randint(a,b)
-        #self.naturalDefenseInd["Velocidad_aire"]=int(defences["Velocidad_aire"])+random.randint(a,b)
-        #self.naturalDefenseInd["Velocidad_tierra"]=int(defences["Velocidad_tierra"])+random.randint(a,b)
         self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(defences["Edad_de_madurez_sexual_en_dias"])+random.randint(a,b)
         self.naturalDefenseInd["Tiempo_de_gestacion"]=int(defences["Tiempo_de_gestacion"])+random.randint(a,b)
         self.naturalDefenseInd["Tiempo_entre_reproducccion"]=int(defences["Tiempo_entre_reproducccion"])+random.randint(a,b)
@@ -403,8 +396,6 @@ class Individuo():
             self.naturalDefenseInd["Slow_chance"]=int(self.naturalDefenseInd["Slow_chance"])+int(random.randint(int(varianza["Slow_chance"]),int(varianza["Slow_chance"])))
             self.naturalDefenseInd["Slow_done"]=int(self.naturalDefenseInd["Slow_done"])+int(random.randint(int(varianza["Slow_done"]),int(varianza["Slow_done"])))
             self.naturalDefenseInd["Velocidad_agua"]=int(self.naturalDefenseInd["Velocidad_agua"])+int(random.randint(int(varianza["Velocidad_agua"]),int(varianza["Velocidad_agua"])))
-            #self.naturalDefenseInd["Velocidad_aire"]=int(self.naturalDefenseInd["Velocidad_aire"])+int(random.randint(int(varianza["Velocidad_aire"]),int(varianza["Velocidad_aire"])))
-            #self.naturalDefenseInd["Velocidad_tierra"]=int(self.naturalDefenseInd["Velocidad_tierra"])+int(random.randint(int(varianza["Velocidad_tierra"]),int(varianza["Velocidad_tierra"])))
             self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=int(self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"])+int(random.randint(int(varianza["Edad_de_madurez_sexual_en_dias"]),int(varianza["Edad_de_madurez_sexual_en_dias"])))
             self.naturalDefenseInd["Tiempo_de_gestacion"]=int(self.naturalDefenseInd["Tiempo_de_gestacion"])+int(random.randint(int(varianza["Tiempo_de_gestacion"]),int(varianza["Tiempo_de_gestacion"])))
             self.naturalDefenseInd["Tiempo_entre_reproducccion"]=int(self.naturalDefenseInd["Tiempo_entre_reproducccion"])+int(random.randint(int(varianza["Tiempo_entre_reproducccion"]),int(varianza["Tiempo_entre_reproducccion"])))
@@ -414,8 +405,6 @@ class Individuo():
             self.naturalDefenseInd["Cantidad_de_energia_almacenable"]=1+3*(int(self.naturalDefenseInd["Vida"]))/5
             self.naturalDefenseInd["Nivel_de_Hambre"]=2*int(self.naturalDefenseInd["Vida"])/3
 
-
-        
         
         
         if self.naturalDefenseInd["Vida"]<=0:
@@ -454,10 +443,7 @@ class Individuo():
             
         if self.naturalDefenseInd["Velocidad_agua"]<=0:
             self.naturalDefenseInd["Velocidad_agua"]=0
-        #if self.naturalDefenseInd["Velocidad_aire"]<0:
-        #    self.naturalDefenseInd["Velocidad_aire"]=0
-        #if self.naturalDefenseInd["Velocidad_tierra"]<0:
-        #    self.naturalDefenseInd["Velocidad_tierra"]=0
+
             
         if self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]<10:
             self.naturalDefenseInd["Edad_de_madurez_sexual_en_dias"]=10
@@ -499,7 +485,6 @@ class Individuo():
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
         
-        #self.especie.basicInfo["Cantidad_de_miembros"]+=1
     
     #este metodo crea un nuevo individuo promedio de los dos padres
     def sexualReproduction(self,mate):
@@ -514,7 +499,7 @@ class Individuo():
         
         currentSpicie.individuos[newName]=newIndividual
         currentSpicie.basicInfo["Ultimo_numero"]=str(lastNumber+1)
-        #self.especie.basicInfo["Cantidad_de_miembros"]+=1
+
                                     #move
     #############################################################################
     #movimiento del individuo
@@ -546,8 +531,6 @@ class Individuo():
             if misc.chanceToDie(deathMatrix[myPositionX][myPositionY]):
                 self.die("Moving")
         else:
-            #tempDic=globals.worldMap.movementMatrix(self)   
-            #pathFinder(currentIndividual,foodMatrix,dangerMatrix,mateMatrix,especiesMatrix):
             die=misc.pathFinder(self,mapa) 
             
         
@@ -557,7 +540,7 @@ class Individuo():
         
     
     def moveRandom(seflf,myMap):
-        #ausmiendo que el mapa es cuadrado y el individuo esta en la posicion central
+        #asumiendo que el mapa es cuadrado y el individuo esta en la posicion central
         myPosition=int(len(list(myMap))/2)
         succed=False
         i=10
@@ -590,12 +573,6 @@ class Individuo():
         for resource in self.especie.alimentos:
             if float(self.saciedad)>=float(self.naturalDefenseInd["Cantidad_de_energia_almacenable"]):
                 break
-            ##################################
-            #cosumiendo energia
-            #self.saciedad=int(self.saciedad)-int(self.especie.naturalDefense["Cantidad_de_energia_necesaria"])
-            #revisando el hambre de la especie
-            #hambre=int(self.especie.naturalDefense["Nivel_de_Hambre"]) 
-            ###################################################
             
             neededFood= int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])-int(self.saciedad)
 
@@ -631,19 +608,12 @@ class Individuo():
                         self.die("Hunting")
                         eatSuccess=False
                         break
-                    #sdfdsaf
                     #la presa escapo
                     elif combatResult==2:
                         print(self.name+" intento cazar a "+prey.name+" pero se le escapo")
                         continue
                 
                 else:
-                    #aca revisa si hay suficiente para saciarse con este elemento y si es asi manda a eliminar esa cantidad al mapa mientras come
-                    #if int(globals.worldMap.Tiles[self.xMundo][self.yMundo].ComponentsDict[resource])>1+neededFood//int(self.especie.alimentos[resource]):
-                    #    listDestroy.append((resource,1+neededFood/(int(self.especie.alimentos[resource]))))
-                    #    self.saciedad=int(self.naturalDefenseInd["Cantidad_de_energia_almacenable"])
-
-                        
                 
                     #en este caso no hay suficiente por lo q tiene q seguir buscando recursos despues de comerse todo lo q hay
                     #else:
@@ -659,7 +629,6 @@ class Individuo():
         for item in listDestroy:
             print("Yo "+self.name+" me comi "+str(int(item[1]))+" unidad de "+str(item[0]))
             self.especie.dataDicc["Food"][item[0]]+=1
-            #globals.worldMap.Tiles[self.xMundo][self.yMundo].eliminate(item[0],item[1])
         return eatSuccess
 ######################################################################################################################################################################################
 
@@ -720,12 +689,8 @@ class Individuo():
         if int(self.especie.basicInfo["Cantidad_de_miembros"])==0:
             self.especie.dataDicc["Extinct"]=globals.globalTime
         
-        #######AQUI INTENTAS ELIMINAR A ALGUIEN QUE YA NO EXISTE
-        #######ESTA ES UNA SOLUCIÓN TEMPORAL
         if self.name in self.especie.individuos.keys():
             del self.especie.individuos[self.name]
-        if int(self.especie.basicInfo["Cantidad_de_miembros"])<0 or int(self.especie.basicInfo["Cantidad_de_miembros"])!=len(self.especie.individuos):
-            print("zzzzz")
         
         #matar en casilla de mapa
         if self in globals.worldMap.Tiles[self.xMundo][self.yMundo].CreatureList:
@@ -733,10 +698,4 @@ class Individuo():
         
         if self.naturalDefenseInd["Inteligencia"]<2:        
             count=0
-            #for tile in globals.worldMap.Tiles:
-            #    for i in range(len(tile)):
-            #        for creature in tile[i].CreatureList:
-            #            if creature.name==self.name:
-            #                count+=1
-            #print(count)
         

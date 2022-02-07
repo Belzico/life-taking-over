@@ -35,10 +35,8 @@ def worldController():
         globals.waitSpeciesList=[]
         
         globals.globalTime+=1
-        #globals.worldMap.PrintMap()
         print('---------------------------------NEW CYCLE-------------------------------------------------')
         #####################################    
-        #aca meter el codigo de ejecucion de la cola de fenomenos.
         #####################################
     print("Simulation finished!!!!!")        
 
@@ -49,16 +47,11 @@ def main():
     globals.worldMap=map.Map(10,10,5)
     especies.Especies(5,0,0)
     especies.Especies(5,0,0)
-    #globals.allSpecies["1"].ModifyCaracteristic("Vida",100)
-    #globals.allSpecies["2"].ModifyCaracteristic("Inteligencia",200)
+    #globals.allSpecies["1"].ModifyCaracteristic("Vida",100) #ej de modify
     especies.Especies.initSpecies()
     
-    #current=globals.allSpecies["Alfie"]
-    #current.individuos["Alfie1"].breed()
-    #print(len(current.individuos))
     print("star world")
     worldController()
     
-print(type(3)==int)
 main()
     
