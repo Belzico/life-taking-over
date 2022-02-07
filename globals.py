@@ -1,6 +1,14 @@
 import queue
 from ArbolEvolutivo.arbolEvolutivo import Arbol_Evo
 
+WorldSize = 10
+ZoneCount = 3
+
+
+SpeciesAmount = 2
+
+CreaturesAmount = 5
+
 #Todas las zonas con las que trabaja la simulación
 ZoneList = ['Prairie', 'Mountain', 'Ocean']
 #La peligrosidad de cada zona
@@ -133,7 +141,7 @@ waitSpeciesList=[]
 deadTypesList=["Natural","Hunted","Hunting","Ciclon","Landslide","Volcan","Tsunami","Moving","Evolving"]
 
 #cantidad de ciclos que se van a realizar
-iterationCicles=1000
+iterationCicles=500
 
 #iteracion actual del ciclo o dia del ciclo
 globalTime=1

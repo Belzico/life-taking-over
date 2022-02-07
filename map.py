@@ -27,7 +27,6 @@ class Map:
 
         self.CreateZonesNotSoRandom()
         self.PopulateNotSoRandom()
-        self.Graphics = graphics.MapGraphics(self)
 
     
     def IsBorn(self, individuo):
