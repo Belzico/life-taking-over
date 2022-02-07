@@ -170,7 +170,7 @@ class Zone:
         randomIndex = randint(0 , int(ElementsPctTupleList[-1][1]))
         
         for i in ElementsPctTupleList:
-            if i[1]<= randomIndex:
+            if randomIndex<=i[1] :
                 return i[0]
         
         return 'Solar Light'
