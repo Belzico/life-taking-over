@@ -1,7 +1,7 @@
 from compGlobals import TokeTypes 
 
 
-               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
+              #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
 production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],  ["K",TokeTypes.tokOpenBracket] , [TokeTypes.tokClosedBracket,"Q"], ["P",TokeTypes.tokOpenParen,TokeTypes.tokID,"A",TokeTypes.tokClosedParen,TokeTypes.tokSemicolon] ],
             #Primero las declaraciones
             "D":[["R"],["I"], [TokeTypes.tokBool, TokeTypes.tokID, TokeTypes.tokAssign,"E"], [TokeTypes.tokInt, TokeTypes.tokID, TokeTypes.tokAssign, "E"],  [TokeTypes.tokString, TokeTypes.tokID, TokeTypes.tokAssign, "E"], [TokeTypes.tokDouble, TokeTypes.tokID, TokeTypes.tokAssign, "E"] ],
@@ -44,7 +44,7 @@ production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],  ["K",TokeTypes.tokOpe
                 
                 
             #Nuestros métodos:
-           "P":[[TokeTypes.tokModify],[TokeTypes.tokMSum],[TokeTypes.tokMSub],[TokeTypes.tokMMul],[TokeTypes.tokMDiv], [TokeTypes.tokDie] ,[TokeTypes.tokEvolve], [TokeTypes.tokAdd], [TokeTypes.tokMove], [TokeTypes.tokEat]],
+            "P":[[TokeTypes.tokModify],[TokeTypes.tokMSum],[TokeTypes.tokMSub],[TokeTypes.tokMMul],[TokeTypes.tokMDiv], [TokeTypes.tokDie] ,[TokeTypes.tokEvolve], [TokeTypes.tokAdd], [TokeTypes.tokMove], [TokeTypes.tokEat]],
             #Los otros términos que reciben nuestros métodos
             "A":[["empty"],[TokeTypes.tokComma,TokeTypes.tokID], ["A"]],
             

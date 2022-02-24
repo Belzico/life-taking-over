@@ -1,18 +1,16 @@
 
+from dataclasses import dataclass
 
+@dataclass
 class ClassNode():
-    
-    def __init__(self,value,hijos):
-        self.value = value
-        self.hijos = hijos
-        
-    def Eval(self):
-        return
+    pass
+
 
 #--------------------------------------------------------------------------- #
 #-------------------------- Nodos Operadores ------------------------------- #
 #--------------------------------------------------------------------------- #
-   
+
+@dataclass
 class SumNode(ClassNode):
     def __init__(self,value,hijos):
         super().__init__(value,hijos)
