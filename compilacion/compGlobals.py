@@ -22,8 +22,8 @@ class TokeTypes(enum.Enum):
     tokString=enum.auto() # string     -------
     tokBool=enum.auto() #bool     -------
     tokNone=enum.auto() #None
-    tokTrue=enum.auto()  #True     -------
-    tokFalse=enum.auto() #False     -------
+    #tokTrue=enum.auto()  #True     -------
+    #tokFalse=enum.auto() #False     -------
     tokDicc=enum.auto() #Dicc     -------
     
     tokList=enum.auto() # list (propio)     -------
@@ -117,8 +117,8 @@ keywordsDicc={
     #Keywords de valor
     "bool"     : TokeTypes.tokBool,
     "None"     : TokeTypes.tokNone,
-    "True"     : TokeTypes.tokTrue,
-    "False "   : TokeTypes.tokFalse,
+    #"True"     : TokeTypes.tokTrue,
+    #"False "   : TokeTypes.tokFalse,
     
     #Kewords del trabajo
     "Individuo": TokeTypes.tokIndividual,
