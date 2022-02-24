@@ -1,82 +1,88 @@
 import enum
 
+from compilacion.tokens import TokenType
+
 
 class TokeTypes(enum.Enum):
-    tokSemicolon=0 # ;     -------
-    tokPoint=1 # .
+    tokSemicolon=enum.auto() # ;     -------
+    tokPoint=enum.auto() # .
+    tokArrow=enum.auto() # :
     
-    tokComennt=2 # #
+    tokComennt=enum.auto() # #   -------
     
-    tokOpenParen=3 # (     -------
-    tokClosedParen=4 # )     -------
-    tokOpenBracket=5 # {     -------
-    tokClosedBracket=6 # }     -------
-    tokOpenSquareBracket=7 #[     -------
-    tokClosedSquareBracket=8#]     -------
+    tokOpenParen=enum.auto() # (     -------
+    tokClosedParen=enum.auto() # )     -------
+    tokOpenBracket=enum.auto() # {     -------
+    tokClosedBracket=enum.auto() # }     -------
+    tokOpenSquareBracket=enum.auto() #[     -------
+    tokClosedSquareBracket=enum.auto() #]     -------
     
-    tokInt=9 # int     -------
-    tokDouble=10 # double     -------
-    tokString=11 # string     -------
-    tokBool=12 #bool     -------
-    tokNone=13 #None
-    tokTrue=14  #True     -------
-    tokFalse=15 #False     -------
+    tokInt=enum.auto() # int     -------
+    tokDouble=enum.auto() # double     -------
+    tokString=enum.auto() # string     -------
+    tokBool=enum.auto() #bool     -------
+    tokNone=enum.auto() #None
+    tokTrue=enum.auto()  #True     -------
+    tokFalse=enum.auto() #False     -------
     
-    tokList=16 # list (propio)     -------
-    tokMatrix=17 # matrix (propio)     -------
-    tokIndividual=18 #Individuo (propio)     -------
-    tokSpecies=19 #Especie (propio)     -------
-    tokMap=20 #mapa (propio)     -------
-    tokphenomenon=21 #fenomeno (propio)     -------
+    tokList=enum.auto() # list (propio)     -------
+    tokMatrix=enum.auto() # matrix (propio)     -------
+    tokIndividual=enum.auto() #Individuo (propio)     -------
+    tokSpecies=enum.auto() #Especie (propio)     -------
+    tokMap=enum.auto() #mapa (propio)     -------
+    tokphenomenon=enum.auto() #fenomeno (propio)     -------
     
-    tokIf=22 # if     -------
-    tokElif=23 # elif     -------
-    tokElse=24 # else     -------
-    tokLoop=25 # loop     -------
-    tokBreak=26 # break     -------
-    tokContinue=27 # continue     -------
+    tokIf=enum.auto() # if     -------
+    tokElif=enum.auto() # elif     -------
+    tokElse=enum.auto() # else     -------
+    tokLoop=enum.auto() # loop     -------
+    tokBreak=enum.auto() # break     -------
+    tokContinue=enum.auto() # continue     -------
+    tokLet=enum.auto() # let     -------
+    tokDef=enum.auto() # TokeTypes.tokDef     -------
     
-    tokImport=28 # continue
+    tokImport=enum.auto() # continue
     
     
-    tokComma=29 #,
-    tokNextLine=30 # /n
-    tokNot=31 #!
+    tokComma=enum.auto() #,
+    tokNextLine=enum.auto() # /n
+    tokNot=enum.auto() #!
     
-    tokEqual=32 #==     -------
-    tokNotEqual=33 #!=     -------
-    tokLessOrEqual=34 #<=     -------
-    tokGreaterOrEqual=35 #>=     -------
-    tokGreater=36 #>     -------
-    tokLess=36 #<     -------
+    tokEqual=enum.auto() #==     -------
+    tokNotEqual=enum.auto() #!=     -------
+    tokLessOrEqual=enum.auto() #<=     -------
+    tokGreaterOrEqual=enum.auto() #>=     -------
+    tokGreater=enum.auto() #>     -------
+    tokLess=enum.auto() #<     -------
     
-    tokSum=37 #+     -------
-    tokSub=38 #-     -------
-    tokMul=39 #*     -------
-    tokDiv=40 #/     -------
-    tokModDiv=41 #%     -------
-    tokPow=42 #^     -------
+    tokSum=enum.auto() #+     -------
+    tokSub=enum.auto() #-     -------
+    tokMul=enum.auto() #*     -------
+    tokDiv=enum.auto() #/     -------
+    tokModDiv=enum.auto() #%     -------
+    tokPow=enum.auto() #^     -------
     
-    tokAnd=43 #&&     -------
-    tokOr=44 #||     -------
+    tokAnd=enum.auto() #&&     -------
+    tokOr=enum.auto() #||     -------
     
-    tokID=45 #     -------
+    tokID=enum.auto() #     -------
     
-    tokModify=46 # $Modify    -------
-    tokCreate=47 # $Create       --------
-    tokDie=48 # $Die     -------
-    tokEvolve=49 # $Evolve     -------
-    tokAdd=50 # $Add     -------
-    tokMove=51 # $Move     -------
-    tokEat=52   # $Eat     -------
+    tokModify=enum.auto() # $Modify    -------
+    tokCreate=enum.auto() # $Create       --------
+    tokDie=enum.auto() # $Die     -------
+    tokEvolve=enum.auto() # $Evolve     -------
+    tokAdd=enum.auto() # $Add     -------
+    tokMove=enum.auto() # $Move     -------
+    tokEat=enum.auto()   # $Eat     -------
     
-    tokMSum=53 # $MatrixSum
-    tokMSub=54 # $MatrixSub
-    tokMMul=55 # $MatrixMul
-    tokMDiv=56 # $MatrixDiv
+    tokMSum=enum.auto() # $MatrixSum
+    tokMSub=enum.auto() # $MatrixSub
+    tokMMul=enum.auto() # $MatrixMul
+    tokMDiv=enum.auto() # $MatrixDiv
     
-    tokAssign=57 # Assign     -------
-    tokReturn=58 # Return
+    tokAssign=enum.auto() # Assign     -------
+    tokReturn=enum.auto() # Return      -------
+    tokPrint=enum.auto() # Print     -------
     
     
     
@@ -90,6 +96,10 @@ keywordsDicc={
     "if"       : TokeTypes.tokIf, 
     "elif"     : TokeTypes.tokElif,
     "else"     : TokeTypes.tokElse,
+    
+    #declaracion
+    "let"     : TokeTypes.tokLet,
+    "def"     : TokeTypes.tokDef,
     
     #Keywords de Ciclos
     "loop"     : TokeTypes.tokLoop,
@@ -112,7 +122,10 @@ keywordsDicc={
     "Individuo": TokeTypes.tokIndividual,
     "Especie"  : TokeTypes.tokSpecies,
     "mapa"     : TokeTypes.tokMap,
-    "fenomeno" : TokeTypes.tokphenomenon
+    "fenomeno" : TokeTypes.tokphenomenon,
+    
+    #especiales
+    "print" : TokenType.tokPrint
 }
 
 operatorsDicc={
@@ -139,9 +152,12 @@ operatorsDicc={
     ">"  : TokeTypes.tokGreater,
     "<"  : TokeTypes.tokLess,
     
+    
+    
     #solo para la tokenizacion
     "&":None,
     "|":None,
+    
     
     
     
@@ -168,6 +184,8 @@ puntuationDicc={
     ","  : TokeTypes.tokComma, 
     #"."  : TokeTypes.tokColom,
     
+    #simbolo para especificar tipos de retorno
+    "->" : TokenType.tokArrow,
     #Signos Especiales
     #"\n" : TokeTypes.tokNextLine
 }
