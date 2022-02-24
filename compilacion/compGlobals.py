@@ -24,6 +24,7 @@ class TokeTypes(enum.Enum):
     tokNone=enum.auto() #None
     tokTrue=enum.auto()  #True     -------
     tokFalse=enum.auto() #False     -------
+    tokDicc=enum.auto() #Dicc     -------
     
     tokList=enum.auto() # list (propio)     -------
     tokMatrix=enum.auto() # matrix (propio)     -------
@@ -111,6 +112,7 @@ keywordsDicc={
     "int"      : TokeTypes.tokInt,
     "double"   : TokeTypes.tokDouble,
     "string"   : TokeTypes.tokString,
+    "dict"     : TokeTypes.tokDicc,
     
     #Keywords de valor
     "bool"     : TokeTypes.tokBool,

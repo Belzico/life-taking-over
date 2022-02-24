@@ -50,13 +50,67 @@ productions={
     "lenguage_funtion":[["die"],["modify"],["create"],["evolve"],["add"],["move"],["eat"]],
     
     #lenguage funtion die
-    "die":[[TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
     
     #lenguage funtion create
-    "create":[[TokeTypes.tokIndividual,TokeTypes.tokOpenParen,TokeTypes.tokInt,TokeTypes.tokInt,TokeTypes.tokInt,TokeTypes.tokClosedParen]],
+    "create":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"leng_type",TokeTypes.tokComma,"args_list",TokeTypes.tokClosedParen]],
+    
+    #Modify leng_type
+    "modify":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"leng_type",TokeTypes.tokComma,"args_list",TokeTypes.tokClosedParen]],
+    
+    #lenguage funtion die
+    "evolve":[[TokeTypes.tokOpenParen,TokeTypes.tokSpecies,TokeTypes.tokClosedParen]],
+    
+    #lenguage funtion add al mapa cosas como fenomeno o especie
+    "add":[[TokeTypes.tokID,TokeTypes.tokOpenParen,TokeTypes.tokSpecies,TokeTypes.tokClosedParen]],
+    
+    #lenguage funtion die
+    "move":[[TokeTypes.tokMove,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    
+    #lenguage funtion die
+    "eat":[[TokeTypes.tokMove,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    
+    #lenguaje types
+    "leng_type":[[TokeTypes.tokIndividual],[TokeTypes.tokSpecies],[TokeTypes.tokMap],[TokeTypes.tokphenomenon]],
+    
+    #args_list
+    "args_list":[[TokeTypes.tokID],[TokeTypes.tokID,TokeTypes.tokComma,"args_list"]],
     
     #types
-    "type":[[TokeTypes.tokInt],[TokeTypes.tokDouble],[TokeTypes.tokString],[TokeTypes.tokBool],[TokeTypes.tokNone],[TokeTypes.tokTrue],[TokeTypes.tokFalse]]
+    "type":[[TokeTypes.tokInt],[TokeTypes.tokDouble],[TokeTypes.tokString],[TokeTypes.tokBool],[TokeTypes.tokNone],[TokeTypes.tokTrue],[TokeTypes.tokFalse]],
+    
+    #expresions
+    "expr":[["expr",TokeTypes.tokSum,"term"],["expr",TokeTypes.tokSub,"term"],["term"]],
+    
+    #terminos
+    "term":[["term",TokeTypes.tokMul,"factor"],["term",TokeTypes.tokDiv,"factor"],["factor"]],
+    
+    #factor
+    "factor":[["atom"],[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
+    
+    #atomos
+    "atom":[[TokeTypes.tokID],["func_call"],["type"],["leng_type"]],
+    
+    #llamados a funciones
+    "func_call":[["matrix_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
+    
+    #separacion para los metodos que usan escalares y los que usen 2 matrices
+    "matrix_func":[["escalar"],["vectorial"]],
+    
+    #suma y resta vectorial
+    "vectorial":[["matrix_vec",TokeTypes.tokOpenParen,TokeTypes.tokMatrix,TokeTypes.tokMatrix,TokeTypes.tokClosedParen]],
+    
+    #matrices vec
+    "matrix_vec":[[TokeTypes.tokMSum],[TokeTypes.tokMSub]],
+    
+    #multiplicacion y division escalar
+    "escalar":[["matrix_esca",TokeTypes.tokOpenParen,TokeTypes.tokMatrix,TokeTypes.tokInt,TokeTypes.tokClosedParen]],
+    
+    #matrices esca
+    "matrix_esca":[[TokeTypes.tokMDiv],[TokeTypes.tokMMul]],
+    
+    #lista de expresiones
+    "expr_list":[["expr"],["expr",TokeTypes.tokComma,"expr_list"]]
 }
 
 
