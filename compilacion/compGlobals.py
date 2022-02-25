@@ -88,7 +88,7 @@ class TokeTypes(enum.Enum):
     tokAssign=enum.auto() # Assign     -------
     tokReturn=enum.auto() # Return      -------
     tokPrint=enum.auto() # Print     -------
-    
+    tokFinal = enum.auto() #$
     
     
     
