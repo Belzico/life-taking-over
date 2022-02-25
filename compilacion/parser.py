@@ -110,23 +110,23 @@ class Item:
 
 #Creando los estados posibles de la gramaática
 class State:
-  def __init__(self,ItemsList):
+  def __init__(self,Kernel):
       
       #Estados que continúan luego de este
       self.continuationStates = {}
       
-      #Representación del string de este estado de a siguiente forma S==>X|X,acd ;
+      #Representación del string de este estado de a siguiente forma S==>X|X,acd :|: X==>i ,acdi
       self.stringRep = ""
       
       self.expectedExpressions = []
       self.id = 0
       
-      self.kernel=ItemsList
-      self.items = {ItemsList}
+      self.kernel=Kernel
+      self.items = {Kernel}
       
       
       #Creando la representación de Estados en string
-      for item in ItemsList:
+      for item in Kernel:
         self.stringRep = f"{item} :|: "
           
   def AddItem(self,Item):
@@ -156,10 +156,26 @@ class State:
             self.AddItem(newItem)
             developingQueue.append(newItem)
   
-  def GOTO(self,states,state_List):
-    pass
+  def GOTO(self,states,stateList, InitialItems,queue,elements):
+    tempkernel = []
+    for i in self.expectedExpressions[elements]:
+      new_item = Item(i.production, i.index + 1, i.lookahead)
+      tempkernel.append(new_item)
+
+    new_state = State(tempkernel)
     
     
+    if new_state not in states:
+      new_state.number = len(states)
+      new_state.build(InitialItems)
+      states[new_state] = new_state
+      stateList.append(new_state)
+      queue.append(new_state)
+    else:
+      new_state = states[new_state]
+      
+    self.continuationStates[elements] = new_state
+
     
 class Automata:
   def __init__(self,Grammar):
@@ -188,11 +204,19 @@ class Automata:
         state.build(firstItems)
         
         for sym in state.expected_elements:
-            state.go_to(sym, states_dict, states_list)
+            state.GOTO(sym, states_dict, states_list)
     
     
     
-    #return states_lis
+    return states_list
+  
+  
+class GOTOACTION:
+  def __init__(self,grammar):
+    self.grammar =grammar
 
+  def build(self):
+    
+    statesDict = Automata(self.grammar).Construct()
 
   
