@@ -22,9 +22,11 @@ class TokeTypes(enum.Enum):
     tokString=enum.auto() # string     -------
     tokBool=enum.auto() #bool     -------
     tokNone=enum.auto() #None
-    #tokTrue=enum.auto()  #True     -------
-    #tokFalse=enum.auto() #False     -------
+    tokTrue=enum.auto()  #True     -------
+    tokFalse=enum.auto() #False     -------
     tokDicc=enum.auto() #Dicc     -------
+    tokNumber=enum.auto() #numeros    -------
+    tokChain=enum.auto() #Cadenas     -------
     
     tokList=enum.auto() # list (propio)     -------
     tokMatrix=enum.auto() # matrix (propio)     -------

@@ -23,7 +23,10 @@ productions={
     "stat_list_fix":[["epsilon"],["stat_list"]],
     
     #statment
-    "stat":[["let_dec"],["func_dec"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["epsilon"]],
+    "stat":[["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["epsilon"]],
+    
+    #reasignacion de variable
+    "var_reasign":[TokeTypes.tokID,TokeTypes.tokAssign,"expr"],
     
     #return expresion
     "return_exp":[[TokeTypes.tokReturn,"expr"]],
@@ -32,7 +35,7 @@ productions={
     "break_exp":[[TokeTypes.tokBreak]],
     
     #let declarator
-    "let_dec":[[TokeTypes.tokLet,"all_types",TokeTypes.tokID,TokeTypes.tokEqual,"expr"]],
+    "let_dec":[[TokeTypes.tokLet,"all_types",TokeTypes.tokID,TokeTypes.tokAssign,"expr"]],
     
     #declarador de funciones
     "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]],
@@ -93,7 +96,7 @@ productions={
     "type":[[TokeTypes.tokInt],[TokeTypes.tokDouble],[TokeTypes.tokString],[TokeTypes.tokBool],[TokeTypes.tokNone]],
     
     #expresions
-    "expr":[["expr",TokeTypes.tokSum,"term"],["expr",TokeTypes.tokSub,"term"],["term"]],
+    "expr":[["term",TokeTypes.tokSum,"expr"],["term",TokeTypes.tokSub,"expr"],["term","comparer","expr"],["term"]],
     
     #terminos
     "term":[["term",TokeTypes.tokMul,"factor"],["term",TokeTypes.tokDiv,"factor"],["factor"]],
@@ -103,6 +106,9 @@ productions={
     
     #atomos
     "atom":[[TokeTypes.tokID],["func_call"],["create"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_dec"],["epsilon"]],
+    
+    #comparadores
+    "comparer":[[TokeTypes.tokEqual],[TokeTypes.tokNot],[TokeTypes.tokNotEqual],[TokeTypes.tokGreaterOrEqual],[TokeTypes.tokGreater],[TokeTypes.tokLess],[TokeTypes.tokLessOrEqual],[TokeTypes.tokAnd],[TokeTypes.tokOr]],
     
     #declaracion de diccionario
     "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
@@ -155,7 +161,6 @@ dicNode = {
     "let_dec": classnode.LetNode(),
     "func_dec": classnode.FucNode(),
     "print_stat": classnode.PrintNode(),
-    "return_exp": classnode.ReturnNode(),
     "condictional_stat": classnode.Condictional_statNode(),
     "if_stat": classnode.IfNode(),
     "elif_stat": classnode.ElifNode(),
@@ -173,6 +178,8 @@ dicNode = {
     "dic_dec": classnode.DicNode(),
     "search_dic": classnode.SearchDicNode(),
     "recieve_dic": classnode.RecieveDicNode(),
+    "var_reasign":classnode.RedeclareVar(),
+    "return_exp": classnode.ReturnNode(),
     
     #------------------------------------- TokTerminales -----------------------------------------------#
     
