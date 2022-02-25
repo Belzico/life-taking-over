@@ -12,7 +12,7 @@ class ClassNode():
 
 @dataclass
 class SumNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -29,7 +29,7 @@ class SumNode(ClassNode):
         return self.Left + self.Right
 
 class SubNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -46,7 +46,7 @@ class SubNode(ClassNode):
         return self.Left - self.Right
 
 class MulNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -63,7 +63,7 @@ class MulNode(ClassNode):
         return self.Left * self.Right
 
 class DivNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -80,7 +80,7 @@ class DivNode(ClassNode):
         return self.Left / self.Right
 
 class ModNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -97,7 +97,7 @@ class ModNode(ClassNode):
         return self.Left % self.Right
 
 class PowNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -118,7 +118,7 @@ class PowNode(ClassNode):
 #--------------------------------------------------------------------------- #
 
 class EqualNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -135,7 +135,7 @@ class EqualNode(ClassNode):
         return self.Left == self.Right
 
 class NotEqualNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -152,7 +152,7 @@ class NotEqualNode(ClassNode):
         return self.Left != self.Right
 
 class LoENode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -169,7 +169,7 @@ class LoENode(ClassNode):
         return self.Left <= self.Right
 
 class GoENode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -186,7 +186,7 @@ class GoENode(ClassNode):
         return self.Left >= self.Right
 
 class GreaterNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -203,7 +203,7 @@ class GreaterNode(ClassNode):
         return self.Left > self.Right
 
 class LessNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -226,7 +226,7 @@ class LessNode(ClassNode):
 
     
 class AndNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -243,7 +243,7 @@ class AndNode(ClassNode):
         return self.Left and self.Right
    
 class OrNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -260,7 +260,7 @@ class OrNode(ClassNode):
         return self.Left or self.Right
 
 class LoopNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -284,7 +284,7 @@ class LoopNode(ClassNode):
 
 
 class ModifyNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -301,7 +301,7 @@ class ModifyNode(ClassNode):
         pass
 
 class CreateNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -318,7 +318,7 @@ class CreateNode(ClassNode):
         pass
 
 class DieNode():
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -336,7 +336,7 @@ class DieNode():
     
 
 class EvolveNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -353,7 +353,7 @@ class EvolveNode(ClassNode):
         pass
 
 class AddNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -370,7 +370,7 @@ class AddNode(ClassNode):
         pass
     
 class MoveNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
@@ -387,7 +387,24 @@ class MoveNode(ClassNode):
         pass
     
 class EatNode(ClassNode):
-    def __init__(self,value,hijos):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.name = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.args = hijos[1,...]
+        except:
+            Exception("No fue mandado el primer hijo")
+    
+    def EvalNode():
+        pass
+    
+class ProgramNode(ClassNode):
+    def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
         try:
