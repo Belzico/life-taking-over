@@ -110,52 +110,74 @@ class Item:
 
 #Creando los estados posibles de la gramaática
 class State:
-  def __init__(self,Kernel):
+  def __init__(self,Kernel,id):
       
-      #Estados que continúan luego de este
-      self.continuationStates = {}
-      
-      #Representación del string de este estado de a siguiente forma S==>X|X,acd :|: X==>i ,acdi
-      self.stringRep = ""
-      
-      self.expectedExpressions = []
-      self.id = 0
-      
-      self.kernel=Kernel
-      self.items = {Kernel}
-      
-      
-      #Creando la representación de Estados en string
-      for item in Kernel:
-        self.stringRep = f"{item} :|: "
+    #Estados que continúan luego de este
+    self.continuationStates = {}
+    
+    #Representación del string de este estado de a siguiente forma S==>X|X,acd :|: X==>i ,acdi
+    self.stringRep = ""
+    
+    self.expectedExpressions = []
+    self.id = 0
+    
+    self.kernel=Kernel
+    self.items = {Kernel}
+    
+    
+    #Creando la representación de Estados en string
+    for item in Kernel:
+      self.stringRep = f"{item} :|: "
+
           
   def AddItem(self,Item):
     self.items.add(Item)
     
-  def Develop(self,Items):
+  #Desarrollando el estado
+  def Develop(self,AllItems):
     developingQueue = deque(self.kernel)
     
+    
+    #Revisando todos los items que son generados en este estado
     while len(developingQueue)!= 0:
+      
+      #Tomamos el item que no ha sido analizado
       item =developingQueue.popleft()
       
+      #Si ese item es final, entonces no genera más ninguno
       if item.index == len(item.components): continue
       
+      #Tomando el símbolo que viene
       element = item.components[item.index]
       
+      #Añadiendo en el diccionario del estado, que este símbolo que espero me genera un estado nuevo
       if element in self.expectedExpressions: self.expectedExpressions[element].add(item)
       else : self.expectedExpressions[element] = {item}
       
+      
+      #Si ese símbolo es un No terminal, entonces hay que hallarle su clausura
       if Type(element) != NonTerminal:
-        for i in Items[element]:
+        
+        #Revisando todos los items que crea el elemento para agragrlos al estado
+        for i in AllItems[element]:
+          
+          #Si el es el último elemento del item, entonces generará un item nuevo, pero su lookahead no cambia
           if item.index + 1 == len(item.components):
             newlookahead = item.lookahead
+          
           else:
-            lookahead = item.components[item.index + 1]
-          newItem = Item(i.components,i.index,lookahead)
+            #ESTE LOOKAHEAD ESTA MAL
+            newlookahead = item.components[item.index+1]
+          
+          #Creando el nuevo item para agregarrlo al estado
+          newItem = Item(i.components, i.index, newlookahead)
+
+          #Añadiendo el item al estado
           if newItem not in self.items:
             self.AddItem(newItem)
+            #Añadiendolo a la cola de análisis
             developingQueue.append(newItem)
-  
+
   def GOTO(self,states,stateList, InitialItems,queue,elements):
     tempkernel = []
     for i in self.expectedExpressions[elements]:
@@ -217,6 +239,39 @@ class GOTOACTION:
 
   def build(self):
     
+    states = Automata(self.grammar).create()
+
+    go_to = []
+    action = []
+    for state in states:
+        state_action = {}
+        state_go_to = {}
+        lookA_item = {}
+        for element_item in state.items:
+            if element_item.index == len(element_item.production):
+                if element_item.lookahead in lookA_item:
+                    raise Exception('There has been a Reduce-Reduce conflict')
+                lookA_item[element_item.lookahead] = element_item
+        for next_element in state.next_states:
+            if next_element.is_terminal:
+                state_action[next_element.name] = ('R', state.next_states[next_element].number)
+            else:
+                state_go_to[next_element.name] = state.next_states[next_element].number
+        go_to.append(state_go_to)
+        action.append(state_action)
     statesDict = Automata(self.grammar).Construct()
 
+   # if element in self.expectedExpressions: self.expectedExpressions[element].add(item)
+      # else : self.expectedExpressions[element] = {item}
+      
+      # if Type(element) != NonTerminal:
+      #   for i in Items[element]:
+      #     if item.index + 1 == len(item.components):
+      #       newlookahead = item.lookahead
+      #     else:
+      #       lookahead = item.components[item.index + 1]
+      #     newItem = Item(i.components,i.index,lookahead)
+      #     if newItem not in self.items:
+      #       self.AddItem(newItem)
+      #       developingQueue.append(newItem)
   
