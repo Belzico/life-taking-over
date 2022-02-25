@@ -119,7 +119,7 @@ class State:
       self.stringRep = ""
       
       self.expectedExpressions = []
-      self.id = 0-
+      self.id = 0
       
       self.kernel=ItemsList
       self.items = {ItemsList}
@@ -157,7 +157,7 @@ class State:
             developingQueue.append(newItem)
   
   def GOTO(self,states,state_List):
-  
+    pass
     
     
     
@@ -192,7 +192,7 @@ class Automata:
     
     
     
-    return states_lis
+    #return states_lis
 
 
   
