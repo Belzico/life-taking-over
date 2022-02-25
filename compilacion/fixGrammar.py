@@ -22,16 +22,19 @@ productions={
     "stat_list_fix":[["epsilon"],["stat_list"]],
     
     #statment
-    "stat":[["let_dec"],["func_dec"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["epsilon"]],
+    "stat":[["let_dec"],["func_dec"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["epsilon"]],
     
+    #return expresion
+    "return_exp":[[TokeTypes.tokReturn,"expr"]],
+        
     #expresion break
     "break_exp":[[TokeTypes.tokBreak]],
     
     #let declarator
-    "let_dec":[[TokeTypes.tokLet,"äll_types",TokeTypes.tokID,TokeTypes.tokEqual,"expr"]],
+    "let_dec":[[TokeTypes.tokLet,"all_types",TokeTypes.tokID,TokeTypes.tokEqual,"expr"]],
     
     #declarador de funciones
-    "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"arg-list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"äll_types",TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]],
+    "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]],
     
     #print statment
     "print_stat":[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen],
@@ -74,7 +77,7 @@ productions={
     "eat":[[TokeTypes.tokEat,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
     
     #todos los tipos del lenguaje
-    "äll_types":[["leng_type"],["type"]],
+    "all_types":[["leng_type"],["type"]],
     
     #lenguaje types
     "leng_type":[[TokeTypes.tokIndividual],[TokeTypes.tokSpecies],[TokeTypes.tokMap],[TokeTypes.tokphenomenon]],
@@ -98,13 +101,25 @@ productions={
     "factor":[["atom"],[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #atomos
-    "atom":[[TokeTypes.tokID],["func_call"],["create"]],
+    "atom":[[TokeTypes.tokID],["func_call"],["create"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_dec"],["epsilon"]],
     
+    #declaracion de diccionario
+    "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
+
     #lenguage funtion create
     "create":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"leng_type",TokeTypes.tokComma,"args_list",TokeTypes.tokClosedParen]],
     
     #llamados a funciones
-    "func_call":[["matrix_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
+    "func_call":[["matrix_func"],["dic_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
+    
+    #funciones de diccionario    
+    "dic_func":[["search_dic"],["recieve_dic"]],
+    
+    #pregunta si una funcion
+    "search_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
+    
+    #retorna el valor asociado a la llave
+    "recieve_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #separacion para los metodos que usan escalares y los que usen 2 matrices
     "matrix_func":[["escalar"],["vectorial"]],

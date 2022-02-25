@@ -22,9 +22,11 @@ class TokeTypes(enum.Enum):
     tokString=enum.auto() # string     -------
     tokBool=enum.auto() #bool     -------
     tokNone=enum.auto() #None
-    #tokTrue=enum.auto()  #True     -------
-    #tokFalse=enum.auto() #False     -------
+    tokTrue=enum.auto()  #True     -------
+    tokFalse=enum.auto() #False     -------
     tokDicc=enum.auto() #Dicc     -------
+    tokNumber=enum.auto() #number     -------
+    tokChain=enum.auto() #string in chain     -------
     
     tokList=enum.auto() # list (propio)     -------
     tokMatrix=enum.auto() # matrix (propio)     -------
@@ -75,6 +77,8 @@ class TokeTypes(enum.Enum):
     tokAdd=enum.auto() # $Add     -------
     tokMove=enum.auto() # $Move     -------
     tokEat=enum.auto()   # $Eat     -------
+    tokSearchDicc=enum.auto()   # $SearchDicc     -------
+    tokReturnDicc=enum.auto()   # $ReturnDicc     -------
     
     tokMSum=enum.auto() # $MatrixSum
     tokMSub=enum.auto() # $MatrixSub
@@ -205,7 +209,13 @@ specialKeywordsDicc={
     "$MatrixSum":TokeTypes.tokMSum, 
     "$MatrixSub":TokeTypes.tokMSub,
     "$MatrixMul":TokeTypes.tokMMul,
-    "$MatrixDiv":TokeTypes.tokMDiv
+    "$MatrixDiv":TokeTypes.tokMDiv,
+    
+    "$SearchDicc" :  TokenType.tokSearchDicc,
+    "$ReturnDicc" :TokenType.tokReturnDicc
+    
+    
+    
     
 }
 
