@@ -402,7 +402,10 @@ class EatNode(ClassNode):
     
     def EvalNode():
         pass
-    
+
+
+#-------------------------- Modificar----------------------------------
+
 class ProgramNode(ClassNode):
     def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
@@ -419,3 +422,446 @@ class ProgramNode(ClassNode):
     
     def EvalNode():
         pass
+    
+class StatementNode(ClassNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class BreakNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class LetNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class FucNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class PrintNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class Condictional_statNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class IfNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class ElifNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+    
+class elseNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class elseNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+
+class loopNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class dieNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class modifyNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class evolveNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class moveNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class eatNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class createNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class func_callNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class vectorialNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class TookBreakNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+    
+class IdNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+
+class NumberNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+
+class ChainNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+
+class TrueNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+
+class FalseNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
+
+class NoneNode(StatementNode):
+    def __init__(self,value = None,hijos = None):
+        super().__init__(value,hijos)
+        
+        try:
+            self.Left = hijos[0]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+        try:
+            self.Right = hijos[1]
+        except:
+            Exception("No fue mandado el primer hijo")
+            
+    def Eval(self):
+        return self.Left + self.Right
