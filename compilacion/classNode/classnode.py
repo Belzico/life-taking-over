@@ -156,6 +156,9 @@ class SumNode(OperatorNode):
         self.Left=None
         self.Right=None
         self.context=context
+
+        self.RT = None
+        self.ET = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -180,6 +183,9 @@ class SubNode(OperatorNode):
         self.Left=None
         self.Right=None
         self.context=context
+
+        self.RT = None
+        self.ET = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -227,6 +233,9 @@ class DivNode(OperatorNode):
         self.Left=None
         self.Right=None
         self.context=context
+
+        self.RT = None
+        self.ET = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -271,6 +280,9 @@ class PowNode(OperatorNode):
         self.Left=None
         self.Right=None
         self.context=context
+
+        self.RT = None
+        self.ET = None
     
     def Eval(self):
         value1=self.Left.Eval()
@@ -298,6 +310,9 @@ class EqualNode(CompareNode):
         self.Left=None
         self.Right=None
         self.context=context
+
+        self.RT = None
+        self.ET = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -323,6 +338,9 @@ class NotEqualNode(CompareNode):
         self.Left=None
         self.Right=None
         self.context=context
+
+        self.RT = None
+        self.ET = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -347,6 +365,9 @@ class LoENode(CompareNode):
         self.Right=None
         self.context=context
     
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         value1=self.Left.Eval(self.context)
         value2=self.Right.Eval(self.context)
@@ -370,7 +391,10 @@ class GoENode(CompareNode):
         self.Left=None
         self.Right=None
         self.context=context
-    
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         value1=self.Left.Eval(self.context)
         value2=self.Right.Eval(self.context)
@@ -395,6 +419,9 @@ class GreaterNode(CompareNode):
         self.Right=None
         self.context=context
     
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         value1=self.Left.Eval(self.context)
         value2=self.Right.Eval(self.context)
@@ -419,6 +446,9 @@ class LessNode(CompareNode):
         self.Right=None
         self.context=context
     
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         value1=self.Left.Eval(self.context)
         value2=self.Right.Eval(self.context)
@@ -449,6 +479,9 @@ class AndNode(ClassNode):
         self.Right=None
         self.context=context
     
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         value1=self.Left.Eval(self.context)
         value2=self.Right.Eval(self.context)
@@ -473,6 +506,9 @@ class OrNode(ClassNode):
         self.Right=None
         self.context=context
     
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         value1=self.Left.Eval(self.context)
         value2=self.Right.Eval(self.context)
@@ -499,6 +535,9 @@ class LoopNode(ClassNode):
         self.Body=None
         self.context=context
     
+        self.RT = None
+        self.ET = None
+
     #hijo del break
     def breakValue(self):
         return self
@@ -532,6 +571,9 @@ class ModifyNode(ClassNode):
         self.args = None
         self.context = context
     
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
@@ -569,7 +611,8 @@ class CreateNode(ClassNode):
         self.args = None
         self.context = context
         
-
+        self.RT = None
+        self.ET = None
 
     def validateNode(self,context):
         valid= self.leng_Type.validateNode(context) 
@@ -604,6 +647,9 @@ class DieNode(ClassNode):
         self.args = None
         self.context = context
 
+        self.RT = None
+        self.ET = None
+
     def validateNode(self,context):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
@@ -633,6 +679,9 @@ class EvolveNode(ClassNode):
         self.args = None
         self.context = context
 
+        self.RT = None
+        self.ET = None
+
     def validateNode(self,context):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
@@ -660,6 +709,9 @@ class AddNode(ClassNode):
         self.leng_Type = None
         self.args = None
         self.context = context
+
+        self.RT = None
+        self.ET = None
 
     def validateNode(self,context):
         valid= self.leng_Type.validateNode(context) 
@@ -689,6 +741,9 @@ class MoveNode(ClassNode):
         self.args = None
         self.context = context
 
+        self.RT = None
+        self.ET = None
+
     def validateNode(self,context):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
@@ -717,6 +772,9 @@ class EatNode(ClassNode):
         self.args = None
         self.context = context
 
+        self.RT = None
+        self.ET = None
+
     def validateNode(self,context):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
@@ -743,14 +801,23 @@ class EatNode(ClassNode):
 #-------------------------- Modificar----------------------------------
 
 class ProgramNode(ClassNode):
-    def __init__(self,value = None,hijos = None):
-        self.ListStatement = hijos
+    def __init__(self,context):
+        self.ListStatement = None
+        self.context = context
 
+        self.RT = None
+        self.ET = None
 
     def Eval(self):
         for statement in self.ListStatement:
             value = statement.Eval(self.context)
     
+    def transpilar(self):
+        textcode = ""
+        for statement in self.ListStatement:
+            textcode += statement.transpilar()
+            textcode += "\n"
+
     def validateNode(self, context):
         for statement in self.ListStatement:
             if statement.validateNode(context):
@@ -761,9 +828,15 @@ class StatementNode(ClassNode):
         self.actionNode = None
         self.context = context
 
-            
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         self.actionNode.Eval(self.context)
+
+    def transpilar(self):
+        return self.actionNode.transpilar()
+
     
     def validateNode(self, context):
         if not self.actionNode.validateNode(context):
@@ -773,7 +846,10 @@ class StatementNode(ClassNode):
 class BreakNode(StatementNode):
     def __init__(self, context):
         self.context = context
-            
+        self.RT = None
+        self.ET = None
+
+
     def Eval(self, context):
         return
     
@@ -804,7 +880,10 @@ class LetNode(StatementNode):
         self.idnode = None
         self.val = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         return
     
@@ -823,7 +902,10 @@ class Condictional_statNode(StatementNode):
         self.condition = None
         self.ListStatements = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         if self.condition:
             for statement in self.ListStatements:
@@ -839,7 +921,10 @@ class IfNode(StatementNode):
         self.elsenode = None
         self.elifnode = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         if self.condition.Eval(self.context):
             for statement in self.ListStatements:
@@ -878,7 +963,10 @@ class ElifNode(StatementNode):
         self.elsenode = None
         self.elifnode = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         if self.condition.Eval(self.context):
             for statement in self.ListStatements:
@@ -915,7 +1003,10 @@ class elseNode(StatementNode):
     def __init__(self,context):
         self.ListStatement = None
         
-            
+        self.RT = None
+        self.ET = None
+
+
     def Eval(self,context):
         for statement in self.ListStatement:
             statement.Eval(self.context)
@@ -939,7 +1030,10 @@ class FucNode(StatementNode):
         self.name = None
         self.args = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         return self.Left + self.Right
 
@@ -947,6 +1041,9 @@ class func_callNode(StatementNode):
     def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
+        self.RT = None
+        self.ET = None
+
         try:
             self.Left = hijos[0]
         except:
@@ -965,7 +1062,10 @@ class PrintNode(StatementNode):
         self.name = "print"
         self.args = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         val = self.args[0].Eval(self.context)
         #print(val)
@@ -983,7 +1083,10 @@ class vectorialNode(StatementNode):
         self.ejex = None
         self.ejey = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         return (self.ejex,self.ejey)
     
@@ -997,7 +1100,10 @@ class IdNode(StatementNode):
     def __init__(self,context):
         self.id = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         return self.id
 
@@ -1011,7 +1117,10 @@ class NumberNode(StatementNode):
     def __init__(self,context):
         self.val = None
         self.context = context
-           
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         return self.val
 
@@ -1026,7 +1135,10 @@ class ChainNode(StatementNode):
     def __init__(self,context):
         self.chain = None
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self,context):
         return chain
 
@@ -1039,6 +1151,9 @@ class ChainNode(StatementNode):
 class TrueNode(StatementNode):
     def __init__(self,context):
         self.context = context
+
+        self.RT = None
+        self.ET = None
 
     def Eval(self):
         return True
@@ -1053,6 +1168,9 @@ class FalseNode(StatementNode):
     def __init__(self,context):
         self.context = context
 
+        self.RT = None
+        self.ET = None
+
     def Eval(self):
         return False
 
@@ -1065,7 +1183,10 @@ class FalseNode(StatementNode):
 class NoneNode(StatementNode):
     def __init__(self,context):
         self.context = context
-            
+
+        self.RT = None
+        self.ET = None
+
     def Eval(self, context):
         return None
 
