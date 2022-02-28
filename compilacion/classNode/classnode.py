@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from distutils.log import error
+from inspect import ArgSpec
 from itertools import chain
 from lib2to3.pytree import Node
-from multiprocessing import context
+from multiprocessing import Condition, context
 from pickle import FALSE
 from platform import node
 from tokenize import Double
@@ -507,6 +508,13 @@ class LoopNode(ClassNode):
             newContext=self.context.create_hild("loop",self)
             self.Body.Eval(newContext)
             
+    def transpilar(self):
+        textcode = ""
+        textcode += "while " + self.Conditional.transpilar() + ":"
+        textcode += "\n \t"
+        textcode += self.transpilar()
+
+        return textcode
         
     def validateNode(self,context):
         valid= self.Conditional.validateNode(context) and self.Body.validateNode(context)
@@ -534,6 +542,20 @@ class ModifyNode(ClassNode):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
             self.Right.validateNode(context)
+
+    def transpilar(self):
+        textcode = ""
+        textcode += "modify("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
+        
+        textcode += ")"
+
+        return textcode
         
     def build_ast(self,productionList):
         pass
@@ -553,7 +575,21 @@ class CreateNode(ClassNode):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
+
+
+    def transpilar(self):
+        textcode = ""
+        textcode += "create("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
         
+        textcode += ")"
+
+        return textcode
 
     def Eval(self):
         pass
@@ -573,6 +609,20 @@ class DieNode(ClassNode):
         for item in self.args:
             item.validateNode(context)
     
+    def transpilar(self):
+        textcode = ""
+        textcode += "Die("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
+        
+        textcode += ")"
+
+        return textcode
+    
     def Eval(self,context):
         pass
     
@@ -588,6 +638,20 @@ class EvolveNode(ClassNode):
         for item in self.args:
             item.validateNode(context)
     
+    def transpilar(self):
+        textcode = ""
+        textcode += "Evolve("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
+        
+        textcode += ")"
+
+        return textcode
+
     def Eval(self,context):
         pass
 
@@ -602,6 +666,20 @@ class AddNode(ClassNode):
         for item in self.args:
             item.validateNode(context)
     
+    def transpilar(self):
+        textcode = ""
+        textcode += "Add("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
+        
+        textcode += ")"
+
+        return textcode
+
     def Eval(self,context):
         pass
     
@@ -615,6 +693,20 @@ class MoveNode(ClassNode):
         valid= self.leng_Type.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
+
+    def transpilar(self):
+        textcode = ""
+        textcode += "Move("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
+        
+        textcode += ")"
+
+        return textcode
 
     def Eval():
         pass
@@ -630,6 +722,20 @@ class EatNode(ClassNode):
         for item in self.args:
             item.validateNode(context)
     
+    def transpilar(self):
+        textcode = ""
+        textcode += "transpilar("
+        i = 0
+        for arg in self.args:
+            textcode += arg.transpilar()
+            i+=1
+            if i < len(self.args) - 1:
+                textcode += ","
+        
+        textcode += ")"
+
+        return textcode
+
     def Eval(self,context):
         pass
 
