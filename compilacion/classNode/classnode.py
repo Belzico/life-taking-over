@@ -1,3 +1,4 @@
+from calendar import TextCalendar
 from dataclasses import dataclass
 from distutils.log import error
 from inspect import ArgSpec
@@ -16,20 +17,23 @@ from numpy import true_divide
 class ClassNode():
     
 
-    def EvalNode():
+    def Eval(self,context):
         pass
     
     def validateNode(self,context):
         pass
     
     def transpilar(self):
+        pass
+
+    def checkTypes(self):
         pass
 
     def build_ast(productionList):
         pass
 
 class OperatorNode(ClassNode):
-    def EvalNode():
+    def Eval(self,context):
         pass
     
     def validateNode(self,context):
@@ -38,11 +42,14 @@ class OperatorNode(ClassNode):
     def transpilar(self):
         pass
     
+    def checkTypes(self):
+        pass
+
     def build_ast(productionList):
         pass
 
 class CompareNode(ClassNode):
-    def EvalNode():
+    def Eval(self,context):
         pass
     
     def validateNode(self,context):
@@ -852,6 +859,9 @@ class BreakNode(StatementNode):
 
     def Eval(self, context):
         return
+
+    def transpilar(self):
+        return "break"
     
     def validateNode(self, context):
         contexttemp = context
@@ -877,6 +887,7 @@ class BreakNode(StatementNode):
 
 class LetNode(StatementNode):
     def __init__(self, context):
+        self.type = None
         self.idnode = None
         self.val = None
         self.context = context
@@ -894,25 +905,30 @@ class LetNode(StatementNode):
         validate = self.idnode.validateNode(context) and self.val.validateNode(context)
         return validate
 
+    def transpilar(self):
+        return "Let " + str(self.type) + " " + str(self.idnode) + " = " + self.val
+    
 # Revisar como crearlo
 
     
 class Condictional_statNode(StatementNode):
     def __init__(self,context):
         self.condition = None
-        self.ListStatements = None
         self.context = context
 
         self.RT = None
         self.ET = None
 
     def Eval(self,context):
-        if self.condition:
-            for statement in self.ListStatements:
-                statement.Eval(self.context)
-    
+        return self.condition.Eval()
+
+    def transpilar(self):
+        textcode = ""
+        textcode += self.condition.tranpilar()
+        return textcode
+
     def validateNode(self, context):
-        return super().validateNode(context)
+        return self.validateNode(self.condition)
 
 class IfNode(StatementNode):
     def __init__(self,context):
@@ -936,6 +952,25 @@ class IfNode(StatementNode):
         if self.elifnode != None:
             self.elifnode.Eval()
     
+    def transpilar(self):
+        textcode = ""
+        textcode += "if "
+        textcode += self.condition.transpilar()
+        textcode += ":"
+        for statement in self.ListStatements:
+            textcode += "\n \t"
+            textcode += statement.transpilar
+        
+        textcode += "\n"
+        textcode += self.elsenode.transpilar()
+
+        if self.elifnode != None:
+            textcode += "\n"
+            textcode += self.elifnode.transpilar()
+
+        return textcode
+
+
     def validateNode(self, context):
         validate1 = self.condition.validateNode(self.context)
         if not validate1:
@@ -978,6 +1013,24 @@ class ElifNode(StatementNode):
         if self.elifnode != None:
             self.elifnode.Eval()
     
+    def transpilar(self):
+        textcode = ""
+        textcode += "elif "
+        textcode += self.condition.transpilar()
+        textcode += ":"
+        for statement in self.ListStatements:
+            textcode += "\n \t"
+            textcode += statement.transpilar
+        
+        textcode += "\n"
+        textcode += self.elsenode.transpilar()
+
+        if self.elifnode != None:
+            textcode += "\n"
+            textcode += self.elifnode.transpilar()
+
+        return textcode
+
     def validateNode(self, context):
         validate1 = self.condition.validateNode(self.context)
         if not validate1:
@@ -1010,6 +1063,18 @@ class elseNode(StatementNode):
     def Eval(self,context):
         for statement in self.ListStatement:
             statement.Eval(self.context)
+
+    def transpilar(self):
+        textcode = ""
+        textcode += "else:"
+        textcode += "\n"
+        
+        for statement in self.ListStatements:
+            textcode += "\n \t"
+            textcode += statement.transpilar
+        
+        return textcode
+
 
     def validateNode(self, context):
         if not self.context.name == "if" and not self.context.name == "elif":
