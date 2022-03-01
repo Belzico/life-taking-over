@@ -1,3 +1,4 @@
+from ast import arg
 from calendar import TextCalendar
 from dataclasses import dataclass
 from distutils.log import error
@@ -5,13 +6,30 @@ from inspect import ArgSpec
 from itertools import chain
 from lib2to3.pytree import Node
 from multiprocessing import Condition, context
+from ntpath import join
 from pickle import FALSE
 from platform import node
 from tokenize import Double
 from webbrowser import Opera
 from wsgiref import validate
+import enum
 
 from numpy import true_divide
+
+class nodetypes(enum.Enum):
+    IdNode = enum.auto()
+    SumNode = enum.auto()
+    SubNode = enum.auto()
+    MulNode = enum.auto()
+    DivNode = enum.auto()
+    ModNode = enum.auto()
+    PowNode = enum.auto()
+    VectorialNode = enum.auto()
+    NumberNode = enum.auto()
+    ChainNode = enum.auto()
+    TrueNode = enum.auto()
+    FalseNode = enum.auto()
+    NoneNode = enum.auto()
 
 @dataclass
 class ClassNode():
@@ -64,8 +82,8 @@ class CompareNode(ClassNode):
 class Context():
     def __init__(self,name,classNode,fatherContext=None,breakCheck=False):
         
-        self.diccVarContext : dict(str,ClassNode)= {}
-        self.diccFuncContext : dict(str,ClassNode)={} 
+        self.diccVarContext = {}
+        self.diccFuncContext = {} 
         self.fatherContext= fatherContext
         self.name=name
         self.breakCheck=breakCheck
@@ -86,7 +104,7 @@ class Context():
 
     def checkFun(self,var,typeList):
         #declarada
-        if var in self.diccFuncContext or (self.fatherContext!=None and self.fatherContext.checkFun()):
+        if var in self.diccFuncContext or (self.fatherContext!=None and self.fatherContext.checkFun(var,typeList)):
             varAtributes=self.retFun(var,typeList)
             if varAtributes==None:
                 #error de tipo
@@ -108,7 +126,7 @@ class Context():
     def define_func(self,var,typeList:list):
         if not self.checkVar(var,typeList):
             typeList.insert(0,var)
-            self.diccVarContext[var]=[var,typeList]
+            self.diccFuncContext[var]=[var,typeList]
             return True
         return False
     
@@ -164,8 +182,8 @@ class SumNode(OperatorNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -178,8 +196,14 @@ class SumNode(OperatorNode):
     def transpilar(self):
         return str(self.Left) + " + " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == int
+
     def validateNode(self,context):
         valid= self.Left.validateNode(context) and self.Right.validateNode(context)
+        return valid
         
     def build_ast(self,productionList):
         pass
@@ -191,8 +215,8 @@ class SubNode(OperatorNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -207,6 +231,10 @@ class SubNode(OperatorNode):
     def transpilar(self):
         return str(self.Left) + " - " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == int
 
     def build_ast(self,productionList):
         pass
@@ -231,6 +259,10 @@ class MulNode(OperatorNode):
     def transpilar(self):
         return str(self.Left) + " * " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == int
 
     def build_ast(self,productionList):
         pass
@@ -241,8 +273,8 @@ class DivNode(OperatorNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -256,7 +288,12 @@ class DivNode(OperatorNode):
 
     def transpilar(self):
         return str(self.Left) + " / " +  str(self.Right)
-    
+
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == int
+
     def build_ast(self,productionList):
         pass
 
@@ -279,6 +316,11 @@ class ModNode(OperatorNode):
     def transpilar(self):
         return str(self.Left) + " % " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == int
+
     def build_ast(self,productionList):
         pass
 
@@ -288,8 +330,8 @@ class PowNode(OperatorNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
     
     def Eval(self):
         value1=self.Left.Eval()
@@ -303,6 +345,11 @@ class PowNode(OperatorNode):
     
     def transpilar(self):
         return str(self.Left) + " ^ " +  str(self.Right)
+
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == int
 
     def build_ast(self,productionList):
         pass
@@ -318,8 +365,8 @@ class EqualNode(CompareNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -336,6 +383,11 @@ class EqualNode(CompareNode):
     def transpilar(self):
         return str(self.Left) + " == " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
     
@@ -346,8 +398,8 @@ class NotEqualNode(CompareNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
     
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -362,6 +414,10 @@ class NotEqualNode(CompareNode):
     def transpilar(self):
         return str(self.Left) + " != " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == bool
 
     def build_ast(self,productionList):
         pass
@@ -372,8 +428,8 @@ class LoENode(CompareNode):
         self.Right=None
         self.context=context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -390,6 +446,11 @@ class LoENode(CompareNode):
     def transpilar(self):
         return str(self.Left) + " <= " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
 
@@ -399,8 +460,8 @@ class GoENode(CompareNode):
         self.Right=None
         self.context=context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -417,6 +478,11 @@ class GoENode(CompareNode):
     def transpilar(self):
         return str(self.Left) + " >= " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
 
@@ -426,8 +492,8 @@ class GreaterNode(CompareNode):
         self.Right=None
         self.context=context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -444,6 +510,11 @@ class GreaterNode(CompareNode):
     def transpilar(self):
         return str(self.Left) + " > " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
 
@@ -453,8 +524,8 @@ class LessNode(CompareNode):
         self.Right=None
         self.context=context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         value1=self.Left.Eval(self.context)
@@ -471,6 +542,11 @@ class LessNode(CompareNode):
     def transpilar(self):
         return str(self.Left) + " < " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 != None and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
     
@@ -486,8 +562,8 @@ class AndNode(ClassNode):
         self.Right=None
         self.context=context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -504,6 +580,11 @@ class AndNode(ClassNode):
     def transpilar(self):
         return str(self.Left) + " and " +  str(self.Right)
 
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 == bool and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
 
@@ -513,8 +594,8 @@ class OrNode(ClassNode):
         self.Right=None
         self.context=context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         value1=self.Left.Eval(self.context)
@@ -528,7 +609,12 @@ class OrNode(ClassNode):
 
     def validateNode(self,context):
         valid= self.Left.validateNode(context) or self.Right.validateNode(context)
-        
+    
+    def checkTypes(self):
+        type1 = self.Left.ReturnType
+        type2 = self.Left.ReturnType
+        return type1 == type2 and not type1 == bool and self.ReturnType == bool
+
     def build_ast(self,productionList):
         pass
 
@@ -542,8 +628,8 @@ class LoopNode(ClassNode):
         self.Body=None
         self.context=context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     #hijo del break
     def breakValue(self):
@@ -565,6 +651,9 @@ class LoopNode(ClassNode):
     def validateNode(self,context):
         valid= self.Conditional.validateNode(context) and self.Body.validateNode(context)
         
+    def checkTypes(self):
+        return self.Conditional.checkTypes()
+
     def build_ast(self,productionList):
         pass
 #--------------------------------------------------------------------------- #
@@ -574,21 +663,21 @@ class LoopNode(ClassNode):
 
 class ModifyNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
     
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
         
         
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             self.Right.validateNode(context)
 
@@ -605,6 +694,9 @@ class ModifyNode(ClassNode):
         textcode += ")"
 
         return textcode
+
+    def checkTypes(self):
+        return self.context.checkFun("modify", [self.id] + self.args)
         
     def build_ast(self,productionList):
         pass
@@ -614,15 +706,15 @@ class ModifyNode(ClassNode):
 #------------------------------------------------------------------
 class CreateNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
         
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
 
@@ -641,6 +733,9 @@ class CreateNode(ClassNode):
 
         return textcode
 
+    def checkTypes(self):
+        return self.context.checkFun("create", [self.id] + self.args)
+
     def Eval(self):
         pass
 
@@ -650,15 +745,15 @@ class CreateNode(ClassNode):
 
 class DieNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
     
@@ -676,21 +771,24 @@ class DieNode(ClassNode):
 
         return textcode
     
+    def checkTypes(self):
+        return self.context.checkFun("die", [self.id] + self.args)
+
     def Eval(self,context):
         pass
     
 
 class EvolveNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
     
@@ -708,20 +806,23 @@ class EvolveNode(ClassNode):
 
         return textcode
 
+    def checkTypes(self):
+        return self.context.checkFun("create", [self.id] + self.args)
+
     def Eval(self,context):
         pass
 
 class AddNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
     
@@ -744,15 +845,15 @@ class AddNode(ClassNode):
     
 class MoveNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
 
@@ -775,15 +876,15 @@ class MoveNode(ClassNode):
     
 class EatNode(ClassNode):
     def __init__(self,context):
-        self.leng_Type = None
+        self.id = None
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def validateNode(self,context):
-        valid= self.leng_Type.validateNode(context) 
+        valid= self.id.validateNode(context) 
         for item in self.args:
             item.validateNode(context)
     
@@ -812,8 +913,8 @@ class ProgramNode(ClassNode):
         self.ListStatement = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         for statement in self.ListStatement:
@@ -835,8 +936,8 @@ class StatementNode(ClassNode):
         self.actionNode = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         self.actionNode.Eval(self.context)
@@ -853,8 +954,8 @@ class StatementNode(ClassNode):
 class BreakNode(StatementNode):
     def __init__(self, context):
         self.context = context
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
 
     def Eval(self, context):
@@ -892,8 +993,8 @@ class LetNode(StatementNode):
         self.val = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return
@@ -916,8 +1017,8 @@ class Condictional_statNode(StatementNode):
         self.condition = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return self.condition.Eval()
@@ -938,8 +1039,8 @@ class IfNode(StatementNode):
         self.elifnode = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         if self.condition.Eval(self.context):
@@ -999,8 +1100,8 @@ class ElifNode(StatementNode):
         self.elifnode = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         if self.condition.Eval(self.context):
@@ -1056,8 +1157,8 @@ class elseNode(StatementNode):
     def __init__(self,context):
         self.ListStatement = None
         
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
 
     def Eval(self,context):
@@ -1096,8 +1197,8 @@ class FucNode(StatementNode):
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return self.Left + self.Right
@@ -1106,8 +1207,8 @@ class func_callNode(StatementNode):
     def __init__(self,value = None,hijos = None):
         super().__init__(value,hijos)
         
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
         try:
             self.Left = hijos[0]
@@ -1128,8 +1229,9 @@ class PrintNode(StatementNode):
         self.args = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
+
 
     def Eval(self,context):
         val = self.args[0].Eval(self.context)
@@ -1149,14 +1251,17 @@ class vectorialNode(StatementNode):
         self.ejey = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return (self.ejex,self.ejey)
     
     def transpilar(self):
         return "("+str(self.ejex) + "," +  str(self.ejey)+")"
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return isnumeric(self.ejex) and isnumeric(self.ejey)
@@ -1166,14 +1271,17 @@ class IdNode(StatementNode):
         self.id = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         return self.id
 
     def transpilar(self):
         return str(self.id)
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return self.id is str
@@ -1183,14 +1291,17 @@ class NumberNode(StatementNode):
         self.val = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return self.val
 
     def transpilar(self):
         return str(self.val)
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return isnumeric(self.val)
@@ -1201,14 +1312,17 @@ class ChainNode(StatementNode):
         self.chain = None
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return chain
 
     def transpilar(self):
         return str(self.chain)
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return self.chain is str
@@ -1217,14 +1331,17 @@ class TrueNode(StatementNode):
     def __init__(self,context):
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         return True
 
     def transpilar(self):
         return str(True)
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return True
@@ -1233,14 +1350,17 @@ class FalseNode(StatementNode):
     def __init__(self,context):
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self):
         return False
 
     def transpilar(self):
         return str(False)
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return True
@@ -1249,14 +1369,17 @@ class NoneNode(StatementNode):
     def __init__(self,context):
         self.context = context
 
-        self.RT = None
-        self.ET = None
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self, context):
         return None
 
     def transpilar(self):
         return str(None)
+
+    def checkTypes(self):
+        return True
 
     def validateNode(self, context):
         return True
