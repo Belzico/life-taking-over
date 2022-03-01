@@ -1,6 +1,6 @@
 from compGlobals import TokeTypes 
 from fixGrammar import Production, NonTerminal, Terminal , Grammar
-from Collections import deque
+from collections import deque
 
               #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
 production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],  ["K",TokeTypes.tokOpenBracket] , [TokeTypes.tokClosedBracket,"Q"], ["P",TokeTypes.tokOpenParen,TokeTypes.tokID,"A",TokeTypes.tokClosedParen,TokeTypes.tokSemicolon] ],
@@ -84,7 +84,7 @@ class Item:
   def __init__(self,Production : Production, Index, Lookahead):
     
     #String Representation es utilizado para observar el item de manera intuitiva (Ej: F==>a|XY,acf)
-      self.stringRep = f"{Production.nonTerminal} ==>"
+      self.stringRep = f"{Production.head} ==>"
       
     #Lookahead me representa los lookahead del item (los firsts del follow del item)
       self.lookahead = Lookahead
@@ -153,7 +153,7 @@ class State:
       
       
       #Si ese símbolo es un No terminal, entonces hay que hallarle su clausura
-      if Type(element) != NonTerminal:
+      if type(element) != NonTerminal:
         
         #Revisando todos los items que crea el elemento para agragrlos al estado
         for i in AllItems[element]:
