@@ -86,7 +86,7 @@ class TokeTypes(enum.Enum):
     tokAssign=enum.auto() # Assign     -------
     tokReturn=enum.auto() # Return      -------
     tokPrint=enum.auto() # Print     -------
-    
+    tokOverride=enum.auto() #override
     
     
     
@@ -203,6 +203,7 @@ specialKeywordsDicc={
     "$Add":TokeTypes.tokAdd, 
     "$Move":TokeTypes.tokMove,
     "$Eat":TokeTypes.tokEat,
+    "$Override":TokeTypes.tokOverride,
     
     "$MatrixSum":TokeTypes.tokMSum, 
     "$MatrixSub":TokeTypes.tokMSub,
