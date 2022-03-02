@@ -23,13 +23,16 @@ productions={
     "stat_list_fix":[["epsilon"],["stat_list"]],
     
     #statment
-    "stat":[["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["epsilon"]],
+    "stat":[["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]],
     
     #reasignacion de variable
     "var_reasign":[TokeTypes.tokID,TokeTypes.tokAssign,"expr"],
     
     #return expresion
     "return_exp":[[TokeTypes.tokReturn,"expr"]],
+    
+    #expresion continue
+    "continue_exp":[[TokeTypes.tokContinue]],
         
     #expresion break
     "break_exp":[[TokeTypes.tokBreak]],
@@ -66,19 +69,19 @@ productions={
     "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
     
     #Modify leng_type
-    "modify":[[TokeTypes.tokModify,TokeTypes.tokOpenParen,"leng_type",TokeTypes.tokComma,"args_list",TokeTypes.tokClosedParen]],
+    "modify":[[TokeTypes.tokModify,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #lenguage funtion die
-    "evolve":[[TokeTypes.tokOpenParen,TokeTypes.tokSpecies,TokeTypes.tokClosedParen]],
+    "evolve":[[TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #lenguage funtion add al mapa cosas como fenomeno o especie
-    "add":[[TokeTypes.tokID,TokeTypes.tokPoint,TokeTypes.tokAdd,TokeTypes.tokOpenParen,"leng_type",TokeTypes.tokClosedParen]],
+    "add":[[TokeTypes.tokID,TokeTypes.tokPoint,TokeTypes.tokAdd,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #lenguage funtion die
-    "move":[[TokeTypes.tokMove,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    "move":[[TokeTypes.tokMove,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #lenguage funtion die
-    "eat":[[TokeTypes.tokEat,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    "eat":[[TokeTypes.tokEat,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #todos los tipos del lenguaje
     "all_types":[["leng_type"],["type"]],
@@ -114,7 +117,7 @@ productions={
     "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
 
     #lenguage funtion create
-    "create":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"leng_type",TokeTypes.tokComma,"args_list",TokeTypes.tokClosedParen]],
+    "create":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #llamados a funciones
     "func_call":[["matrix_func"],["dic_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
