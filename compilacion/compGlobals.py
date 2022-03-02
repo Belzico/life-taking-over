@@ -58,6 +58,10 @@ class TokeTypes(enum.Enum):
     tokGreater=enum.auto() #>     -------
     tokLess=enum.auto() #<     -------
     
+    tokSearchDicc = enum.auto()
+    tokReturnDicc  =enum.auto()
+    
+    
     tokSum=enum.auto() #+     -------
     tokSub=enum.auto() #-     -------
     tokMul=enum.auto() #*     -------
