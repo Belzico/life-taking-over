@@ -217,9 +217,9 @@ class Terminal:
 
 class Production:
 
-    def __init__(self, NonTerminal ,Components):
+    def __init__(self, head ,Components):
         self.components = Components
-        self.nonTerminal = NonTerminal
+        self.head = head
 
 
 class NonTerminal:
