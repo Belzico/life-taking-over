@@ -23,7 +23,10 @@ productions={
     "stat_list_fix":[["epsilon"],["stat_list"]],
     
     #statment
-    "stat":[["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]],
+    "stat":[["override_expr"],["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]],
+    
+    #statement
+    "override_expr":[TokeTypes.tokOverride,TokeTypes.tokOpenParen,"leng_type","lenguage_funtion",TokeTypes.tokID,TokeTypes.tokClosedParen],
     
     #reasignacion de variable
     "var_reasign":[TokeTypes.tokID,TokeTypes.tokAssign,"expr"],
@@ -63,7 +66,7 @@ productions={
     "loop_stat":[[TokeTypes.tokLoop,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]], 
     
     #funciones especiales del lenguaje
-    "lenguage_funtion":[["die"],["modify"],["evolve"],["add"],["move"],["eat"]],  #["create"], sacado para ponerlo en expresion
+    "lenguage_funtion":[["die"],["modify"],["evolve"],["add"],["move"],["eat"],["create"]],  # sacado para ponerlo en expresion
     
     #lenguage funtion die
     "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
@@ -82,6 +85,9 @@ productions={
     
     #lenguage funtion die
     "eat":[[TokeTypes.tokEat,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
+    
+    #lenguage funtion create
+    "create":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #todos los tipos del lenguaje
     "all_types":[["leng_type"],["type"]],
@@ -108,7 +114,7 @@ productions={
     "factor":[["atom"],[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #atomos
-    "atom":[[TokeTypes.tokID],["func_call"],["create"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_dec"],["epsilon"]],
+    "atom":[[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_dec"],["epsilon"]],
     
     #comparadores
     "comparer":[[TokeTypes.tokEqual],[TokeTypes.tokNot],[TokeTypes.tokNotEqual],[TokeTypes.tokGreaterOrEqual],[TokeTypes.tokGreater],[TokeTypes.tokLess],[TokeTypes.tokLessOrEqual],[TokeTypes.tokAnd],[TokeTypes.tokOr]],
@@ -116,8 +122,7 @@ productions={
     #declaracion de diccionario
     "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
 
-    #lenguage funtion create
-    "create":[[TokeTypes.tokCreate,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
+
     
     #llamados a funciones
     "func_call":[["matrix_func"],["dic_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
