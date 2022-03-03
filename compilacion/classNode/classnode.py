@@ -1,5 +1,6 @@
 from ast import arg
 from calendar import TextCalendar
+from cgitb import text
 from dataclasses import dataclass
 from distutils.log import error
 from inspect import ArgSpec
@@ -10,6 +11,7 @@ from ntpath import join
 from pickle import FALSE
 from platform import node
 from tokenize import Double
+from unittest import result
 from webbrowser import Opera
 from wsgiref import validate
 import enum
@@ -83,7 +85,8 @@ class Context():
     def __init__(self,name,classNode,fatherContext=None,breakCheck=False):
         
         self.diccVarContext = {}
-        self.diccFuncContext = {} 
+        self.diccFuncContext = {}
+        self.diccFunStatement = {} 
         self.fatherContext= fatherContext
         self.name=name
         self.breakCheck=breakCheck
@@ -105,7 +108,7 @@ class Context():
     def checkFun(self,var,typeList):
         #declarada
         if var in self.diccFuncContext or (self.fatherContext!=None and self.fatherContext.checkFun(var,typeList)):
-            varAtributes=self.retFun(var,typeList)
+            varAtributes=self.retFun(var)
             if varAtributes==None:
                 #error de tipo
                 return False
@@ -130,6 +133,12 @@ class Context():
             return True
         return False
     
+    def define_statement(self,var,statementNode):
+        if var in self.define_statement:
+            return False
+        self.define_statement[var] = statementNode
+        return True
+
     #este metodo devuelve una lista con el formator [name,type]
     def retVar(self,var):
         current=self
@@ -140,11 +149,11 @@ class Context():
             current=self.fatherContext
     
     #este metodo devuelve una lista con el formator [name,arg1Type,arg2Type....,argNType]
-    def retFun(self,var,argList):
+    def retFun(self,var):
         current=self
         while current!=None:
             if self==None: return None
-            if (var,argList) in current.diccFuncContext:
+            if var in current.diccFuncContext:
                 return current.diccFuncContext[var]
             current=self.fatherContext
     
@@ -163,7 +172,14 @@ class Context():
             
         #error la variable no existe
         return False
-        
+
+    def overrideFun(self,nameF,nameNF):
+        if nameF in self.diccFuncContext and nameNF in self.diccFuncContext:
+            val = self.diccFuncContext[nameNF]
+            self.diccFuncContext[nameF] = val
+            return True
+        return False
+
     def create_hild(self,name,node):
         chilcontext=Context(name,self,node)
         return chilcontext
@@ -650,6 +666,7 @@ class LoopNode(ClassNode):
         
     def validateNode(self,context):
         valid= self.Conditional.validateNode(context) and self.Body.validateNode(context)
+        return valid
         
     def checkTypes(self):
         return self.Conditional.checkTypes()
@@ -1218,8 +1235,192 @@ class IfNode(StatementNode):
 #
 #
 
+class ReturnNode(StatementNode):
+    def __init__(self, context):
+        self.val = None
+        self.context = context
 
-class FucNode(StatementNode):
+
+    
+    def validateNode(self,context):
+        contexttemp = context
+        while contexttemp != None:
+            classNodeFather = contexttemp.classNode is FucNode
+            if classNodeFather:
+                return True
+            contexttemp = contexttemp.fatherContext
+
+        return False
+    
+    def transpilar(self):
+        if self.value == None:
+            return "return"
+        return "return " + str(self.val)
+
+    def Eval(self,context):
+        pass
+
+    def checkTypes(self):
+        return True
+
+    def build_ast(productionList):
+        pass
+
+class ContinueNode(StatementNode):
+    def __init__(self, context):
+        self.cicle = None
+        self.context = context
+
+    
+    def validateNode(self,context):
+        contexttemp = context
+        while contexttemp != None:
+            classNodeFather = contexttemp.classNode is FucNode
+            if classNodeFather:
+                return True
+            contexttemp = contexttemp.fatherContext
+
+        return False
+    
+    def transpilar(self):
+        return "continue"
+
+    def Eval(self,context):
+        self.cicle.Eval(context)
+    
+    def checkTypes(self):
+        return True
+
+    def build_ast(productionList):
+        pass
+
+class OverrideNode(StatementNode):
+    def __init__(self, context):
+        self.type = None
+        self.metodo = None
+        self.newmetodo = None
+
+        self.context = context
+        self.state1 = None
+        self.state2 = None
+
+    
+    def validateNode(self,context):
+        self.state1 = self.context.retFun(self.metodo)
+        self.state2 = self.context.retFun(self.newmetodo)
+        return self.state1 != None and self.state2 != None
+    
+    def transpilar(self):
+        return "override " + str(type(self.type)) + " " + self.metodo + " " + self.newmetodo
+
+    def Eval(self,context):
+        self.context.overrideFun(self.metodo,self.newmetodo)
+    
+    def checkTypes(self):
+        return True
+
+    def build_ast(productionList):
+        pass
+
+class ReasignNode(StatementNode):
+    def __init__(self, context):
+        self.id = None
+        self.value = None
+        self.context = context
+
+        self.name = None
+        self.type = None
+        self.valueant = None
+
+    
+    def validateNode(self,context):
+        result = self.context.retVar(self.value)
+        if result == None:
+            return False
+        
+        name, typevar, value = result
+        self.name = name
+        self.type = typevar
+        self.valueant = value
+        
+
+    def transpilar(self):
+        return self.id.transpilar() + " = " + self.value
+
+    def Eval(self,context):
+        self.context.redeclareVar(self.name,type(self.value),self.value)
+    
+    def checkTypes(self):
+        return self.type == type(self.value)
+
+    def build_ast(productionList):
+        pass
+
+class RecieveDicNode(StatementNode):
+    def __init__(self, context):
+        self.context = context
+
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def Eval(self,context):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+
+class SearchDicNode(StatementNode):
+    def __init__(self, context):
+        self.context = context
+
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def Eval(self,context):
+        pass
+    
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+
+class InsertDicNode(StatementNode):
+    def __init__(self, context):
+        self.context = context
+
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def Eval(self,context):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+
+
+class func_callNode(StatementNode):
     def __init__(self,context):
         self.name = None
         self.args = None
@@ -1228,28 +1429,98 @@ class FucNode(StatementNode):
         self.ReturnType = None
         self.EspecterType = None
 
-    def Eval(self,context):
-        return self.Left + self.Right
+    def validateNode(self,context):
+        typs = []
+        for arg in self.args:
+            typs.append(type(arg))
 
-class func_callNode(StatementNode):
-    def __init__(self,value = None,hijos = None):
-        super().__init__(value,hijos)
+        state = self.context.checkFun(self.name,typs)
+
+        if not state:
+            return False
+
+        return True
+    
+    def transpilar(self):
+        textcode = ""
+        textcode += self.name
+        textcode += "("
+        i = 0
+        for arg in self.args:
+            if i != 0:
+                textcode += ","
+            textcode += arg.transpilar()
+            i += 1
+        textcode += ")"
+
+    def Eval(self,context):
+        return self.context.retFun(self.name,self.args)
+
+    def checkTypes(self):
+        typs = []
+        for arg in self.args:
+            typs.append(type(arg))
+
+        state = self.context.checkFun(self.name,typs)
+
+        if not state:
+            return False
+
+        return True
+
+    def build_ast(productionList):
+        pass
+
+class FucNode(StatementNode):
+    def __init__(self,context):
+        self.argstypes = None
+        self.argsid = None
+        self.name = None
+        self.node_statements = None
+        self.context = context
         
         self.ReturnType = None
         self.EspecterType = None
 
-        try:
-            self.Left = hijos[0]
-        except:
-            Exception("No fue mandado el primer hijo")
-            
-        try:
-            self.Right = hijos[1]
-        except:
-            Exception("No fue mandado el primer hijo")
-            
-    def Eval(self):
-        return self.Left + self.Right
+    def validateNode(self,context):
+        state = self.context.define_func(self.name,self.argstypes)
+        if state == None:
+            return False
+
+        for idvar in self.argsid:
+            if not idvar.validateNode(context):
+                return False
+        return self.node_statements.validateNode(context)
+    
+    def transpilar(self):
+        textcode = ""
+        textcode += self.name
+        textcode += "("
+
+        i = 0
+        for arg in self.args:
+            if i != 0:
+                textcode += ","
+            textcode += arg.transpilar()
+            i += 1
+        
+        textcode += "):"
+        codestatement = self.node_statements.transpilar()
+        temp = codestatement.split("\n")
+
+        for line in temp:
+            textcode += "\n\t " + line
+
+        return textcode
+
+    def Eval(self,context):
+        self.context.define_statement(self.name,self.node_statements)
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
     
 class PrintNode(StatementNode):
     def __init__(self,context):
@@ -1296,23 +1567,31 @@ class vectorialNode(StatementNode):
 
 class IdNode(StatementNode):
     def __init__(self,context):
+        self.fathercontext = None
+        self.type = None
         self.id = None
         self.context = context
+
+        self.value = None
 
         self.ReturnType = None
         self.EspecterType = None
 
     def Eval(self):
+        if self.ReturnType == "reference":
+            return self.value
         return self.id
 
     def transpilar(self):
         return str(self.id)
 
     def checkTypes(self):
-        return True
+        return self.id is str
 
     def validateNode(self, context):
-        return self.id is str
+        if self.ReturnType == "reference":
+            self.value = self.context.retVar(self.name)
+        return True
 
 class NumberNode(StatementNode):
     def __init__(self,context):
