@@ -53,7 +53,7 @@ productions={
     "condictional_stat":[["if_stat"]],
     
     #if statment   (aca regla semantica para q exp sea bool)
-    "if_stat":[[TokeTypes.tokIf,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket,"elif_stat","else_stat"]], 
+    "if_stat":[[TokeTypes.tokIf,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]], 
     
     #elif statment   (aca regla semantica para q exp sea bool)
     "elif_stat":[[TokeTypes.tokElif,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket],["epsilon"]], 
@@ -114,7 +114,7 @@ productions={
     "factor":[["atom"],[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #atomos
-    "atom":[[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_dec"],["epsilon"]],
+    "atom":[[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["epsilon"]],
     
     #comparadores
     "comparer":[[TokeTypes.tokEqual],[TokeTypes.tokNot],[TokeTypes.tokNotEqual],[TokeTypes.tokGreaterOrEqual],[TokeTypes.tokGreater],[TokeTypes.tokLess],[TokeTypes.tokLessOrEqual],[TokeTypes.tokAnd],[TokeTypes.tokOr]],
@@ -128,13 +128,19 @@ productions={
     "func_call":[["matrix_func"],["dic_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
     
     #funciones de diccionario    
-    "dic_func":[["search_dic"],["recieve_dic"]],
+    "dic_func":[["search_dic"],["recieve_dic"],["insert_dic"]],
     
     #pregunta si una funcion
     "search_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
+    #pregunta si una funcion
+    "create_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
+    
     #retorna el valor asociado a la llave
     "recieve_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
+    
+    #retorna el valor asociado a la llave
+    "insert_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokComma,"expr",TokeTypes.tokClosedParen]],
     
     #separacion para los metodos que usan escalares y los que usen 2 matrices
     "matrix_func":[["escalar"],["vectorial"]],

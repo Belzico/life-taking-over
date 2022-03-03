@@ -12,7 +12,9 @@ class Token():
         self.tokenType=tokenType
         self.line=line
         self.column=column
-        
+    
+    def __str__(self) -> str:
+        return str(self.tokenType)
     
     
 class TokenType():

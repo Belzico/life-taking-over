@@ -13,6 +13,24 @@ from wsgiref import validate
 
 from numpy import true_divide
 
+from compGlobals import TokeTypes 
+import enum
+
+class nodetypes(enum.Enum):
+    IdNode = enum.auto()
+    SumNode = enum.auto()
+    SubNode = enum.auto()
+    MulNode = enum.auto()
+    DivNode = enum.auto()
+    ModNode = enum.auto()
+    PowNode = enum.auto()
+    VectorialNode = enum.auto()
+    NumberNode = enum.auto()
+    ChainNode = enum.auto()
+    TrueNode = enum.auto()
+    FalseNode = enum.auto()
+    NoneNode = enum.auto()
+
 @dataclass
 class ClassNode():
     
@@ -45,7 +63,7 @@ class OperatorNode(ClassNode):
     def checkTypes(self):
         pass
 
-    def build_ast(productionList):
+    def build_ast(productionList,indexPro):
         pass
 
 class CompareNode(ClassNode):
@@ -58,7 +76,7 @@ class CompareNode(ClassNode):
     def transpilar(self):
         pass
 
-    def build_ast(productionList):
+    def build_ast(self,productionList,indexProduc):
         pass
 
 class Context():
@@ -181,8 +199,11 @@ class SumNode(OperatorNode):
     def validateNode(self,context):
         valid= self.Left.validateNode(context) and self.Right.validateNode(context)
         
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatExpression(productionList,indeProduc)
+        self.Right=eatExpression(productionList,indeProduc)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
         
 
 class SubNode(OperatorNode):
@@ -829,7 +850,51 @@ class ProgramNode(ClassNode):
         for statement in self.ListStatement:
             if statement.validateNode(context):
                 return False
-
+            
+    #["override_expr"],["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]
+    def build_ast(self,productionList,indexProduc=[0]):
+        indexProduc[0]=0
+        self.ListStatement=[]
+        self.buildPosible()
+        head=None
+        while indexProduc[0]<len(productionList) :
+            head=productionList[indexProduc].head
+            indexProduc[0]+=1
+            if head in self.posibleProductions:
+                
+                #arreglar esto
+                node=self.posibleProductions[head]()
+                #resolver el nodo
+                node.build_ast(productionList,indexProduc)
+                #agregarlo a los hijos
+                self.ListStatement.append(node)
+                
+    
+    def buildPosible(self):
+        #arreglar esto
+        self.posibleProductions={}
+        
+        self.posibleProductions["override_expr"]=OverrideNode
+        self.posibleProductions["let_dec"]=LetNode
+        self.posibleProductions["func_dec"]=FucNode
+        self.posibleProductions["var_reasign"]=ReasignNode
+        self.posibleProductions["print_stat"]=PrintNode
+        self.posibleProductions["if_stat"]=IfNode
+        self.posibleProductions["loop_stat"]=LoopNode
+        #["die"],["modify"],["evolve"],["add"],["move"],["eat"],["create"]
+        self.posibleProductions["die"]=DieNode
+        self.posibleProductions["modify"]=ModifyNode
+        self.posibleProductions["evolve"]=EvolveNode
+        self.posibleProductions["add"]=AddNode
+        self.posibleProductions["move"]=MoveNode
+        self.posibleProductions["eat"]=EatNode
+        self.posibleProductions["create"]=CreateNode
+        
+        self.posibleProductions["break_exp"]=BreakNode
+        self.posibleProductions["return_exp"]=returnNode
+        self.posibleProductions["continue_exp"]=continueNode
+    
+    
 class StatementNode(ClassNode):
     def __init__(self,context):
         self.actionNode = None
@@ -908,8 +973,95 @@ class LetNode(StatementNode):
     def transpilar(self):
         return "Let " + str(self.type) + " " + str(self.idnode) + " = " + self.val
     
+    def build_ast(self,productionList,indexProduc):
+        
+        #agregado el tipo "sale como token todavia no es grave"
+        self.type = productionList[indexProduc][0].components[1]
+        #creando id
+        idn=IdNode()
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc][0].components[1].value,"var","define",self.type)
+        
+        self.idnode = idn
+        self.ET=self.idnode.RT
+        indexProduc[0]+=1
+        self.val=eatExpression(productionList,indexProduc)
+        self.RT=self.val.RT
+    
 # Revisar como crearlo
 
+def eatExpression(productionList,indexProduc):
+    if len(productionList[indexProduc][0].components)==3:
+        component=productionList[indexProduc][0][1]
+        if component in expresionDicc:
+            #creamos el node
+            node =expresionDicc[component]()
+            
+            indexProduc[0]+=1
+            node.build_ast(productionList,indexProduc)
+            return node
+        elif component=="comparer":
+            indexProduc[0]+=1
+            return eatComparer(productionList,indexProduc)
+    else:
+        indexProduc[0]+=1
+        return eatTerm(productionList,indexProduc)
+
+def eatComparer(productionList,indexProduc):
+    component=productionList[indexProduc][0][0]
+    #buscando cual comparador es
+    node =expresionDicc[component]()
+    
+    indexProduc[0]+=1
+    node.build_ast(productionList,indexProduc)
+    return node
+
+def eatTerm(productionList,indexProduc):
+    if len(productionList[indexProduc][0].components)==3:
+        component=productionList[indexProduc][0][1]
+        if component in termDicc:
+            #creamos el node
+            node =expresionDicc[component]()
+            
+            indexProduc[0]+=1
+            node.build_ast(productionList,indexProduc)
+            return node
+    else:
+        indexProduc[0]+=1
+        return eatAtom(productionList,indexProduc)
+
+def eatAtom(productionList,indexProduc):
+    component=productionList[indexProduc][0][0]
+    if component in termDicc:
+        #buscando cual atomo es
+        node =expresionDicc[component]()
+
+        indexProduc[0]+=1
+        node.build_ast(productionList,indexProduc)
+        return node
+    elif component=="func_call":
+        indexProduc[0]+=1
+        if len(productionList[indexProduc][0].component)==4:
+            node=func_callNode()
+            node.build_ast(productionList,indexProduc)
+            return node
+        elif productionList[indexProduc][0].component=="dic_func":
+            indexProduc[0]+=2
+            return eatDiccFunc()
+        elif productionList[indexProduc][0].component=="matrix_func":
+            indexProduc[0]+=1
+            eatMatrixFunc()
+
+def eatMatrixFunc(productionList,indexProduc):
+    pass
+
+def eatDiccFunc(productionList,indexProduc):
+    component=productionList[indexProduc][0][0]
+    node =expresionDicc[component]()
+    
+    indexProduc[0]+=1
+    node.build_ast(productionList,indexProduc)
+    return node
     
 class Condictional_statNode(StatementNode):
     def __init__(self,context):
@@ -934,8 +1086,8 @@ class IfNode(StatementNode):
     def __init__(self,context):
         self.condition = None
         self.ListStatements = None
-        self.elsenode = None
-        self.elifnode = None
+        #self.elsenode = None
+        #self.elifnode = None
         self.context = context
 
         self.RT = None
@@ -1177,6 +1329,15 @@ class IdNode(StatementNode):
 
     def validateNode(self, context):
         return self.id is str
+    
+    #primer termino 
+    def build_ast(self,id,funcOrVar,defineOrCall,valType=None):
+        self.id=id
+        self.RT=valType
+        self.funcOrVar=funcOrVar
+        self.defineOrCall=defineOrCall
+        
+        
 
 class NumberNode(StatementNode):
     def __init__(self,context):
@@ -1280,3 +1441,56 @@ def valNode(node):
         return True
 
     return False
+
+
+#-------------------------------------dics------------------------------------
+atomDicc={}
+#[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_func"],["epsilon"]
+def fillAtom():
+    atomDicc[TokeTypes.tokID]=IdNode
+    
+    atomDicc[TokeTypes.tokNumber]=NumberNode
+    atomDicc[TokeTypes.tokChain]=ChainNode
+    atomDicc[TokeTypes.tokNone]=NoneNode
+    atomDicc[TokeTypes.tokTrue]=TrueNode
+    atomDicc[TokeTypes.tokFalse]=FalseNode
+    #atomDicc["dic_dec"]=dic_func?
+    
+expresionDicc={}
+def fillExpresion():
+    expresionDicc[TokeTypes.tokSub]=FalseNode
+    expresionDicc[TokeTypes.tokSum]=FalseNode
+    
+termDicc={}
+def fillTerm():
+    termDicc[TokeTypes.tokMul]=FalseNode
+    termDicc[TokeTypes.tokDiv]=FalseNode
+
+#[TokeTypes.tokEqual],[TokeTypes.tokNot],[TokeTypes.tokNotEqual],[TokeTypes.tokGreaterOrEqual],[TokeTypes.tokGreater],[TokeTypes.tokLess],[TokeTypes.tokLessOrEqual],[TokeTypes.tokAnd],[TokeTypes.tokOr]
+comparerDicc={}
+def fillComparer():
+    comparerDicc[TokeTypes.tokEqual]=FalseNode
+    comparerDicc[TokeTypes.tokNot]=FalseNode
+    comparerDicc[TokeTypes.tokNotEqual]=FalseNode
+    comparerDicc[TokeTypes.tokGreaterOrEqual]=FalseNode
+    comparerDicc[TokeTypes.tokGreater]=FalseNode
+    comparerDicc[TokeTypes.tokLess]=FalseNode
+    comparerDicc[TokeTypes.tokLessOrEqual]=FalseNode
+    comparerDicc[TokeTypes.tokAnd]=FalseNode
+    comparerDicc[TokeTypes.tokOr]=FalseNode
+
+diccFunDicc={}
+def fillDiccFun():
+    diccFunDicc["search_dic"]=RecieveDiccNode
+    diccFunDicc["recieve_dic"]=SearchDiccNode
+    diccFunDicc["insert_dic"]=InsertDiccNode
+    
+diccMatrixFuncVec={}
+def fillDiccFunVec():
+    diccMatrixFuncVec[TokeTypes.tokMSum]=matrixSumNode
+    diccMatrixFuncVec[TokeTypes.tokMSub]=matrixSubNode
+    
+diccMatrixFuncEsc={}
+def fillDiccFunVec():
+    diccMatrixFuncEsc[TokeTypes.tokMMul]=matrixMulNode
+    diccMatrixFuncEsc[TokeTypes.tokMDiv]=matrixDivNode
