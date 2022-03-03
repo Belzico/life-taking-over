@@ -213,6 +213,10 @@ class Terminal:
     def __init__(self, Name, Type):
         self.name = Name
         self.type = Type
+        
+    def First(self):
+        return {self} 
+  
 
 
 class Production:
@@ -220,15 +224,50 @@ class Production:
     def __init__(self, head ,Components):
         self.components = Components
         self.head = head
+        head.add(self)
 
 
 class NonTerminal:
-    def __init__(self, Name, Productions):
+    def __init__(self, Name):
         self.name = Name
-        self.productions = Productions
+        self.productions = []
+        self.epsilon = False
+        
+    def First(self):
+        
+        firsts = {}
+        
+        #if I found the first of the production
+        FoundUniqueFirst = False
+        
+        for prod in self.productions:
+            FoundUniqueFirst = False
+            for element in prod:
+                if FoundUniqueFirst:
+                    break
+                #Si el elemento es el primer terminal que encuentro el es el primero
+                if type(element) == Terminal:
+                    firsts.add(element)
+                    FoundUniqueFirst =True
+                
+                else:
+                    #Si el No terminal que me encuentro puede generar epsilon, entonces el puede ser uno de
+                    #mis primeros, pero debo seguir revisando
+                    if element.epsilon:
+                        firsts.add(element.First())
+                    
+                    #Si el no terminal que encuentro no genera epsilon, entonces su primero será
+                    #mi primero
+                    else:
+                        firsts.add(element.First())
+                        FoundUniqueFirst =True
 
-    def __iadd__(self, prod: Production):
+        return self    
+    
+    def add(self, prod: Production):
         self.add(prod)
+        if "epsilon" in prod.components: self.epsilon = True
+        else: self.add(prod)
         return self
 
 

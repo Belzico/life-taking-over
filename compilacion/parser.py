@@ -1,8 +1,9 @@
+from errno import EKEYEXPIRED
 from compGlobals import TokeTypes 
 from fixGrammar import Production, NonTerminal, Terminal , Grammar
 from collections import deque
 
-              #Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
+q#Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
 production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],  ["K",TokeTypes.tokOpenBracket] , [TokeTypes.tokClosedBracket,"Q"], ["P",TokeTypes.tokOpenParen,TokeTypes.tokID,"A",TokeTypes.tokClosedParen,TokeTypes.tokSemicolon] ],
             #Primero las declaraciones
             "D":[["R"],["I"], [TokeTypes.tokBool, TokeTypes.tokID, TokeTypes.tokAssign,"E"], [TokeTypes.tokInt, TokeTypes.tokID, TokeTypes.tokAssign, "E"],  [TokeTypes.tokString, TokeTypes.tokID, TokeTypes.tokAssign, "E"], [TokeTypes.tokDouble, TokeTypes.tokID, TokeTypes.tokAssign, "E"] ],
@@ -101,8 +102,7 @@ class Item:
               self.stringRep = f"|"
           
       self.stringRep = f",{self.lookahead}"
-      
-      
+
 
 
 #Creando los estados posibles de la gramaática
@@ -126,7 +126,7 @@ class State:
     for item in Kernel:
       self.stringRep = f"{item} :|: "
 
-          
+
   def AddItem(self,Item):
     self.items.add(Item)
     
@@ -152,7 +152,7 @@ class State:
       else : self.expectedExpressions[element] = {item}
       
       
-      #Si ese símbolo es un No terminal, entonces hay que hallarle su clausura
+      #Si ese símbolo es un No terminal, entonces hay que hallarle su clausura y añadir sus items a la cola
       if type(element) != NonTerminal:
         
         #Revisando todos los items que crea el elemento para agragrlos al estado
@@ -162,9 +162,19 @@ class State:
           if item.index + 1 == len(item.components):
             newlookahead = item.lookahead
           
+          #Hallando los nuevos Lookahead
           else:
+            
+            #Mantenemos primeramente los lookahead antiguos(Porque los firsts de ellos son los mismos)
+            newlookahead = {item.lookahead}
+            
+            #Añadimos ahora los lookahed nuevos (los firsts de los que vienen luego del elemento)
+            for e in range(item.index + 1,len(item.components)):
+              newlookahead.union(item.components[e].First())
+            
+            
             #ESTE LOOKAHEAD ESTA MAL
-            newlookahead = item.components[item.index+1]
+            #newlookahead = item.components[item.index+1]
           
           #Creando el nuevo item para agregarrlo al estado
           newItem = Item(i.components, i.index, newlookahead)
@@ -175,6 +185,8 @@ class State:
             #Añadiendolo a la cola de análisis
             developingQueue.append(newItem)
 
+
+#Todos los estados que derivan de este estado
   def GOTO(self,states,stateList, InitialItems,queue,elements):
     tempkernel = []
     for i in self.expectedExpressions[elements]:
@@ -195,7 +207,7 @@ class State:
       
     self.continuationStates[elements] = new_state
 
-    
+
 class Automata:
   def __init__(self,Grammar):
     self.grammar =Grammar
@@ -206,6 +218,7 @@ class Automata:
     
     firstItems = {beginingProd: [Item(beginingProd.productions[0],0,Terminal('$',TokeTypes.tokFinal))] }
     
+    #Todos los items I0 posibles de la gramática
     for nonTerminal in self.grammar.nonTList:
       firstItems[nonTerminal] = []
       for production in nonTerminal.productions:
@@ -220,7 +233,7 @@ class Automata:
     
     while len(queue) != 0:
         state = queue.popleft()
-        state.build(firstItems)
+        state.Develop(firstItems)
         
         for sym in state.expected_elements:
             state.GOTO(sym, states_dict, states_list)
@@ -228,35 +241,45 @@ class Automata:
     
     
     return states_list
-  
-  
+
+
+
+
 class GOTOACTION:
   def __init__(self,grammar):
     self.grammar =grammar
 
   def build(self):
     
-    states = Automata(self.grammar).create()
+    states = Automata(self.grammar).Construct()
 
     go_to = []
     action = []
+    
     for state in states:
         state_action = {}
         state_go_to = {}
         lookA_item = {}
+        
         for element_item in state.items:
-            if element_item.index == len(element_item.production):
+            if element_item.index == len(element_item.components):
                 if element_item.lookahead in lookA_item:
                     raise Exception('There has been a Reduce-Reduce conflict')
+                  
                 lookA_item[element_item.lookahead] = element_item
-        for next_element in state.next_states:
+                
+        for next_element in state.continuationStates:
             if next_element.is_terminal:
                 state_action[next_element.name] = ('R', state.next_states[next_element].number)
             else:
                 state_go_to[next_element.name] = state.next_states[next_element].number
         go_to.append(state_go_to)
         action.append(state_action)
+    
+    
     statesDict = Automata(self.grammar).Construct()
+
+
 
    # if element in self.expectedExpressions: self.expectedExpressions[element].add(item)
       # else : self.expectedExpressions[element] = {item}
