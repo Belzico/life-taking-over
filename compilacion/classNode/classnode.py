@@ -1561,7 +1561,12 @@ class FucNode(StatementNode):
     def build_ast(productionList):
         pass
 
-class RecieveDicNode(StatementNode):
+class DicNode(StatementNode):
+    def __init__(self, context):
+        self.ListKeys = None
+        self.ListValues = None
+        self.context = context
+
     def Eval(self,context):
         pass
     
@@ -1573,27 +1578,71 @@ class RecieveDicNode(StatementNode):
 
     def checkTypes(self):
         pass
+
+    def build_ast(productionList):
+        pass
+
+
+class RecieveDicNode(StatementNode):
+    def __init__(self, context):
+        self.name = None
+        self.dicNode = None
+        self.key = None
+        self.context = context
+
+    def Eval(self,context):
+        i = 0
+        for keyval in self.dicNode.ListKeys:
+            if keyval == self.key:
+                return self.dicNode.ListValues[i]
+            i += 1
+        
+    
+    def validateNode(self,context):
+        return True
+    
+    def transpilar(self):
+        return self.name + "[" + self.key + "]"
+
+    def checkTypes(self):
+        return True
 
     def build_ast(productionList):
         pass
 
 class SearchDicNode(StatementNode):
+    def __init__(self, context):
+        self.name = None
+        self.dicNode = None
+        self.key = None
+        self.context = context
+
     def Eval(self,context):
-        pass
+        i = 0
+        for keyval in self.dicNode.ListKeys:
+            if keyval == self.key:
+                return True
+            i += 1
+        return False
     
     def validateNode(self,context):
-        pass
+        return True
     
     def transpilar(self):
-        pass
+        return self.key + " in " + self.name
 
     def checkTypes(self):
-        pass
+        return True
 
     def build_ast(productionList):
         pass
 
 class InsertDicNode(StatementNode):
+    def __init__(self, context):
+        self.namedic = None
+        self.value = None
+        self.context = context
+
     def Eval(self,context):
         pass
     
@@ -1601,7 +1650,7 @@ class InsertDicNode(StatementNode):
         pass
     
     def transpilar(self):
-        pass
+        return self.namedic + ".append(" + self.value + ")"
 
     def checkTypes(self):
         pass
