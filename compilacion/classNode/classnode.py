@@ -1763,7 +1763,69 @@ class PrintNode(StatementNode):
         indexProduc[0]+=1
         self.args = eatExpression(productionList,indexProduc,self.context)
     
+class matrixSumNode(StatementNode):
+    def Eval(self,context):
+        pass
     
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+class matrixSubNode(StatementNode):
+    def Eval(self,context):
+        pass
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+class matrixMulNode(StatementNode):
+    def Eval(self,context):
+        pass
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+class matrixDivNode(StatementNode):
+    def Eval(self,context):
+        pass
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
 
 
 # ------------------------------------------------------------------------------- #
