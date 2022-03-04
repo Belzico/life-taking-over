@@ -8,6 +8,7 @@ from itertools import chain
 from lib2to3.pytree import Node
 from multiprocessing import Condition, context
 from ntpath import join
+from operator import index
 from pickle import FALSE
 from platform import node
 from tokenize import Double
@@ -1402,8 +1403,9 @@ class ReturnNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        index[0]=+1
+        self.val = eatExpression(productionList,indexProduc,self.context)
 
 class ContinueNode(StatementNode):
     def __init__(self, context):
@@ -1492,8 +1494,16 @@ class ReasignNode(StatementNode):
     def checkTypes(self):
         return self.type == type(self.value)
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.idnode = idn
+        
+        self.value=eatExpression(productionList,indexProduc,self.context)
 
 
 
@@ -1627,7 +1637,7 @@ class FucNode(StatementNode):
         #creando id
         idn=IdNode(self.context)
         #self,id,funcOrVar,defineOrCall,valType=None
-        idn.build_ast(productionList[indexProduc][0].components[1],"func","define",None)
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
         
         self.idnode = idn
         #esta parte busca los parametros 
@@ -1645,8 +1655,9 @@ class FucNode(StatementNode):
 
 class DeclaretDicNode(StatementNode):
     def __init__(self, context):
-        self.ListKeys = None
-        self.ListValues = None
+        self.ListKeysType = None
+        self.ListValuesType = None
+        self.dicc={}
         self.context = context
 
     def Eval(self,context):
@@ -1661,14 +1672,14 @@ class DeclaretDicNode(StatementNode):
     def checkTypes(self):
         pass
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,IndesxProduc):
+        IndesxProduc[0]+=1
+        self.ListKeysType=eatType(productionList,IndesxProduc,self.context)
 
 
 class RecieveDicNode(StatementNode):
     def __init__(self, context):
         self.name = None
-        self.dicNode = None
         self.key = None
         self.context = context
 
@@ -1689,8 +1700,14 @@ class RecieveDicNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.idnode = idn
+        self.key = eatExpression(productionList,indexProduc,self.context)
 
 class SearchDicNode(StatementNode):
     def __init__(self, context):
@@ -1716,12 +1733,19 @@ class SearchDicNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.idnode = idn
+        self.key = eatExpression(productionList,indexProduc,self.context)
 
 class InsertDicNode(StatementNode):
     def __init__(self, context):
         self.namedic = None
+        self.key=None
         self.value = None
         self.context = context
 
@@ -1737,8 +1761,15 @@ class InsertDicNode(StatementNode):
     def checkTypes(self):
         pass
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.namedic = idn
+        self.key = eatExpression(productionList,indexProduc,self.context)
+        self.value = eatExpression(productionList,indexProduc,self.context)
 
 
 class PrintNode(StatementNode):
@@ -1762,7 +1793,6 @@ class PrintNode(StatementNode):
     def build_ast(self,productionList,indexProduc):
         indexProduc[0]+=1
         self.args = eatExpression(productionList,indexProduc,self.context)
-    
     
 
 
@@ -2096,3 +2126,8 @@ def fillDiccFunVec():
     diccMatrixFunc[TokeTypes.tokMSub]=matrixSubNode
     diccMatrixFunc[TokeTypes.tokMMul]=matrixMulNode
     diccMatrixFunc[TokeTypes.tokMDiv]=matrixDivNode
+    
+termDicc={}
+def fillTerm():
+    termDicc[TokeTypes.tokMul]=FalseNode
+    termDicc[TokeTypes.tokDiv]=FalseNode

@@ -25,10 +25,10 @@ productions={
     "stat":[["override_expr"],["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]],
     
     #statement
-    "override_expr":[TokeTypes.tokOverride,TokeTypes.tokOpenParen,"leng_type","lenguage_funtion",TokeTypes.tokID,TokeTypes.tokClosedParen],
+    "override_expr":[[TokeTypes.tokOverride,TokeTypes.tokOpenParen,"leng_type","lenguage_funtion",TokeTypes.tokID,TokeTypes.tokClosedParen]],
     
     #reasignacion de variable
-    "var_reasign":[TokeTypes.tokID,TokeTypes.tokAssign,"expr"],
+    "var_reasign":[[TokeTypes.tokID,TokeTypes.tokAssign,"expr"]],
     
     #return expresion
     "return_exp":[[TokeTypes.tokReturn,"expr"]],
@@ -46,7 +46,7 @@ productions={
     "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list"]],
     
     #print statment
-    "print_stat":[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen],
+    "print_stat":[[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #condicionales
     "condictional_stat":[["if_stat"]],
@@ -59,7 +59,6 @@ productions={
 
     #else statment
     "else_stat":[[TokeTypes.tokElse,TokeTypes.tokOpenBracket,"stat_list"],["epsilon"]], 
-    
     
     #loop statment   (aca regla semantica para q exp sea bool) y añadir a expr Tokbreak, como usar el break se hara mediante los contextos al ponerle el nombre de un loop si es un loop quien lo llama 
     "loop_stat":[[TokeTypes.tokLoop,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"]], 
@@ -74,7 +73,7 @@ productions={
     "modify":[[TokeTypes.tokModify,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #lenguage funtion die
-    "evolve":[[TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
+    "evolve":[[TokeTypes.tokEvolve,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
 
     #lenguage funtion add al mapa cosas como fenomeno o especie
     "add":[[TokeTypes.tokID,TokeTypes.tokPoint,TokeTypes.tokAdd,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
@@ -101,7 +100,7 @@ productions={
     "args_list_fix":[["epsilon"],[TokeTypes.tokComma,"args_list"]],
     
     #types
-    "type":[[TokeTypes.tokInt],[TokeTypes.tokDouble],[TokeTypes.tokString],[TokeTypes.tokBool],[TokeTypes.tokNone]],
+    "type":[[TokeTypes.tokInt],[TokeTypes.tokDouble],[TokeTypes.tokString],[TokeTypes.tokBool],[TokeTypes.tokNone],[TokeTypes.tokDicc]],
     
     #expresions
     "expr":[["term",TokeTypes.tokSum,"expr"],["term",TokeTypes.tokSub,"expr"],["term","comparer","expr"],["term"]],
@@ -129,13 +128,13 @@ productions={
     "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
     
     #pregunta si una funcion
-    "search_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
+    "search_dic":[[TokeTypes.tokID,TokeTypes.tokPoint,TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
 
     #retorna el valor asociado a la llave
     "recieve_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #retorna el valor asociado a la llave
-    "insert_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokComma,"expr",TokeTypes.tokClosedParen]],
+    "insert_dic":[[TokeTypes.tokID,TokeTypes.tokPoint,TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokComma,"expr",TokeTypes.tokClosedParen]],
     
     #separacion para los metodos que usan escalares y los que usen 2 matrices
     "matrix_func":[["escalar"],["vectorial"]],
