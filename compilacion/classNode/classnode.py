@@ -787,7 +787,7 @@ class ModifyNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Die
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -842,7 +842,7 @@ class CreateNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -894,7 +894,7 @@ class DieNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Die
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -946,7 +946,7 @@ class EvolveNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -995,7 +995,7 @@ class AddNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[2],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[2],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -1044,7 +1044,7 @@ class MoveNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -1093,7 +1093,7 @@ class EatNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
