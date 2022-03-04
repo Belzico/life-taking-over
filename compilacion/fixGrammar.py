@@ -14,7 +14,7 @@ terminales = ["epsilon",TokeTypes.tokComma,TokeTypes.tokOpenSquareBracket,TokeTy
 
 productions={
     #program
-    "program":[[TokeTypes.tokOpenParen,"stat_list"]],
+    "program":[[TokeTypes.tokOpenBracket,"stat_list"]],
     
     #lista de statments
     "stat_list":[["stat",TokeTypes.tokSemicolon,"stat_list_fix"]],
