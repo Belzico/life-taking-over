@@ -11,16 +11,15 @@ terminales = ["epsilon",TokeTypes.tokComma,TokeTypes.tokOpenSquareBracket,TokeTy
             TokeTypes.tokPow,TokeTypes.tokString,TokeTypes.tokInt,TokeTypes.tokDouble,TokeTypes.tokTrue,TokeTypes.tokFalse,TokeTypes.tokBool,TokeTypes.tokAssign,
             TokeTypes.tokSemicolon,TokeTypes.tokClosedBracket,]
 
-
 productions={
     #program
-    "program":[["stat_list"]],
+    "program":[[TokeTypes.tokOpenBracket,"stat_list"]],
     
     #lista de statments
     "stat_list":[["stat",TokeTypes.tokSemicolon,"stat_list_fix"]],
 
     #si un statment se va en epsilon o sigue con una lista de statments
-    "stat_list_fix":[["epsilon"],["stat_list"]],
+    "stat_list_fix":[["stat_list"],[TokeTypes.tokClosedBracket]],  #["epsilon"] ?
     
     #statment
     "stat":[["override_expr"],["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]],
@@ -36,7 +35,7 @@ productions={
     
     #expresion continue
     "continue_exp":[[TokeTypes.tokContinue]],
-        
+
     #expresion break
     "break_exp":[[TokeTypes.tokBreak]],
     
@@ -44,7 +43,7 @@ productions={
     "let_dec":[[TokeTypes.tokLet,"all_types",TokeTypes.tokID,TokeTypes.tokAssign,"expr"]],
     
     #declarador de funciones
-    "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]],
+    "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list"]],
     
     #print statment
     "print_stat":[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen],
@@ -53,30 +52,30 @@ productions={
     "condictional_stat":[["if_stat"]],
     
     #if statment   (aca regla semantica para q exp sea bool)
-    "if_stat":[[TokeTypes.tokIf,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket,"elif_stat","else_stat"]], 
+    "if_stat":[[TokeTypes.tokIf,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"]], 
     
     #elif statment   (aca regla semantica para q exp sea bool)
-    "elif_stat":[[TokeTypes.tokElif,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket],["epsilon"]], 
-    
+    "elif_stat":[[TokeTypes.tokElif,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"],["epsilon"]],
+
     #else statment
-    "else_stat":[[TokeTypes.tokElse,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket],["epsilon"]], 
+    "else_stat":[[TokeTypes.tokElse,TokeTypes.tokOpenBracket,"stat_list"],["epsilon"]], 
     
     
     #loop statment   (aca regla semantica para q exp sea bool) y añadir a expr Tokbreak, como usar el break se hara mediante los contextos al ponerle el nombre de un loop si es un loop quien lo llama 
-    "loop_stat":[[TokeTypes.tokLoop,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]], 
+    "loop_stat":[[TokeTypes.tokLoop,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"]], 
     
     #funciones especiales del lenguaje
     "lenguage_funtion":[["die"],["modify"],["evolve"],["add"],["move"],["eat"],["create"]],  # sacado para ponerlo en expresion
     
     #lenguage funtion die
-    "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #Modify leng_type
     "modify":[[TokeTypes.tokModify,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #lenguage funtion die
     "evolve":[[TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
-    
+
     #lenguage funtion add al mapa cosas como fenomeno o especie
     "add":[[TokeTypes.tokID,TokeTypes.tokPoint,TokeTypes.tokAdd,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
@@ -91,12 +90,12 @@ productions={
     
     #todos los tipos del lenguaje
     "all_types":[["leng_type"],["type"]],
-    
+
     #lenguaje types
     "leng_type":[[TokeTypes.tokIndividual],[TokeTypes.tokSpecies],[TokeTypes.tokMap],[TokeTypes.tokphenomenon]],
     
     #args_list
-    "args_list":[[TokeTypes.tokID,"args_list_fix"],["epsilon"]],
+    "args_list":[["all_types",TokeTypes.tokID,"args_list_fix"],["epsilon"]],
     
     #si un arg se va en epsilon o sigue con una lista de statments
     "args_list_fix":[["epsilon"],[TokeTypes.tokComma,"args_list"]],
@@ -112,45 +111,44 @@ productions={
     
     #factor
     "factor":[["atom"],[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
-    
+
     #atomos
-    "atom":[[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_dec"],["epsilon"]],
+    "atom":[[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["epsilon"]],
     
     #comparadores
     "comparer":[[TokeTypes.tokEqual],[TokeTypes.tokNot],[TokeTypes.tokNotEqual],[TokeTypes.tokGreaterOrEqual],[TokeTypes.tokGreater],[TokeTypes.tokLess],[TokeTypes.tokLessOrEqual],[TokeTypes.tokAnd],[TokeTypes.tokOr]],
     
-    #declaracion de diccionario
-    "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
 
-
-    
     #llamados a funciones
     "func_call":[["matrix_func"],["dic_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
     
     #funciones de diccionario    
-    "dic_func":[["search_dic"],["recieve_dic"]],
+    "dic_func":[["search_dic"],["recieve_dic"],["insert_dic"],["dic_dec"]],
+    
+    #declaracion de diccionario
+    "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
     
     #pregunta si una funcion
     "search_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
-    
+
     #retorna el valor asociado a la llave
     "recieve_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
+    
+    #retorna el valor asociado a la llave
+    "insert_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokComma,"expr",TokeTypes.tokClosedParen]],
     
     #separacion para los metodos que usan escalares y los que usen 2 matrices
     "matrix_func":[["escalar"],["vectorial"]],
     
     #suma y resta vectorial
-    "vectorial":[["matrix_vec",TokeTypes.tokOpenParen,TokeTypes.tokID,TokeTypes.tokID,TokeTypes.tokClosedParen]],
-    
-    #matrices vec
-    "matrix_vec":[[TokeTypes.tokMSum],[TokeTypes.tokMSub]],
+    "vectorial":[[TokeTypes.tokMSum,"matrix_sentence_rest"],[TokeTypes.tokMSub,"matrix_sentence_rest"]],
     
     #multiplicacion y division escalar
-    "escalar":[["matrix_esca",TokeTypes.tokOpenParen,TokeTypes.tokID,TokeTypes.tokID,TokeTypes.tokClosedParen]],
+    "escalar":[[TokeTypes.tokMDiv,"matrix_sentence_rest"],[TokeTypes.tokMMul,"matrix_sentence_rest"]],
     
-    #matrices esca
-    "matrix_esca":[[TokeTypes.tokMDiv],[TokeTypes.tokMMul]],
-    
+    #matrices vec
+    "matrix_sentence_rest":[[TokeTypes.tokOpenParen,TokeTypes.tokID,TokeTypes.tokID,TokeTypes.tokClosedParen]],
+
     #lista de expresiones
     "expr_list":[["expr"],["expr_list_fix"]],
     
@@ -188,7 +186,7 @@ dicNode = {
     "recieve_dic": classnode.RecieveDicNode(),
     "var_reasign":classnode.RedeclareVar(),
     "return_exp": classnode.ReturnNode(),
-    
+
     #------------------------------------- TokTerminales -----------------------------------------------#
     
     TokeTypes.tokBreak: classnode.TookBreakNode(),
@@ -205,128 +203,29 @@ dicNode = {
     TokeTypes.tokNone: classnode.NoneNode()
 }
 
-
-
-
-
 class Terminal:
-    def __init__(self, Name, Type):
+    def init(self, Name, Type):
         self.name = Name
         self.type = Type
-        
-    def First(self):
-        return {self} 
-  
 
 
 class Production:
 
-    def __init__(self, head ,Components):
+    def init(self, head ,Components):
         self.components = Components
         self.head = head
-        head.add(self)
 
 
 class NonTerminal:
-    def __init__(self, Name):
+    def init(self, Name, Productions):
         self.name = Name
-        self.productions = []
-        self.epsilon = False
-        
-    def First(self):
-        
-        firsts = {}
-        
-        #if I found the first of the production
-        FoundUniqueFirst = False
-        
-        for prod in self.productions:
-            FoundUniqueFirst = False
-            for element in prod:
-                if FoundUniqueFirst:
-                    break
-                #Si el elemento es el primer terminal que encuentro el es el primero
-                if type(element) == Terminal:
-                    firsts.add(element)
-                    FoundUniqueFirst =True
-                
-                else:
-                    #Si el No terminal que me encuentro puede generar epsilon, entonces el puede ser uno de
-                    #mis primeros, pero debo seguir revisando
-                    if element.epsilon:
-                        firsts.add(element.First())
-                    
-                    #Si el no terminal que encuentro no genera epsilon, entonces su primero será
-                    #mi primero
-                    else:
-                        firsts.add(element.First())
-                        FoundUniqueFirst =True
+        self.productions = Productions
 
-        return self    
-    
-    def add(self, prod: Production):
-        if "epsilon" in prod.components: self.epsilon = True
-        else: self.productions.add(prod)
+    def iadd(self, prod: Production):
+        self.add(prod)
         return self
 
-
 class Grammar:
-    def __init__(self, Head, TerminalList,prodDict):
-        self.nonTList = []
-        self.head = Head 
-        self.prodDict = prodDict
-        self.terminalList=TerminalList
-        self.productions = []
-        self.BuildGrammar()
-        
-    def BuildGrammar(self,Terminals, prodDict):
-        
-        TerminalDict = []
-        TerminalList = []
-        
-        for Terminal in self.terminalList:
-            if Terminal == "epsilon": continue
-            temTerminal = Terminal(f'{Terminal}', Terminal)
-            TerminalList.append(temTerminal)
-            TerminalDict[f'{Terminal}'] = temTerminal
-        
-        Temp_nonTList = prodDict.keys()
-
-        
-        NonTerminalList = []
-        NonTerminalDict = []
-        
-        for NTerminal in Temp_nonTList:
-            tempNTerminal = NonTerminal(NTerminal)
-            NonTerminalList.append(tempNTerminal)
-            NonTerminalDict[NTerminal] = tempNTerminal
-        
-        
-        ProdList = []
-        for Nt in Temp_nonTList:
-            for production in prodDict[Nt]:
-                
-                componentList=[]
-                
-                if production[0] == "epsilon":
-                    tempProd =  Production(NonTerminalDict[Nt],["epsilon"])
-                    NonTerminalDict[Nt].add(tempProd)
-                    continue
-                    
-                for element in production:
-                    if element in Temp_nonTList:
-                        componentList.append(NonTerminalDict[element])
-                    else:
-                        componentList.append(TerminalDict[element])
-                
-                tempProd = Production(NonTerminalDict[Nt],componentList)
-                ProdList.append(tempProd)
-                NonTerminalDict[Nt].add(tempProd)
-            
-        
-        self.productions = ProdList
-        self.nonTList = NonTerminalList
-        temphead = NonTerminalDict[self.head]
-        self.head = temphead
-        
-        
+    def init(self, nonTList, Head):
+        self.nonTList = nonTList
+        self.head = Head

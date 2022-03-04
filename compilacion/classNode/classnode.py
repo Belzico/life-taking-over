@@ -15,6 +15,10 @@ from unittest import result
 from unittest.mock import NonCallableMagicMock
 from webbrowser import Opera
 from wsgiref import validate
+
+import enum
+
+from compGlobals import TokeTypes 
 import enum
 
 from numpy import true_divide
@@ -238,9 +242,11 @@ class SumNode(OperatorNode):
         valid= self.Left.validateNode(context) and self.Right.validateNode(context)
         return valid
         
-    def build_ast(self,productionList):
-        pass
-        
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class SubNode(OperatorNode):
     def __init__(self,context):
@@ -269,8 +275,11 @@ class SubNode(OperatorNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == int
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
     
 
 class MulNode(OperatorNode):
@@ -297,8 +306,11 @@ class MulNode(OperatorNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == int
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatFactor(productionList,indeProduc,context)
+        self.Right=eatTerm(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
     
 class DivNode(OperatorNode):
     def __init__(self,context):
@@ -327,8 +339,11 @@ class DivNode(OperatorNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == int
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatFactor(productionList,indeProduc,context)
+        self.Right=eatTerm(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class ModNode(OperatorNode):
     def __init__(self,context):
@@ -354,8 +369,11 @@ class ModNode(OperatorNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == int
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatFactor(productionList,indeProduc,context)
+        self.Right=eatTerm(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class PowNode(OperatorNode):
     def __init__(self,context):
@@ -421,8 +439,11 @@ class EqualNode(CompareNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
     
     
 class NotEqualNode(CompareNode):
@@ -452,8 +473,11 @@ class NotEqualNode(CompareNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
     
 class LoENode(CompareNode):
     def __init__(self,context):
@@ -484,8 +508,11 @@ class LoENode(CompareNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class GoENode(CompareNode):
     def __init__(self,context):
@@ -516,8 +543,11 @@ class GoENode(CompareNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class GreaterNode(CompareNode):
     def __init__(self,context):
@@ -548,8 +578,11 @@ class GreaterNode(CompareNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class LessNode(CompareNode):
     def __init__(self,context):
@@ -580,8 +613,11 @@ class LessNode(CompareNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 != None and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
     
 
 #--------------------------------------------------------------------------- #
@@ -618,8 +654,11 @@ class AndNode(ClassNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 == bool and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 class OrNode(ClassNode):
     def __init__(self,context):
@@ -648,8 +687,11 @@ class OrNode(ClassNode):
         type2 = self.Left.ReturnType
         return type1 == type2 and not type1 == bool and self.ReturnType == bool
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatTerm(productionList,indeProduc,context)
+        self.Right=eatExpression(productionList,indeProduc,context)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
 
 # -------------------------------------------------------------------------
 # Ciclos ------------------------------------------------------------------
@@ -688,8 +730,18 @@ class LoopNode(ClassNode):
     def checkTypes(self):
         return self.Conditional.checkTypes()
 
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
+        node=eatExpression(productionList,indexProduc,self.context)
+        
+        
+        node.build_ast(productionList,indexProduc)
+        self.Conditional=node
+        
+        newcontext=self.context.create_hild("loop",self)
+        node=ProgramNode(newcontext)
+        node.build_ast(productionList,indexProduc)
+        self.Body=node
 #--------------------------------------------------------------------------- #
 #--------------------------Func Program ------------------------------------ #
 #--------------------------------------------------------------------------- #
@@ -977,6 +1029,49 @@ class ProgramNode(ClassNode):
             if statement.validateNode(context):
                 return False
 
+    def build_ast(self,productionList,indexProduc=[0]):
+        indexProduc[0]=0
+        self.ListStatement=[]
+        self.buildPosible()
+        head=None
+        while indexProduc[0]<len(productionList) :
+            head=productionList[indexProduc].head
+            if productionList[indexProduc].components[0]==TokeTypes.tokClosedBracket:
+                break
+            indexProduc[0]+=1
+            if head in self.posibleProductions:
+                
+                #arreglar esto
+                node=self.posibleProductions[head]()
+                #resolver el nodo
+                node.build_ast(productionList,indexProduc)
+                #agregarlo a los hijos
+                self.ListStatement.append(node)
+
+    def buildPosible(self):
+        #arreglar esto
+        self.posibleProductions={}
+        
+        self.posibleProductions["override_expr"]=OverrideNode
+        self.posibleProductions["let_dec"]=LetNode
+        self.posibleProductions["func_dec"]=FucNode
+        self.posibleProductions["var_reasign"]=ReasignNode
+        self.posibleProductions["print_stat"]=PrintNode
+        self.posibleProductions["if_stat"]=IfNode
+        self.posibleProductions["loop_stat"]=LoopNode
+        #["die"],["modify"],["evolve"],["add"],["move"],["eat"],["create"]
+        self.posibleProductions["die"]=DieNode
+        self.posibleProductions["modify"]=ModifyNode
+        self.posibleProductions["evolve"]=EvolveNode
+        self.posibleProductions["add"]=AddNode
+        self.posibleProductions["move"]=MoveNode
+        self.posibleProductions["eat"]=EatNode
+        self.posibleProductions["create"]=CreateNode
+        
+        self.posibleProductions["break_exp"]=BreakNode
+        self.posibleProductions["return_exp"]=ReturnNode
+        self.posibleProductions["continue_exp"]=ContinueNode
+
 class StatementNode(ClassNode):
     def __init__(self,context):
         self.actionNode = None
@@ -1035,6 +1130,10 @@ class BreakNode(StatementNode):
 
         return False
 
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
+        #esto hay que implementarlo ya que el el break al crease solo guarda a su hijo como el nodo loop mas cercano
+        #esto seria buscar en el contexto
 
 
 
@@ -1066,6 +1165,20 @@ class LetNode(StatementNode):
     def transpilar(self):
         return "Let " + str(self.type) + " " + str(self.idnode) + " = " + self.val
     
+    def build_ast(self,productionList,indexProduc):
+        
+        #agregado el tipo "sale como token todavia no es grave"
+        self.type = productionList[indexProduc][0].components[1]
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc][0].components[1].value,"var","define",self.type)
+        
+        self.idnode = idn
+        self.ET=self.idnode.RT
+        indexProduc[0]+=1
+        self.val=eatExpression(productionList,indexProduc,context)
+        self.RT=self.val.RT
 # Revisar como crearlo
 
     
@@ -1152,6 +1265,15 @@ class IfNode(StatementNode):
         #        return False
 
         return True
+
+    def build_ast(self,productionList,indexProduc):
+        
+        
+        indexProduc[0]+=1
+        self.condition = eatExpression(productionList,indexProduc,self.context)
+        
+        #indexProduc[0]+=1 #? esto va aqui?
+        self.ListStatements = ProgramNode(productionList,indexProduc,self.context)
 
 
 #class ElifNode(StatementNode):
@@ -1373,68 +1495,6 @@ class ReasignNode(StatementNode):
     def build_ast(productionList):
         pass
 
-class RecieveDicNode(StatementNode):
-    def __init__(self, context):
-        self.context = context
-
-    def validateNode(self,context):
-        pass
-    
-    def transpilar(self):
-        pass
-
-    def Eval(self,context):
-        pass
-
-    def checkTypes(self):
-        pass
-
-    def build_ast(productionList):
-        pass
-
-
-class SearchDicNode(StatementNode):
-    def __init__(self, context):
-        self.context = context
-
-    
-    def validateNode(self,context):
-        pass
-    
-    def transpilar(self):
-        pass
-
-    def Eval(self,context):
-        pass
-    
-
-    def checkTypes(self):
-        pass
-
-    def build_ast(productionList):
-        pass
-
-
-class InsertDicNode(StatementNode):
-    def __init__(self, context):
-        self.context = context
-
-    
-    def validateNode(self,context):
-        pass
-    
-    def transpilar(self):
-        pass
-
-    def Eval(self,context):
-        pass
-
-    def checkTypes(self):
-        pass
-
-    def build_ast(productionList):
-        pass
-
 
 
 class func_callNode(StatementNode):
@@ -1503,8 +1563,12 @@ class func_callNode(StatementNode):
 
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
+        self.condition = eatExpression(productionList,indexProduc,self.context)
+        
+        #indexProduc[0]+=1 #? esto va aqui?
+        self.ListStatements = ProgramNode(productionList,indexProduc,self.context)
 
 class FucNode(StatementNode):
     def __init__(self,context):
@@ -1558,10 +1622,28 @@ class FucNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc][0].components[1],"func","define",None)
+        
+        self.idnode = idn
+        #esta parte busca los parametros 
+        indexProduc[0]+=1
+        argsss=eatArgList(productionList,indexProduc,context)
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
+        indexProduc[0]+=2
+        self.RT= eatType(productionList,indexProduc,context)
+        indexProduc[0]+=1
+        newcontext=self.context.create_hild("func",self)
+        node=ProgramNode(newcontext)
+        node.build_ast(productionList,indexProduc)
+        self.node_statements=node
 
-class DicNode(StatementNode):
+class DeclaretDicNode(StatementNode):
     def __init__(self, context):
         self.ListKeys = None
         self.ListValues = None
@@ -1657,7 +1739,8 @@ class InsertDicNode(StatementNode):
 
     def build_ast(productionList):
         pass
-    
+
+
 class PrintNode(StatementNode):
     def __init__(self,context):
         self.name = "print"
@@ -1675,6 +1758,10 @@ class PrintNode(StatementNode):
         val = self.args[0].Eval(self.context)
         print(val)
         return
+
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
+        self.args = eatExpression(productionList,indexProduc,self.context)
     
     
 
@@ -1732,6 +1819,12 @@ class IdNode(StatementNode):
             self.value = self.context.retVar(self.name)
         return True
 
+    def build_ast(self,id,funcOrVar,defineOrCall,valType="referencia"):
+        self.id=id
+        self.RT=valType
+        self.funcOrVar=funcOrVar
+        self.defineOrCall=defineOrCall
+
 class NumberNode(StatementNode):
     def __init__(self,context):
         self.val = None
@@ -1751,6 +1844,10 @@ class NumberNode(StatementNode):
 
     def validateNode(self, context):
         return isnumeric(self.val)
+
+    def build_ast(self,value,valtype):
+        self.val=value
+        self.valtype=valtype
 
 
 class ChainNode(StatementNode):
@@ -1773,6 +1870,10 @@ class ChainNode(StatementNode):
     def validateNode(self, context):
         return self.chain is str
 
+    def build_ast(self,value,valtype):
+        self.val=value
+        self.valtype=valtype
+
 class TrueNode(StatementNode):
     def __init__(self,context):
         self.context = context
@@ -1791,6 +1892,10 @@ class TrueNode(StatementNode):
 
     def validateNode(self, context):
         return True
+
+    def build_ast(self,value,valtype):
+        self.val=value
+        self.valtype=valtype
 
 class FalseNode(StatementNode):
     def __init__(self,context):
@@ -1811,6 +1916,10 @@ class FalseNode(StatementNode):
     def validateNode(self, context):
         return True
 
+    def build_ast(self,value,valtype):
+        self.val=value
+        self.valtype=valtype
+
 class NoneNode(StatementNode):
     def __init__(self,context):
         self.context = context
@@ -1829,6 +1938,10 @@ class NoneNode(StatementNode):
 
     def validateNode(self, context):
         return True
+
+    def build_ast(self,value,valtype):
+        self.val=value
+        self.valtype=valtype
 
 # ---------------------------------------------------------------------------------------------
 # ---------------------------------- Funciones de apoyo ---------------------------------------
@@ -1849,3 +1962,137 @@ def valNode(node):
         return True
 
     return False
+
+def eatExpression(productionList,indexProduc,context):
+    if len(productionList[indexProduc][0].components)==3:
+        component=productionList[indexProduc][0][1]
+        if component in expresionDicc:
+            #creamos el node
+            node =expresionDicc[component](context)
+            
+            indexProduc[0]+=1
+            node.build_ast(productionList,indexProduc)
+            return node
+        elif component=="comparer":
+            indexProduc[0]+=1
+            return eatComparer(productionList,indexProduc,context)
+    else:
+        indexProduc[0]+=1
+        return eatTerm(productionList,indexProduc,context)
+
+def eatComparer(productionList,indexProduc,context):
+    component=productionList[indexProduc][0][0]
+    #buscando cual comparador es
+    node =expresionDicc[component](context)
+    
+    indexProduc[0]+=1
+    node.build_ast(productionList,indexProduc)
+    return node
+
+def eatFactor(productionList,indexProduc,context):
+    component=productionList[indexProduc][0][1]
+    if component==productionList[indexProduc][0][0]==TokeTypes.tokOpenParen:
+            indexProduc[0]+=1
+            return eatExpression(productionList,indexProduc,context)
+    else:
+        indexProduc[0]+=1
+        return eatAtom(productionList,indexProduc,context)
+        
+    
+def eatTerm(productionList,indexProduc,context):
+    if len(productionList[indexProduc][0].components)==3:
+        component=productionList[indexProduc][0][1]    
+        if component in termDicc:
+            #creamos el node
+            node =expresionDicc[component](context)
+            
+            indexProduc[0]+=1
+            node.build_ast(productionList,indexProduc)
+            return node
+        else:
+            indexProduc[0]+=1
+            return eatFactor
+        
+    
+
+def eatAtom(productionList,indexProduc,context):
+    component=productionList[indexProduc][0][0]
+    if component in termDicc:
+        #buscando cual atomo es
+        node =expresionDicc[component](context)
+
+        indexProduc[0]+=1
+        node.build_ast(productionList,indexProduc)
+        return node
+    elif component=="func_call":
+        indexProduc[0]+=1
+        if len(productionList[indexProduc][0].component)==4:
+            node=func_callNode(context)
+            node.build_ast(productionList,indexProduc)
+            return node
+        elif productionList[indexProduc][0].component=="dic_func":
+            indexProduc[0]+=2
+            return eatDiccFunc(productionList,indexProduc,context)
+        elif productionList[indexProduc][0].component=="matrix_func":
+            indexProduc[0]+=2
+            eatMatrixFunc(productionList,indexProduc,context)
+
+def eatMatrixFunc(productionList,indexProduc,context):
+    component=productionList[indexProduc][0][0]
+    node =diccMatrixFunc[component](context)
+    
+    indexProduc[0]+=1
+    node.build_ast(productionList,indexProduc)
+    return node
+
+def eatDiccFunc(productionList,indexProduc,context):
+    component=productionList[indexProduc][0][0]
+    node =diccFunDicc[component](context)
+    
+    indexProduc[0]+=1
+    node.build_ast(productionList,indexProduc,context)
+    return node
+
+def eatArgList(productionList,indexProduc,context):
+    resultTypes=[]
+    resultId=[]
+    while productionList[indexProduc][1].head!="args_list" or productionList[indexProduc][1].head!="args_list_fix":
+        resultId.append(productionList[indexProduc][1].components[1]) 
+        indexProduc[0]+=2
+        resultTypes.append(eatType(productionList,indexProduc))
+    return (resultTypes,resultId)
+
+def eatType(productionList,indexProduc):
+    return productionList[indexProduc][0].components[0]
+
+atomDicc={}
+#[TokeTypes.tokID],["func_call"],[TokeTypes.tokNumber],[TokeTypes.tokChain],[TokeTypes.tokNone],[TokeTypes.tokChain],[TokeTypes.tokTrue],[TokeTypes.tokFalse],["dic_func"],["epsilon"]
+def fillAtom():
+    atomDicc[TokeTypes.tokID]=IdNode
+    
+    atomDicc[TokeTypes.tokNumber]=NumberNode
+    atomDicc[TokeTypes.tokChain]=ChainNode
+    atomDicc[TokeTypes.tokNone]=NoneNode
+    atomDicc[TokeTypes.tokTrue]=TrueNode
+    atomDicc[TokeTypes.tokFalse]=FalseNode
+    #atomDicc["dic_dec"]=dic_func?
+    
+expresionDicc={}
+def fillExpresion():
+    expresionDicc[TokeTypes.tokSub]=FalseNode
+    expresionDicc[TokeTypes.tokSum]=FalseNode
+
+diccFunDicc={}
+def fillDiccFun():
+    diccFunDicc["search_dic"]=RecieveDicNode
+    diccFunDicc["recieve_dic"]=SearchDicNode
+    diccFunDicc["insert_dic"]=InsertDicNode
+    diccFunDicc["dic_dec"]=DeclaretDicNode
+    
+    
+diccMatrixFunc={}
+def fillDiccFunVec():
+    diccMatrixFunc[TokeTypes.tokMSum]=matrixSumNode
+    diccMatrixFunc[TokeTypes.tokMSub]=matrixSubNode
+    diccMatrixFunc[TokeTypes.tokMMul]=matrixMulNode
+    diccMatrixFunc[TokeTypes.tokMDiv]=matrixDivNode
