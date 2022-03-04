@@ -119,22 +119,18 @@ productions={
     #comparadores
     "comparer":[[TokeTypes.tokEqual],[TokeTypes.tokNot],[TokeTypes.tokNotEqual],[TokeTypes.tokGreaterOrEqual],[TokeTypes.tokGreater],[TokeTypes.tokLess],[TokeTypes.tokLessOrEqual],[TokeTypes.tokAnd],[TokeTypes.tokOr]],
     
-    #declaracion de diccionario
-    "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
 
-
-    
     #llamados a funciones
     "func_call":[["matrix_func"],["dic_func"],[TokeTypes.tokID,TokeTypes.tokOpenParen,"expr_list",TokeTypes.tokClosedParen]],
     
     #funciones de diccionario    
-    "dic_func":[["search_dic"],["recieve_dic"],["insert_dic"]],
+    "dic_func":[["search_dic"],["recieve_dic"],["insert_dic"],["dic_dec"]],
+    
+    #declaracion de diccionario
+    "dic_dec":[[TokeTypes.tokDicc,TokeTypes.tokOpenSquareBracket,"all_types",TokeTypes.tokComma,"all_types",TokeTypes.tokClosedSquareBracket]],
     
     #pregunta si una funcion
     "search_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
-    
-    #pregunta si una funcion
-    "create_dic":[[TokeTypes.tokSearchDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
     
     #retorna el valor asociado a la llave
     "recieve_dic":[[TokeTypes.tokReturnDicc,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen]],
