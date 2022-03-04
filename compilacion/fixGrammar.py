@@ -69,7 +69,7 @@ productions={
     "lenguage_funtion":[["die"],["modify"],["evolve"],["add"],["move"],["eat"],["create"]],  # sacado para ponerlo en expresion
     
     #lenguage funtion die
-    "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,TokeTypes.tokIndividual,TokeTypes.tokClosedParen]],
+    "die":[[TokeTypes.tokDie,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
     
     #Modify leng_type
     "modify":[[TokeTypes.tokModify,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen]],
