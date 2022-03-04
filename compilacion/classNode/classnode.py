@@ -784,8 +784,22 @@ class ModifyNode(ClassNode):
     def checkTypes(self):
         return self.context.checkFun("modify", [self.id] + self.args)
         
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Die
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        
+        
+        indexProduc[0]+=1
+        
+        
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
 
 #----------------------------------------------------------------
 #--------------------------------------------------------------
@@ -825,6 +839,20 @@ class CreateNode(ClassNode):
     def Eval(self):
         pass
 
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Evolve
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        indexProduc[0]+=1
+        
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
+
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 #---------------------------------------------------------------
@@ -862,6 +890,23 @@ class DieNode(ClassNode):
 
     def Eval(self,context):
         pass
+
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Die
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        
+        
+        indexProduc[0]+=1
+        
+    
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
     
 
 class EvolveNode(ClassNode):
@@ -898,6 +943,21 @@ class EvolveNode(ClassNode):
     def Eval(self,context):
         pass
 
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Evolve
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        indexProduc[0]+=1
+        
+        
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
+
 class AddNode(ClassNode):
     def __init__(self,context):
         self.id = None
@@ -931,6 +991,21 @@ class AddNode(ClassNode):
 
     def Eval(self,context):
         pass
+
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Evolve
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[2],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        indexProduc[0]+=1
+        
+        
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
     
 class MoveNode(ClassNode):
     def __init__(self,context):
@@ -965,6 +1040,21 @@ class MoveNode(ClassNode):
 
     def Eval(self):
         pass
+
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Evolve
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        indexProduc[0]+=1
+        
+        
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
     
 class EatNode(ClassNode):
     def __init__(self,context):
@@ -999,6 +1089,21 @@ class EatNode(ClassNode):
 
     def Eval(self,context):
         pass
+
+    def build_ast(self,productionList,indexProduc):
+        #Creando Id de Evolve
+        idn=IdNode(self.context)
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
+        self.idnode = idn
+        self.RT= None
+        
+        indexProduc[0]+=1
+        
+        
+        argsss=eatArgList(productionList,indexProduc,context)
+        
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
 
 
 #-------------------------- Modificar----------------------------------
