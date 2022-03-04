@@ -3,7 +3,7 @@ from compGlobals import TokeTypes
 from fixGrammar import Production, NonTerminal, Terminal , Grammar
 from collections import deque
 
-q#Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
+#Una línea(L) de nuestro lenguaje puede ser: 1-DECLARACIONES  2-CICLO 3-LUEGO DEL CICLO PUEDE VENIR  4-CONDICIONAL  5-CONTINUACIÓN DE CONDICIONAL 6-NUESTROS MÉTODOS  7-NUESTRAS CLASES
 production = { "L":[["D",TokeTypes.tokSemicolon],  ["L"],  ["K",TokeTypes.tokOpenBracket] , [TokeTypes.tokClosedBracket,"Q"], ["P",TokeTypes.tokOpenParen,TokeTypes.tokID,"A",TokeTypes.tokClosedParen,TokeTypes.tokSemicolon] ],
             #Primero las declaraciones
             "D":[["R"],["I"], [TokeTypes.tokBool, TokeTypes.tokID, TokeTypes.tokAssign,"E"], [TokeTypes.tokInt, TokeTypes.tokID, TokeTypes.tokAssign, "E"],  [TokeTypes.tokString, TokeTypes.tokID, TokeTypes.tokAssign, "E"], [TokeTypes.tokDouble, TokeTypes.tokID, TokeTypes.tokAssign, "E"] ],
@@ -187,9 +187,12 @@ class State:
 
 
 #Todos los estados que derivan de este estado
-  def GOTO(self,states,stateList, InitialItems,queue,elements):
+  def GOTO(self,states,stateList, AllItems, States_queue,elements):
     tempkernel = []
+    
+    #Buscando que items continúan con el elemento recivido
     for i in self.expectedExpressions[elements]:
+      #creando un nuevo item de cada uno de ellos
       new_item = Item(i.production, i.index + 1, i.lookahead)
       tempkernel.append(new_item)
 
@@ -197,11 +200,11 @@ class State:
     
     
     if new_state not in states:
-      new_state.number = len(states)
-      new_state.build(InitialItems)
+      new_state.id = len(states)
+      new_state.Develop(AllItems)
       states[new_state] = new_state
       stateList.append(new_state)
-      queue.append(new_state)
+      States_queue.append(new_state)
     else:
       new_state = states[new_state]
       
@@ -235,8 +238,8 @@ class Automata:
         state = queue.popleft()
         state.Develop(firstItems)
         
-        for sym in state.expected_elements:
-            state.GOTO(sym, states_dict, states_list)
+        for symbol in state.expectedExpressions:
+            state.GOTO(states_dict, states_list, firstItems, queue, symbol)
     
     
     
@@ -263,21 +266,23 @@ class GOTOACTION:
         
         for element_item in state.items:
             if element_item.index == len(element_item.components):
+              #Buscando que 2 items no tengan los mismos lookahead en el mismo estado
+              #a la hora de hacer reduce
                 if element_item.lookahead in lookA_item:
-                    raise Exception('There has been a Reduce-Reduce conflict')
+                    raise Exception('Reduce Reduce prob')
                   
                 lookA_item[element_item.lookahead] = element_item
                 
         for next_element in state.continuationStates:
             if next_element.is_terminal:
-                state_action[next_element.name] = ('R', state.next_states[next_element].number)
+                state_action[next_element.name] = ('R', state.continuationStates[next_element].number)
             else:
-                state_go_to[next_element.name] = state.next_states[next_element].number
+                state_go_to[next_element.name] = state.continuationStates[next_element].number
         go_to.append(state_go_to)
         action.append(state_action)
     
     
-    statesDict = Automata(self.grammar).Construct()
+
 
 
 
