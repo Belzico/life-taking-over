@@ -221,11 +221,66 @@ class NonTerminal:
         self.name = Name
         self.productions = Productions
 
-    def iadd(self, prod: Production):
-        self.add(prod)
+    def add(self, prod: Production):
+        if "epsilon" in prod.components: self.epsilon = True
+        else: self.productions.add(prod)
         return self
 
 class Grammar:
-    def init(self, nonTList, Head):
-        self.nonTList = nonTList
-        self.head = Head
+    def __init__(self, Head, TerminalList,prodDict):
+        self.nonTList = []
+        self.head = Head 
+        self.prodDict = prodDict
+        self.terminalList=TerminalList
+        self.productions = []
+        self.BuildGrammar()
+        
+    def BuildGrammar(self,Terminals, prodDict):
+        
+        TerminalDict = []
+        TerminalList = []
+        
+        for Terminal in self.terminalList:
+            if Terminal == "epsilon": continue
+            temTerminal = Terminal(f'{Terminal}', Terminal)
+            TerminalList.append(temTerminal)
+            TerminalDict[f'{Terminal}'] = temTerminal
+        
+        Temp_nonTList = prodDict.keys()
+
+        
+        NonTerminalList = []
+        NonTerminalDict = []
+        
+        for NTerminal in Temp_nonTList:
+            tempNTerminal = NonTerminal(NTerminal)
+            NonTerminalList.append(tempNTerminal)
+            NonTerminalDict[NTerminal] = tempNTerminal
+        
+        
+        ProdList = []
+        for Nt in Temp_nonTList:
+            for production in prodDict[Nt]:
+                
+                componentList=[]
+                
+                if production[0] == "epsilon":
+                    tempProd =  Production(NonTerminalDict[Nt],["epsilon"])
+                    NonTerminalDict[Nt].add(tempProd)
+                    continue
+                    
+                for element in production:
+                    if element in Temp_nonTList:
+                        componentList.append(NonTerminalDict[element])
+                    else:
+                        componentList.append(TerminalDict[element])
+                
+                tempProd = Production(NonTerminalDict[Nt],componentList)
+                ProdList.append(tempProd)
+                NonTerminalDict[Nt].add(tempProd)
+            
+        
+        self.productions = ProdList
+        self.nonTList = NonTerminalList
+        temphead = NonTerminalDict[self.head]
+        self.head = temphead
