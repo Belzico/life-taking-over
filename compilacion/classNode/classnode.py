@@ -1432,8 +1432,8 @@ class ContinueNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
 
 class OverrideNode(StatementNode):
     def __init__(self, context):
