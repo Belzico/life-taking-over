@@ -15,6 +15,7 @@ from unittest import result
 from unittest.mock import NonCallableMagicMock
 from webbrowser import Opera
 from wsgiref import validate
+import misc
 
 import enum
 
@@ -787,7 +788,7 @@ class ModifyNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Die
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -842,7 +843,7 @@ class CreateNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -894,7 +895,7 @@ class DieNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Die
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -946,7 +947,7 @@ class EvolveNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -995,7 +996,7 @@ class AddNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[2],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[2],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -1044,7 +1045,7 @@ class MoveNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -1093,7 +1094,7 @@ class EatNode(ClassNode):
     def build_ast(self,productionList,indexProduc):
         #Creando Id de Evolve
         idn=IdNode(self.context)
-        idn.build_ast(productionList[indexProduc[0]].components[0],"func","call","referencia")
+        idn.build_ast(productionList[indexProduc].components[0],"func","call","referencia")
         self.idnode = idn
         self.RT= None
         
@@ -1507,8 +1508,9 @@ class ReturnNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]=+1
+        self.val = eatExpression(productionList,indexProduc,self.context)
 
 class ContinueNode(StatementNode):
     def __init__(self, context):
@@ -1535,8 +1537,8 @@ class ContinueNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]=+1
 
 class OverrideNode(StatementNode):
     def __init__(self, context):
@@ -1597,8 +1599,16 @@ class ReasignNode(StatementNode):
     def checkTypes(self):
         return self.type == type(self.value)
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        indexProduc[0]+=1
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.idnode = idn
+        
+        self.value=eatExpression(productionList,indexProduc,self.context)
 
 
 
@@ -1732,7 +1742,7 @@ class FucNode(StatementNode):
         #creando id
         idn=IdNode(self.context)
         #self,id,funcOrVar,defineOrCall,valType=None
-        idn.build_ast(productionList[indexProduc][0].components[1],"func","define",None)
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
         
         self.idnode = idn
         #esta parte busca los parametros 
@@ -1750,43 +1760,72 @@ class FucNode(StatementNode):
 
 class DeclaretDicNode(StatementNode):
     def __init__(self, context):
-        self.ListKeys = None
-        self.ListValues = None
+        self.KeysType = None
+        self.ValueType = None
+        self.dicc={}
         self.context = context
 
     def Eval(self,context):
-        pass
+        return self.dicc
     
     def validateNode(self,context):
-        pass
+        for key in self.dicc.key:
+            validate1 = key.validateNode(context)
+            validate2 = self.dicc[key].validateNode(context)
+            if not validate1 or not validate2:
+                return False
+
+        return True
     
     def transpilar(self):
-        pass
+        textcode = ""
+        textcode += "{"
+        for key in self.dicc.key:
+            textcode += key.transpilar()
+            textcode += " : "
+            textcode += self.dicc[key].transpilar()
+
+        textcode += "}"
+
+        return textcode
 
     def checkTypes(self):
-        pass
+        for key in self.dicc.key:
+            validate1 = key.checkTypes()
+            validate2 = self.dicc[key].checkTypes(context)
+            if not validate1 or not validate2:
+                return False
 
-    def build_ast(productionList):
-        pass
+        typeK = self.KeysType
+        typeV = self.ValueType
+        for key in self.dicc.keys:
+            if key.valtype != typeK:
+                return False
+            if self.dicc[key].valtype != typeV:
+                return False
+
+        return True
+
+
+    def build_ast(self,productionList,IndesxProduc):
+        IndesxProduc[0]+=1
+        self.ListKeysType=eatType(productionList,IndesxProduc,self.context)
+
+    
 
 
 class RecieveDicNode(StatementNode):
     def __init__(self, context):
         self.name = None
-        self.dicNode = None
         self.key = None
         self.context = context
 
     def Eval(self,context):
-        i = 0
-        for keyval in self.dicNode.ListKeys:
-            if keyval == self.key:
-                return self.dicNode.ListValues[i]
-            i += 1
-        
+        dic = self.context.retVar(self.name)
+        return dic[self.key]
     
     def validateNode(self,context):
-        return True
+        return self.context
     
     def transpilar(self):
         return self.name + "[" + self.key + "]"
@@ -1794,8 +1833,14 @@ class RecieveDicNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.idnode = idn
+        self.key = eatExpression(productionList,indexProduc,self.context)
 
 class SearchDicNode(StatementNode):
     def __init__(self, context):
@@ -1821,8 +1866,14 @@ class SearchDicNode(StatementNode):
     def checkTypes(self):
         return True
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.idnode = idn
+        self.key = eatExpression(productionList,indexProduc,self.context)
 
 class InsertDicNode(StatementNode):
     def __init__(self, context):
@@ -1837,13 +1888,20 @@ class InsertDicNode(StatementNode):
         pass
     
     def transpilar(self):
-        return self.namedic + ".append(" + self.value + ")"
+        return self.namedic + "[" + self.value + "] = " + self.value.transpilar()
 
     def checkTypes(self):
         pass
 
-    def build_ast(productionList):
-        pass
+    def build_ast(self,productionList,indexProduc):
+        #creando id
+        idn=IdNode(self.context)
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc[0]].components[1].value,"func","define",None)
+        
+        self.namedic = idn
+        self.key = eatExpression(productionList,indexProduc,self.context)
+        self.value = eatExpression(productionList,indexProduc,self.context)
 
 
 class PrintNode(StatementNode):
@@ -1869,65 +1927,85 @@ class PrintNode(StatementNode):
         self.args = eatExpression(productionList,indexProduc,self.context)
     
 class matrixSumNode(StatementNode):
+    def __init__(self, context):
+        self.matriz1 = None
+        self.matriz2 = None
+        self.context = context
+
     def Eval(self,context):
-        pass
+        return misc.dictMergeSum(self.matriz1.Eval(context), self.matriz2.Eval(context))
     
     def validateNode(self,context):
-        pass
+        return self.matriz1.validateNode(self.context) and self.matriz2.validateNode(self.context)
     
     def transpilar(self):
-        pass
+        return "dictMergeSum(" + self.matriz1.name + "," + self.matriz2.name + ")"
 
     def checkTypes(self):
-        pass
+        return self.matriz1.checkTypes(self.context) and self.matriz2.checkTypes(self.context)
 
     def build_ast(productionList):
         pass
 
 class matrixSubNode(StatementNode):
+    def __init__(self, context):
+        self.matriz1 = None
+        self.matriz2 = None
+        self.context = context
+
     def Eval(self,context):
-        pass
+        return misc.dictMergeSum(self.matriz1.Eval(context), self.matriz2.Eval(context))
     
     def validateNode(self,context):
-        pass
+        return self.matriz1.validateNode(self.context) and self.matriz2.validateNode(self.context)
     
     def transpilar(self):
-        pass
+        return "dictMergeSum(" + self.matriz1.name + "," + self.matriz2.name + ")"
 
     def checkTypes(self):
-        pass
+        return self.matriz1.checkTypes(self.context) and self.matriz2.checkTypes(self.context)
 
     def build_ast(productionList):
         pass
 
 class matrixMulNode(StatementNode):
+    def __init__(self, context):
+        self.matriz1 = None
+        self.matriz2 = None
+        self.context = context
+
     def Eval(self,context):
-        pass
+        return misc.dictMergeSum(self.matriz1.Eval(context), self.matriz2.Eval(context))
     
     def validateNode(self,context):
-        pass
+        return self.matriz1.validateNode(self.context) and self.matriz2.validateNode(self.context)
     
     def transpilar(self):
-        pass
+        return "dictMergeSum(" + self.matriz1.name + "," + self.matriz2.name + ")"
 
     def checkTypes(self):
-        pass
+        return self.matriz1.checkTypes(self.context) and self.matriz2.checkTypes(self.context)
 
     def build_ast(productionList):
         pass
 
 class matrixDivNode(StatementNode):
+    def __init__(self, context):
+        self.matriz1 = None
+        self.matriz2 = None
+        self.context = context
+
     def Eval(self,context):
-        pass
+        return misc.dictMergeSum(self.matriz1.Eval(context), self.matriz2.Eval(context))
     
     def validateNode(self,context):
-        pass
+        return self.matriz1.validateNode(self.context) and self.matriz2.validateNode(self.context)
     
     def transpilar(self):
-        pass
+        return "dictMergeSum(" + self.matriz1.name + "," + self.matriz2.name + ")"
 
     def checkTypes(self):
-        pass
+        return self.matriz1.checkTypes(self.context) and self.matriz2.checkTypes(self.context)
 
     def build_ast(productionList):
         pass
