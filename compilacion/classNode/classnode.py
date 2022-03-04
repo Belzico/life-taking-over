@@ -228,9 +228,11 @@ class SubNode(OperatorNode):
     def transpilar(self):
         return str(self.Left) + " - " +  str(self.Right)
 
-
-    def build_ast(self,productionList):
-        pass
+    def build_ast(self,productionList,indeProduc):
+        self.Left=eatExpression(productionList,indeProduc)
+        self.Right=eatExpression(productionList,indeProduc)
+        self.RT=self.Left.RT
+        self.ET=self.Right.ET
     
 
 class MulNode(OperatorNode):
@@ -859,6 +861,8 @@ class ProgramNode(ClassNode):
         head=None
         while indexProduc[0]<len(productionList) :
             head=productionList[indexProduc].head
+            if productionList[indexProduc].components[0]==TokeTypes.tokClosedBracket:
+                break
             indexProduc[0]+=1
             if head in self.posibleProductions:
                 
@@ -1026,6 +1030,9 @@ def eatTerm(productionList,indexProduc):
             indexProduc[0]+=1
             node.build_ast(productionList,indexProduc)
             return node
+        if component==productionList[indexProduc][0][0]==TokeTypes.tokOpenParen:
+            indexProduc[0]+=1
+            return eatExpression(productionList,indexProduc)
     else:
         indexProduc[0]+=1
         return eatAtom(productionList,indexProduc)
@@ -1049,15 +1056,20 @@ def eatAtom(productionList,indexProduc):
             indexProduc[0]+=2
             return eatDiccFunc()
         elif productionList[indexProduc][0].component=="matrix_func":
-            indexProduc[0]+=1
+            indexProduc[0]+=2
             eatMatrixFunc()
 
 def eatMatrixFunc(productionList,indexProduc):
-    pass
+    component=productionList[indexProduc][0][0]
+    node =diccMatrixFunc[component]()
+    
+    indexProduc[0]+=1
+    node.build_ast(productionList,indexProduc)
+    return node
 
 def eatDiccFunc(productionList,indexProduc):
     component=productionList[indexProduc][0][0]
-    node =expresionDicc[component]()
+    node =diccFunDicc[component]()
     
     indexProduc[0]+=1
     node.build_ast(productionList,indexProduc)
@@ -1243,16 +1255,52 @@ class elseNode(StatementNode):
 # Faltantes
 
 class FucNode(StatementNode):
-    def __init__(self,context):
+    def init(self,context):
+        self.argstypes = None
+        self.argsid = None
         self.name = None
-        self.args = None
+        self.node_statements = None
         self.context = context
-
-        self.RT = None
-        self.ET = None
+        
+        self.ReturnType = None
+        self.EspecterType = None
 
     def Eval(self,context):
         return self.Left + self.Right
+    
+    #ffffffffffffffffffff
+    def build_ast(self,productionList,indexProduc):
+        
+        #creando id
+        idn=IdNode()
+        #self,id,funcOrVar,defineOrCall,valType=None
+        idn.build_ast(productionList[indexProduc][0].components[1],"func","define",None)
+        
+        self.idnode = idn
+        #esta parte busca los parametros 
+        indexProduc[0]+=1
+        argsss=eatArgList(productionList,indexProduc)
+        self.argsid=argsss[1]
+        self.argstypes=argsss[0]
+        indexProduc[0]+=2
+        self.RT= eatType(productionList,indexProduc)
+        indexProduc[0]+=1
+        node=ProgramNode()
+        node.build_ast(productionList,indexProduc)
+        self.node_statements=node
+        
+        
+def eatArgList(productionList,indexProduc):
+    resultTypes=[]
+    resultId=[]
+    while productionList[indexProduc][1].head!="args_list" or productionList[indexProduc][1].head!="args_list_fix":
+        resultId.append(productionList[indexProduc][1].components[1]) 
+        indexProduc[0]+=2
+        resultTypes.append(eatType(productionList,indexProduc))
+    return (resultTypes,resultId)
+
+def eatType(productionList,indexProduc):
+    return productionList[indexProduc][0].components[0]
 
 class func_callNode(StatementNode):
     def __init__(self,value = None,hijos = None):
@@ -1331,7 +1379,7 @@ class IdNode(StatementNode):
         return self.id is str
     
     #primer termino 
-    def build_ast(self,id,funcOrVar,defineOrCall,valType=None):
+    def build_ast(self,id,funcOrVar,defineOrCall,valType="referencia"):
         self.id=id
         self.RT=valType
         self.funcOrVar=funcOrVar
@@ -1484,13 +1532,13 @@ def fillDiccFun():
     diccFunDicc["search_dic"]=RecieveDiccNode
     diccFunDicc["recieve_dic"]=SearchDiccNode
     diccFunDicc["insert_dic"]=InsertDiccNode
+    diccFunDicc["dic_dec"]=DeclaretDiccNode
     
-diccMatrixFuncVec={}
-def fillDiccFunVec():
-    diccMatrixFuncVec[TokeTypes.tokMSum]=matrixSumNode
-    diccMatrixFuncVec[TokeTypes.tokMSub]=matrixSubNode
     
-diccMatrixFuncEsc={}
+diccMatrixFunc={}
 def fillDiccFunVec():
-    diccMatrixFuncEsc[TokeTypes.tokMMul]=matrixMulNode
-    diccMatrixFuncEsc[TokeTypes.tokMDiv]=matrixDivNode
+    diccMatrixFunc[TokeTypes.tokMSum]=matrixSumNode
+    diccMatrixFunc[TokeTypes.tokMSub]=matrixSubNode
+    diccMatrixFunc[TokeTypes.tokMMul]=matrixMulNode
+    diccMatrixFunc[TokeTypes.tokMDiv]=matrixDivNode
+

@@ -14,13 +14,13 @@ terminales = ["epsilon",TokeTypes.tokComma,TokeTypes.tokOpenSquareBracket,TokeTy
 
 productions={
     #program
-    "program":[["stat_list"]],
+    "program":[[TokeTypes.tokOpenParen,"stat_list"]],
     
     #lista de statments
     "stat_list":[["stat",TokeTypes.tokSemicolon,"stat_list_fix"]],
 
     #si un statment se va en epsilon o sigue con una lista de statments
-    "stat_list_fix":[["epsilon"],["stat_list"]],
+    "stat_list_fix":[["stat_list"],[TokeTypes.tokClosedBracket]],  #["epsilon"] ?
     
     #statment
     "stat":[["override_expr"],["let_dec"],["func_dec"],["var_reasign"],["print_stat"],["condictional_stat"],["loop_stat"],["lenguage_funtion"],["break_exp"],["return_exp"],["continue_exp"],["epsilon"]],
@@ -44,7 +44,7 @@ productions={
     "let_dec":[[TokeTypes.tokLet,"all_types",TokeTypes.tokID,TokeTypes.tokAssign,"expr"]],
     
     #declarador de funciones
-    "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]],
+    "func_dec":[[TokeTypes.tokDef,TokeTypes.tokID,TokeTypes.tokOpenParen,"args_list",TokeTypes.tokClosedParen,TokeTypes.tokArrow,"all_types",TokeTypes.tokOpenBracket,"stat_list"]],
     
     #print statment
     "print_stat":[TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen],
@@ -53,17 +53,17 @@ productions={
     "condictional_stat":[["if_stat"]],
     
     #if statment   (aca regla semantica para q exp sea bool)
-    "if_stat":[[TokeTypes.tokIf,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]], 
+    "if_stat":[[TokeTypes.tokIf,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"]], 
     
     #elif statment   (aca regla semantica para q exp sea bool)
-    "elif_stat":[[TokeTypes.tokElif,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket],["epsilon"]], 
+    "elif_stat":[[TokeTypes.tokElif,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"],["epsilon"]], 
     
     #else statment
-    "else_stat":[[TokeTypes.tokElse,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket],["epsilon"]], 
+    "else_stat":[[TokeTypes.tokElse,TokeTypes.tokOpenBracket,"stat_list"],["epsilon"]], 
     
     
     #loop statment   (aca regla semantica para q exp sea bool) y añadir a expr Tokbreak, como usar el break se hara mediante los contextos al ponerle el nombre de un loop si es un loop quien lo llama 
-    "loop_stat":[[TokeTypes.tokLoop,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list",TokeTypes.tokClosedBracket]], 
+    "loop_stat":[[TokeTypes.tokLoop,TokeTypes.tokOpenParen,"expr",TokeTypes.tokClosedParen,TokeTypes.tokOpenBracket,"stat_list"]], 
     
     #funciones especiales del lenguaje
     "lenguage_funtion":[["die"],["modify"],["evolve"],["add"],["move"],["eat"],["create"]],  # sacado para ponerlo en expresion
@@ -96,7 +96,7 @@ productions={
     "leng_type":[[TokeTypes.tokIndividual],[TokeTypes.tokSpecies],[TokeTypes.tokMap],[TokeTypes.tokphenomenon]],
     
     #args_list
-    "args_list":[[TokeTypes.tokID,"args_list_fix"],["epsilon"]],
+    "args_list":[["all_types",TokeTypes.tokID,"args_list_fix"],["epsilon"]],
     
     #si un arg se va en epsilon o sigue con una lista de statments
     "args_list_fix":[["epsilon"],[TokeTypes.tokComma,"args_list"]],
@@ -142,16 +142,13 @@ productions={
     "matrix_func":[["escalar"],["vectorial"]],
     
     #suma y resta vectorial
-    "vectorial":[["matrix_vec",TokeTypes.tokOpenParen,TokeTypes.tokID,TokeTypes.tokID,TokeTypes.tokClosedParen]],
-    
-    #matrices vec
-    "matrix_vec":[[TokeTypes.tokMSum],[TokeTypes.tokMSub]],
+    "vectorial":[[TokeTypes.tokMSum,"matrix_sentence_rest"],[TokeTypes.tokMSub,"matrix_sentence_rest"]],
     
     #multiplicacion y division escalar
-    "escalar":[["matrix_esca",TokeTypes.tokOpenParen,TokeTypes.tokID,TokeTypes.tokID,TokeTypes.tokClosedParen]],
+    "escalar":[[TokeTypes.tokMDiv,"matrix_sentence_rest"],[TokeTypes.tokMMul,"matrix_sentence_rest"]],
     
-    #matrices esca
-    "matrix_esca":[[TokeTypes.tokMDiv],[TokeTypes.tokMMul]],
+    #matrices vec
+    "matrix_sentence_rest":[[TokeTypes.tokOpenParen,TokeTypes.tokID,TokeTypes.tokID,TokeTypes.tokClosedParen]],
     
     #lista de expresiones
     "expr_list":[["expr"],["expr_list_fix"]],
