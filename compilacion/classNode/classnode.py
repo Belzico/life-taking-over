@@ -2013,7 +2013,10 @@ def eatTerm(productionList,indexProduc,context):
             indexProduc[0]+=1
             return eatFactor
         
-    
+termDicc={}
+def fillTerm():
+    termDicc[TokeTypes.tokMul]=FalseNode
+    termDicc[TokeTypes.tokDiv]=FalseNode   
 
 def eatAtom(productionList,indexProduc,context):
     component=productionList[indexProduc][0][0]
