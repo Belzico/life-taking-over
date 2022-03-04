@@ -1,4 +1,4 @@
-from errno import EKEYEXPIRED
+
 from compGlobals import TokeTypes 
 from fixGrammar import Production, NonTerminal, Terminal , Grammar
 from collections import deque
@@ -281,6 +281,10 @@ class GOTOACTION:
         go_to.append(state_go_to)
         action.append(state_action)
     
+    print("A")
+    
+    
+
     
 
 

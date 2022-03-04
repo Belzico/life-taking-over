@@ -161,69 +161,72 @@ productions={
 #------------------------------------------------------------------------------------------------------#
 
 dicNode = {
-    "program": classnode.ProgramNode(),
-    "stat": classnode.StatementNode(),
-    "break": classnode.BreakNode(),
-    "let_dec": classnode.LetNode(),
-    "func_dec": classnode.FucNode(),
-    "print_stat": classnode.PrintNode(),
-    "condictional_stat": classnode.Condictional_statNode(),
-    "if_stat": classnode.IfNode(),
-    "elif_stat": classnode.ElifNode(),
-    "else_stat": classnode.elseNode(),
-    "loop_stat": classnode.loopNode(),
-    "die": classnode.dieNode(),
-    "modify": classnode.modifyNode(),
-    "evolve": classnode.evolveNode(),
-    "add": classnode.AddNode(),
-    "move": classnode.moveNode(),
-    "eat": classnode.eatNode(),
-    "create": classnode.createNode(),
-    "func_call": classnode.func_callNode(),
-    "vectorial": classnode.vectorialNode(),
-    "dic_dec": classnode.DicNode(),
-    "search_dic": classnode.SearchDicNode(),
-    "recieve_dic": classnode.RecieveDicNode(),
-    "var_reasign":classnode.RedeclareVar(),
-    "return_exp": classnode.ReturnNode(),
+    "program": classnode.ProgramNode,
+    "stat": classnode.StatementNode,
+    "break": classnode.BreakNode,
+    "let_dec": classnode.LetNode,
+    "func_dec": classnode.FucNode,
+    "print_stat": classnode.PrintNode,
+    "condictional_stat": classnode.Condictional_statNode,
+    "if_stat": classnode.IfNode,
+    #"elif_stat": classnode.ElifNode(),
+    #"else_stat": classnode.elseNode(),
+    "loop_stat": classnode.LoopNode,
+    "die": classnode.DieNode,
+    "modify": classnode.ModifyNode,
+    "evolve": classnode.EvolveNode,
+    "add": classnode.AddNode,
+    "move": classnode.MoveNode,
+    "eat": classnode.EatNode,
+    "create": classnode.CreateNode,
+    "func_call": classnode.func_callNode,
+    "vectorial": classnode.vectorialNode,
+    "dic_dec": classnode.DeclaretDicNode,
+    "search_dic": classnode.SearchDicNode,
+    "recieve_dic": classnode.RecieveDicNode,
+    "var_reasign":classnode.ReasignNode,
+    "return_exp": classnode.ReturnNode,
 
     #------------------------------------- TokTerminales -----------------------------------------------#
     
-    TokeTypes.tokBreak: classnode.TookBreakNode(),
-    TokeTypes.tokID: classnode.IdNode(),
-    TokeTypes.tokEqual: classnode.EqualNode(),
-    TokeTypes.tokSum: classnode.SumNode(),
-    TokeTypes.tokSub: classnode.SubNode(),
-    TokeTypes.tokMul: classnode.MulNode(),
-    TokeTypes.tokDiv: classnode.DivNode(),
-    TokeTypes.tokNumber: classnode.NumberNode(),
-    TokeTypes.tokChain: classnode.ChainNode(),
-    TokeTypes.tokTrue: classnode.TrueNode(),
-    TokeTypes.tokFalse: classnode.FalseNode(),
-    TokeTypes.tokNone: classnode.NoneNode()
+    TokeTypes.tokBreak: classnode.BreakNode,
+    TokeTypes.tokID: classnode.IdNode,
+    TokeTypes.tokEqual: classnode.EqualNode,
+    TokeTypes.tokSum: classnode.SumNode,
+    TokeTypes.tokSub: classnode.SubNode,
+    TokeTypes.tokMul: classnode.MulNode,
+    TokeTypes.tokDiv: classnode.DivNode,
+    TokeTypes.tokNumber: classnode.NumberNode,
+    TokeTypes.tokChain: classnode.ChainNode,
+    TokeTypes.tokTrue: classnode.TrueNode,
+    TokeTypes.tokFalse: classnode.FalseNode,
+    TokeTypes.tokNone: classnode.NoneNode
 }
 
 class Terminal:
-    def init(self, Name, Type):
+    def __init__(self, Name, Type):
         self.name = Name
         self.type = Type
 
 
+
+
+
 class Production:
 
-    def init(self, head ,Components):
+    def __init__(self, head ,Components):
         self.components = Components
         self.head = head
 
 
 class NonTerminal:
-    def init(self, Name, Productions):
+    def __init__(self, Name, Productions):
         self.name = Name
         self.productions = Productions
 
     def add(self, prod: Production):
         if "epsilon" in prod.components: self.epsilon = True
-        else: self.productions.add(prod)
+        else: self.productions.append(prod)
         return self
 
 class Grammar:
@@ -233,27 +236,27 @@ class Grammar:
         self.prodDict = prodDict
         self.terminalList=TerminalList
         self.productions = []
-        self.BuildGrammar()
+        self.BuildGrammar(prodDict)
         
-    def BuildGrammar(self,Terminals, prodDict):
+    def BuildGrammar(self, prodDict):
         
-        TerminalDict = []
+        TerminalDict = {}
         TerminalList = []
         
-        for Terminal in self.terminalList:
-            if Terminal == "epsilon": continue
-            temTerminal = Terminal(f'{Terminal}', Terminal)
+        for terminal in self.terminalList:
+            if terminal == "epsilon": continue
+            temTerminal = Terminal(f'{terminal}', terminal)
             TerminalList.append(temTerminal)
-            TerminalDict[f'{Terminal}'] = temTerminal
+            TerminalDict[terminal] = temTerminal
         
         Temp_nonTList = prodDict.keys()
 
         
         NonTerminalList = []
-        NonTerminalDict = []
+        NonTerminalDict = {}
         
         for NTerminal in Temp_nonTList:
-            tempNTerminal = NonTerminal(NTerminal)
+            tempNTerminal = NonTerminal(NTerminal,[])
             NonTerminalList.append(tempNTerminal)
             NonTerminalDict[NTerminal] = tempNTerminal
         

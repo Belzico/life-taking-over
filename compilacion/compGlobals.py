@@ -1,6 +1,6 @@
 import enum
 
-from compilacion.tokens import TokenType
+from tokens import TokenType
 
 
 class TokeTypes(enum.Enum):
@@ -133,7 +133,7 @@ keywordsDicc={
     "fenomeno" : TokeTypes.tokphenomenon,
     
     #especiales
-    "print" : TokenType.tokPrint
+    "print" : TokeTypes.tokPrint
 }
 
 operatorsDicc={
@@ -193,7 +193,7 @@ puntuationDicc={
     #"."  : TokeTypes.tokColom,
     
     #simbolo para especificar tipos de retorno
-    "->" : TokenType.tokArrow,
+    "->" : TokeTypes.tokArrow,
     #Signos Especiales
     #"\n" : TokeTypes.tokNextLine
 }

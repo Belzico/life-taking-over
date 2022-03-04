@@ -18,3 +18,4 @@ class Token():
 class TokenType():
     diccType={}
     
+    
