@@ -1560,6 +1560,54 @@ class FucNode(StatementNode):
 
     def build_ast(productionList):
         pass
+
+class RecieveDicNode(StatementNode):
+    def Eval(self,context):
+        pass
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+class SearchDicNode(StatementNode):
+    def Eval(self,context):
+        pass
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
+
+class InsertDicNode(StatementNode):
+    def Eval(self,context):
+        pass
+    
+    def validateNode(self,context):
+        pass
+    
+    def transpilar(self):
+        pass
+
+    def checkTypes(self):
+        pass
+
+    def build_ast(productionList):
+        pass
     
 class PrintNode(StatementNode):
     def __init__(self,context):
