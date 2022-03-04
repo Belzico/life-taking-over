@@ -12,6 +12,7 @@ from pickle import FALSE
 from platform import node
 from tokenize import Double
 from unittest import result
+from unittest.mock import NonCallableMagicMock
 from webbrowser import Opera
 from wsgiref import validate
 import enum
@@ -157,6 +158,10 @@ class Context():
                 return current.diccFuncContext[var]
             current=self.fatherContext
     
+    def retStatement(self,var):
+        if var in self.diccFunStatement:
+            return self.diccFunStatement[var]
+
     def redeclareVar(self,var,varType,varValue):
         current=self
         while current!=None:
@@ -171,6 +176,18 @@ class Context():
             current=self.fatherContext
             
         #error la variable no existe
+        return False
+
+    def overrideVar(self,varname,vartype,varvalue):
+        if varname in self.diccVarContext:
+            dicvar = self.diccVarContext[varname]
+            typeold = dicvar[1]
+            if typeold != vartype:
+                return False
+            
+            self.diccVarContext[varname] = [varname,vartype,varvalue]
+            return True
+        
         return False
 
     def overrideFun(self,nameF,nameNF):
@@ -1032,7 +1049,7 @@ class LetNode(StatementNode):
         self.EspecterType = None
 
     def Eval(self,context):
-        return
+        self.context.define_var(self.idnode.name, self.type, self.val)
     
     def checkTypes(self):
         if not self.idnode.checkTypes():
@@ -1430,9 +1447,16 @@ class func_callNode(StatementNode):
         self.EspecterType = None
 
     def validateNode(self,context):
+        valueargs = []
+        for val in self.args:
+            if not val.validate(context):
+                return False
+            valueargs.append(val.Eval(context))
+
+        
         typs = []
-        for arg in self.args:
-            typs.append(type(arg))
+        for arg in valueargs:
+            typs.append(arg)
 
         state = self.context.checkFun(self.name,typs)
 
@@ -1454,8 +1478,19 @@ class func_callNode(StatementNode):
         textcode += ")"
 
     def Eval(self,context):
-        return self.context.retFun(self.name,self.args)
+        valueargs = []
+        for val in self.args:
+            valueargs.append(val.Eval(context))
 
+        #reasignar valores del contexto
+        ret = self.context.retFun(self.name)
+        statement = self.context.retStatement(self.name)
+
+        for i in range(0,len(valueargs)-1):
+            statement.context.overrideVar(self.name, ret[1][i], valueargs[i])
+
+        return statement.Eval(statement.context)
+            
     def checkTypes(self):
         typs = []
         for arg in self.args:
@@ -1490,6 +1525,10 @@ class FucNode(StatementNode):
         for idvar in self.argsid:
             if not idvar.validateNode(context):
                 return False
+
+        for i in range(0,len(self.argsid)-1):
+            self.context.define_var(self.argsid[i].name, self.argstypes[i], None)
+        
         return self.node_statements.validateNode(context)
     
     def transpilar(self):
@@ -1517,7 +1556,7 @@ class FucNode(StatementNode):
         self.context.define_statement(self.name,self.node_statements)
 
     def checkTypes(self):
-        pass
+        return True
 
     def build_ast(productionList):
         pass
@@ -1531,10 +1570,13 @@ class PrintNode(StatementNode):
         self.ReturnType = None
         self.EspecterType = None
 
+        self.funcOrVar=None
+        self.defineOrCall=None
+
 
     def Eval(self,context):
         val = self.args[0].Eval(self.context)
-        #print(val)
+        print(val)
         return
     
     
